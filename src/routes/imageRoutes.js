@@ -18,7 +18,7 @@ router.post('/generations', async (req, res) => {
     }
 
     // Validate size parameter
-    const validSizes = ['256x256', '512x512', '1024x1024']
+    const validSizes = ['128x128', '256x256', '512x512', '1024x1024']
     if (!validSizes.includes(size)) {
       return res.status(400).json({
         error: {
@@ -29,7 +29,7 @@ router.post('/generations', async (req, res) => {
     }
 
     // Validate model parameter
-    const validModels = ['dall-e-2', 'dall-e-3']
+    const validModels = ['dall-e-2', 'dall-e-3', 'stabilityai/sdxl-turbo']
     if (!validModels.includes(model)) {
       return res.status(400).json({
         error: {
@@ -49,9 +49,16 @@ router.post('/generations', async (req, res) => {
     res.json(result)
   } catch (error) {
     console.error('Image generation error:', error)
+    
+    // If the error is already in the correct format, forward it as-is
+    if (error) {
+      return res.status(error.status || 500).json(error)
+    }
+    
+    // If it's a different type of error, wrap it in the standard format
     res.status(500).json({
       error: {
-        message: 'Failed to generate image',
+        message: error.message || 'Failed to generate image',
         type: 'internal_error'
       }
     })
