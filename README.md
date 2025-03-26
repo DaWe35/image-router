@@ -1,6 +1,6 @@
 # Image Router API
 
-A flexible API router for image generation services that supports multiple providers (OpenAI, Stability AI, Midjourney) with a unified interface.
+A flexible API router for image generation services, supporting multiple providers including OpenAI, Stability AI, and Midjourney.
 
 ## Features
 
@@ -31,112 +31,176 @@ cd image-router-api
 npm install
 ```
 
-3. Create a `.env` file in the root directory:
-```env
-NODE_ENV=development
-PORT=3000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=image_router
-DB_USER=postgres
-DB_PASSWORD=postgres
-JWT_SECRET=your_jwt_secret
-LOG_LEVEL=debug
+3. Create a `.env` file:
+```bash
+cp .env.example .env
 ```
 
-4. Start the application using Docker Compose:
+4. Update the `.env` file with your configuration.
+
+5. Start the application:
 ```bash
 docker-compose up -d
 ```
+
+The application will be available at `http://localhost:3000`.
 
 ## API Endpoints
 
 ### Authentication
 
-- `POST /api/v1/users/register` - Register a new user
-- `POST /api/v1/users/login` - Login user
-- `GET /api/v1/users/profile` - Get user profile
-- `PUT /api/v1/users/profile` - Update user profile
-- `PUT /api/v1/users/password` - Change password
+#### Register User
+```bash
+curl -X POST http://localhost:3000/api/v1/users/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "Test123!",
+    "name": "Test User"
+  }'
+```
+
+#### Login
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "Test123!"
+  }'
+```
 
 ### API Keys
 
-- `POST /api/v1/keys` - Create a new API key
-- `GET /api/v1/keys` - List API keys
-- `PUT /api/v1/keys/:id` - Update API key
-- `DELETE /api/v1/keys/:id` - Delete API key
+#### Create API Key
+```bash
+curl -X POST http://localhost:3000/api/v1/keys \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test API Key",
+    "rateLimit": 100,
+    "rateLimitWindow": 3600000,
+    "expiresAt": "2024-12-31T23:59:59Z"
+  }'
+```
+
+#### List API Keys
+```bash
+curl -X GET http://localhost:3000/api/v1/keys \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
 
 ### Image Generation
 
-- `POST /api/v1/images/generations` - Generate images
-- `GET /api/v1/images/generations/:id` - Get image status
-- `GET /api/v1/images/generations` - List images
-
-### Provider Management (Admin)
-
-- `POST /api/v1/providers` - Create a new provider
-- `GET /api/v1/providers` - List providers
-- `GET /api/v1/providers/:id` - Get provider details
-- `PUT /api/v1/providers/:id` - Update provider
-- `DELETE /api/v1/providers/:id` - Delete provider
-- `PUT /api/v1/providers/:id/status` - Update provider status
-
-## Request Format
-
-### Image Generation
-
-```json
-{
-  "prompt": "A beautiful sunset over mountains",
-  "n": 1,
-  "size": "1024x1024",
-  "response_format": "url"
-}
+#### Generate Image with OpenAI
+```bash
+curl -X POST http://localhost:3000/api/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A beautiful sunset over mountains",
+    "provider": "openai",
+    "model": "dall-e-3",
+    "size": "1024x1024",
+    "quality": "standard",
+    "style": "vivid"
+  }'
 ```
 
-### Provider Creation
-
-```json
-{
-  "name": "OpenAI",
-  "type": "openai",
-  "apiKey": "your_api_key",
-  "baseUrl": "https://api.openai.com/v1",
-  "priority": 1,
-  "rateLimit": 60,
-  "costPerImage": 0.02,
-  "supportedSizes": ["256x256", "512x512", "1024x1024"],
-  "maxImagesPerRequest": 10,
-  "timeout": 30000
-}
+#### Generate Image with Stability AI
+```bash
+curl -X POST http://localhost:3000/api/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A beautiful sunset over mountains",
+    "provider": "stability",
+    "model": "stable-diffusion-xl-1024-v1-0",
+    "width": 1024,
+    "height": 1024,
+    "steps": 30,
+    "cfg_scale": 7
+  }'
 ```
 
-## Response Format
-
-### Success Response
-
-```json
-{
-  "success": true,
-  "data": {
-    // Response data
-  }
-}
+#### Generate Image with Midjourney
+```bash
+curl -X POST http://localhost:3000/api/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A beautiful sunset over mountains",
+    "provider": "midjourney",
+    "model": "v6",
+    "aspectRatio": "1:1",
+    "quality": "standard",
+    "style": "photorealistic"
+  }'
 ```
 
-### Error Response
+### Provider Management (Admin Only)
 
-```json
-{
-  "success": false,
-  "error": {
-    "type": "error_type",
-    "message": "Error message",
-    "details": {
-      // Additional error details
-    }
-  }
-}
+#### Create Provider
+```bash
+curl -X POST http://localhost:3000/api/v1/providers \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "OpenAI",
+    "type": "openai",
+    "apiKey": "your-openai-api-key",
+    "baseUrl": "https://api.openai.com/v1",
+    "models": ["dall-e-2", "dall-e-3"],
+    "defaultModel": "dall-e-3",
+    "timeout": 30000,
+    "rateLimit": 50,
+    "rateLimitWindow": 60000,
+    "active": true
+  }'
+```
+
+#### List Providers
+```bash
+curl -X GET http://localhost:3000/api/v1/providers \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### Update Provider Status
+```bash
+curl -X PUT http://localhost:3000/api/v1/providers/1/status \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "active": false
+  }'
+```
+
+### Testing Error Handling
+
+#### Test Rate Limiting
+```bash
+for i in {1..10}; do
+  curl -X POST http://localhost:3000/api/v1/images/generations \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "prompt": "Test rate limit",
+      "provider": "openai"
+    }'
+  sleep 0.1
+done
+```
+
+#### Test Validation Error
+```bash
+curl -X POST http://localhost:3000/api/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "",
+    "provider": "invalid-provider"
+  }'
 ```
 
 ## Development
