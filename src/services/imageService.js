@@ -67,13 +67,10 @@ async function generateDeepInfra({ prompt, n, size }) {
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      inputs: prompt,
-      parameters: {
-        num_inference_steps: 50,
-        guidance_scale: 7.5,
-        width: parseInt(size.split('x')[0]),
-        height: parseInt(size.split('x')[1])
-      }
+      prompt: prompt,
+      size: size,
+      model: "stabilityai/sdxl-turbo",
+      n: 1
     })
   })
 
@@ -85,11 +82,5 @@ async function generateDeepInfra({ prompt, n, size }) {
   const data = await response.json()
   
   // Transform DeepInfra response to match OpenAI format
-  return {
-    created: Math.floor(Date.now() / 1000),
-    data: data.images.map(image => ({
-      url: image,
-      revised_prompt: prompt
-    }))
-  }
+  return data
 } 
