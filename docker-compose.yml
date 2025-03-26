@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  api:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    command: sh -c "npm install && npm start"
+    restart: unless-stopped 
