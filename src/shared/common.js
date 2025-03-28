@@ -1,10 +1,12 @@
 const imageModels = {
     'openai/dall-e-2': {
         providers:['openai'],
+		price: 0.02
         
     },
     'openai/dall-e-3': {
-        providers:['openai']
+        providers:['openai'],
+		price: 0.12
     },
     'stabilityai/sd3.5': {
         providers:['deepinfra'],
