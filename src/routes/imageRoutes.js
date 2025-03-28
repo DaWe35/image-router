@@ -45,8 +45,8 @@ router.post('/generations', async (req, res) => {
         console.error('Image generation error:', error)
 
         // If the error is already in the correct format, forward it as-is
-        if (error) {
-            return res.status(error.status || 500).json(error)
+        if (error?.errorResponse) {
+            return res.status(error.status || 500).json(error.errorResponse)
         }
         
         // If it's a different type of error, wrap it in the standard format

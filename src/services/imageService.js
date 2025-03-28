@@ -30,7 +30,7 @@ export async function generateImage(reqBody) {
 // OpenAI format API call to any provider that supports
 async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
     if (!providerKey) {
-        throw new Error('OpenAI API key is not configured')
+        throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
 
     const response = await fetch(providerUrl, {
@@ -43,8 +43,11 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
     })
 
     if (!response.ok) {
-        const error = await response.json()
-        throw error
+        const errorResponse = await response.json()
+        throw {
+            status: response.status,
+            errorResponse: errorResponse
+        }
     }
 
     const data = await response.json()
