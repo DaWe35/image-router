@@ -70,15 +70,6 @@ async function testImageGeneration(model, prompt) {
     const outputDir = path.join(process.cwd(), 'test', 'manualTestOutput', timestamp)
     fs.mkdirSync(outputDir, { recursive: true })
 
-    // Prepare request body
-    const requestBody = {
-        prompt,
-        model,
-        size: "100x100",
-        n: 1,
-        response_format: "b64_json" // Request base64 encoded response
-    }
-
     // Get provider info
     const provider = imageModels[model].providers[0]
     let providerUrl, providerKey
@@ -94,6 +85,15 @@ async function testImageGeneration(model, prompt) {
             break
         default:
             throw new Error(`Unsupported provider: ${provider}`)
+    }
+
+    // Prepare request body
+    const requestBody = {
+        prompt,
+        model,
+        size: "512x512",
+        n: 1,
+        response_format: "b64_json" // Request base64 encoded response
     }
 
     // Test local API
@@ -122,6 +122,7 @@ async function testImageGeneration(model, prompt) {
     // Test provider API
     try {
         console.log('Making request to provider...')
+        requestBody.model = model.replace('openai/', '')
         const providerResponse = await makeRequest(providerUrl, {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
@@ -146,6 +147,7 @@ async function testImageGeneration(model, prompt) {
 }
 
 // Example usage
+// const model = 'openai/dall-e-2'
 const model = 'stabilityai/sdxl-turbo'
 const prompt = 'A photo of an astronaut riding a horse on Mars.'
 
