@@ -17,30 +17,30 @@ app.use(express.json())
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
 })
 app.use(limiter)
 
 // Routes
-app.use('/v1/images', imageRoutes)
+app.use('/v1/openai/images', imageRoutes)
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' })
+    res.json({ status: 'ok' })
 })
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).json({
-    error: {
-      message: 'Internal server error',
-      type: 'internal_error'
-    }
-  })
+    console.error(err.stack)
+    res.status(500).json({
+        error: {
+            message: 'Internal server error',
+            type: 'internal_error'
+        }
+    })
 })
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
+    console.log(`Server running on port ${port}`)
 }) 
