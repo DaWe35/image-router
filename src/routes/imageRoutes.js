@@ -10,30 +10,21 @@ router.post('/generations', async (req, res) => {
         const { prompt, model } = req.body
 
         if (!prompt) {
-            return res.status(400).json({
-                error: {
-                    message: 'Prompt is required',
-                    type: 'invalid_request_error'
-                }
+            return res.status(422).json({
+                detail: "Invalid request data: 1 validation error for OpenAIImagesGenerationsIn\nprompt\n  field required (type=value_error.missing)"
             })
         }
         
         if (!model) {
-            return res.status(400).json({
-                error: {
-                    message: 'Model is required',
-                    type: 'invalid_request_error'
-                }
+            return res.status(422).json({
+                detail: "Invalid request data: 1 validation error for OpenAIImagesGenerationsIn\nmodel\n  field required (type=value_error.missing)"
             })
         }
 
         // Validate model parameter
-        if (!imageModels[model].providers[0]) {
-            return res.status(400).json({
-                error: {
-                    message: 'Invalid model parameter',
-                    type: 'invalid_request_error'
-                }
+        if (!imageModels[model]?.providers[0]) {
+            return res.status(404).json({
+                detail: {error: "Model is not available"}
             })
         }
 
