@@ -4,6 +4,11 @@ import { imageModels } from '../shared/common.js'
 
 const router = express.Router()
 
+// GET /v1/images/models
+router.get('/models', (req, res) => {
+    res.json(imageModels)
+})
+
 // POST /v1/images/generations
 router.post('/generations', async (req, res) => {
     try {

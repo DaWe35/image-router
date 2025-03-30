@@ -17,14 +17,16 @@ export async function generateImage(reqBody) {
             providerUrl = 'https://api.openai.com/v1/images/generations'
             providerKey = process.env.OPENAI_API_KEY
             reqBody.model = reqBody.model.replace('openai/', '')
-            break
+            return generateOpenAI({ providerUrl, providerKey, reqBody })
         case 'deepinfra':
             providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
             providerKey = process.env.DEEPINFRA_API_KEY
-            break
-    }
-
-    return generateOpenAI({ providerUrl, providerKey, reqBody })
+            return generateOpenAI({ providerUrl, providerKey, reqBody })
+        case 'replicate':
+            providerUrl = `https://api.replicate.com/v1/models/${reqBody.model}/predictions`
+            providerKey = process.env.REPLICATE_API_KEY
+            return generateReplicate({ providerUrl, providerKey, reqBody })
+    }    
 }
 
 // OpenAI format API call to any provider that supports
@@ -52,4 +54,41 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
 
     const data = await response.json()
     return data
+}
+
+async function generateReplicate({ providerUrl, providerKey, reqBody }) {
+    const convertedReqBody = {
+        input: {
+            prompt: reqBody.prompt
+        }
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify(convertedReqBody)
+    })
+    
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        throw {
+            status: response.status,
+            errorResponse: errorResponse
+        }
+    }
+
+    const data = await response.json()
+
+    const convertedData = {
+        created: Math.floor(new Date(data.created_at).getTime() / 1000),
+        data: {
+            url: data.output[0],
+            revised_prompt: null,
+            original_response_from_provider: data
+        }
+    }
+    return convertedData
 }
