@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: image-router-api
+    image: node:20-bookworm
+    working_dir: /app
+    command: >
+      sh -c '
+        npm install &&
+        npm run prisma:generate
+      '
+    volumes:
+      - .:/app
+    ports:
+      - "127.0.0.1:${PORT}:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - wasp-network
+
+networks:
+  wasp-network:
+    name: wasp-network
