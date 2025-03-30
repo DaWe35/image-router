@@ -1,31 +1,59 @@
 import { prisma } from '../config/database.js'
 import { imageModels } from '../shared/common.js'
+import { validateTempToken } from '../shared/tempAuth.js'
 
 // Convert USD price to database format (multiply by 10000 to get 4 decimal places)
 const convertPriceToDbFormat = (usdPrice) => Math.round(usdPrice * 10000)
 
 export const validateApiKey = async (req, res, next) => {
-    const apiKey = req.headers['x-api-key']
+    const authHeader = req.headers['authorization']
 
-    if (!apiKey) {
+    if (!authHeader) {
         return res.status(401).json({
             error: {
-                message: 'API key is required',
+                message: 'Authorization header is required',
                 type: 'unauthorized'
             }
         })
     }
 
     try {
-        const key = await prisma.aPIKey.findUnique({
-            where: { key: apiKey },
-            include: { user: true }
-        })
+        let key = null
+        let user = null
 
+        // Check if it's a Bearer token
+        if (authHeader.startsWith('Bearer ')) {
+            const apiKey = authHeader.substring(7) // Remove 'Bearer ' prefix
+            key = await prisma.aPIKey.findUnique({
+                where: { key: apiKey },
+                include: { user: true }
+            })
+            if (key) {
+                user = key.user
+            }
+        }
+
+        // If Bearer token failed, try JWT validation
         if (!key) {
+            const jwtResult = validateTempToken(authHeader)
+            if (jwtResult?.userId) {
+                user = await prisma.user.findUnique({
+                    where: { id: jwtResult.userId }
+                })
+                if (user) {
+                    key = {
+                        id: 'temp',
+                        isActive: true,
+                        user: user
+                    }
+                }
+            }
+        }
+
+        if (!key || !user) {
             return res.status(401).json({
                 error: {
-                    message: 'Invalid API key',
+                    message: 'Invalid authorization token',
                     type: 'unauthorized'
                 }
             })
@@ -55,7 +83,7 @@ export const validateApiKey = async (req, res, next) => {
         const usdPrice = modelConfig.price
         const dbPrice = convertPriceToDbFormat(usdPrice)
         
-        if (key.user.credits < dbPrice) {
+        if (user.credits < dbPrice) {
             return res.status(403).json({
                 error: {
                     message: 'Insufficient credits',
@@ -66,7 +94,7 @@ export const validateApiKey = async (req, res, next) => {
 
         // Pass data through res.locals instead of req
         res.locals.apiKey = key
-        res.locals.user = key.user
+        res.locals.user = user
         res.locals.modelPrice = dbPrice
         res.locals.model = model
         next()
