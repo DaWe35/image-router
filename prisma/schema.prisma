@@ -36,7 +36,7 @@ model APIUsage {
   prompt                    String
   cost                      Int
   speedMs                   Int
-  imageSize                 Float
+  imageSize                 String
   status                    String
   error                     String?
   metadata                  Json?

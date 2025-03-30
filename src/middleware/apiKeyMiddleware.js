@@ -135,7 +135,7 @@ export const logApiUsage = async (req, res, next) => {
                     prompt: req.body.prompt || '',
                     cost: modelPrice,
                     speedMs: 0,
-                    imageSize: req.body.size || 1024,
+                    imageSize: req.body.size || 'unknown',
                     status: 'processing'
                 }
             })
