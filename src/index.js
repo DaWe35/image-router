@@ -4,6 +4,8 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import { imageRoutes } from './routes/imageRoutes.js'
+import { validateApiKey, logApiUsage } from './middleware/apiKeyMiddleware.js'
+import { prisma } from './config/database.js'
 
 dotenv.config()
 
@@ -22,6 +24,11 @@ const limiter = rateLimit({
 })
 app.use(limiter)
 
+// API key validation and usage logging
+if (process.env.DATABASE_URL) {
+    app.use('/v1/openai/images', validateApiKey, logApiUsage)
+}
+
 // Routes
 app.use('/v1/openai/images', imageRoutes)
 
@@ -39,6 +46,14 @@ app.use((err, req, res, next) => {
             type: 'internal_error'
         }
     })
+})
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    if (prisma) {
+        await prisma.$disconnect()
+    }
+    process.exit(0)
 })
 
 app.listen(port, () => {
