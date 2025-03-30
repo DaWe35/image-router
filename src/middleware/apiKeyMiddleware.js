@@ -20,10 +20,9 @@ export const validateApiKey = async (req, res, next) => {
     try {
         let key = null
         let user = null
+        const apiKey = authHeader.substring(7) // Remove 'Bearer ' prefix
 
-        // Check if it's a Bearer token
-        if (authHeader.startsWith('Bearer ')) {
-            const apiKey = authHeader.substring(7) // Remove 'Bearer ' prefix
+        if (apiKey.length === 64) {
             key = await prisma.aPIKey.findUnique({
                 where: { key: apiKey },
                 include: { user: true }
@@ -31,11 +30,9 @@ export const validateApiKey = async (req, res, next) => {
             if (key) {
                 user = key.user
             }
-        }
-
-        // If Bearer token failed, try JWT validation
-        if (!key) {
-            const jwtResult = validateTempToken(authHeader)
+        } else if (apiKey.length === 192) {
+            // JWT validation
+            const jwtResult = validateTempToken(apiKey)
             if (jwtResult?.userId) {
                 user = await prisma.user.findUnique({
                     where: { id: jwtResult.userId }
@@ -48,6 +45,13 @@ export const validateApiKey = async (req, res, next) => {
                     }
                 }
             }
+        } else {
+            return res.status(401).json({
+                error: {
+                    message: 'Invalid authorization token length: ' + apiKey.length,
+                    type: 'unauthorized'
+                }
+            })
         }
 
         if (!key || !user) {

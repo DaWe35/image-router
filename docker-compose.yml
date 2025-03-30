@@ -4,6 +4,7 @@ services:
   api:
     container_name: image-router-api
     image: node:20-bookworm
+    restart: unless-stopped
     working_dir: /app
     command: >
       sh -c '
@@ -17,4 +18,9 @@ services:
       - "127.0.0.1:${PORT}:3000"
     environment:
       - NODE_ENV=production
-    restart: unless-stopped 
+    networks:
+      - wasp-network
+
+networks:
+  wasp-network:
+    name: wasp-network
