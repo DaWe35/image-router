@@ -3,7 +3,7 @@ version: '3.8'
 services:
   api:
     container_name: image-router-api
-    image: node:20-alpine
+    image: node:20-bookworm
     working_dir: /app
     volumes:
       - .:/app
