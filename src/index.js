@@ -26,7 +26,7 @@ app.use(limiter)
 
 // API key validation and usage logging
 if (process.env.DATABASE_URL) {
-    app.use('/v1/openai/images', validateApiKey, logApiUsage)
+    app.use('/v1/openai/images/generations', validateApiKey, logApiUsage)
 }
 
 // Routes

@@ -5,11 +5,16 @@ services:
     container_name: image-router-api
     image: node:20-bookworm
     working_dir: /app
+    command: >
+      sh -c '
+        apt-get update && apt-get install -y tini &&
+        npm install &&
+        exec tini -- npm start
+      '
     volumes:
       - .:/app
     ports:
       - "127.0.0.1:${PORT}:3000"
     environment:
       - NODE_ENV=production
-    command: sh -c "npm install && npm start"
     restart: unless-stopped 
