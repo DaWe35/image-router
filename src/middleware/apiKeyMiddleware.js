@@ -19,42 +19,55 @@ export const validateApiKey = async (req, res, next) => {
 
     try {
         let key = null
-        let user = null
-        const apiKey = authHeader.substring(7) // Remove 'Bearer ' prefix
+        const apiKeyString = authHeader.substring(7) // Remove 'Bearer ' prefix
 
-        if (apiKey.length === 64) {
-            key = await prisma.aPIKey.findUnique({
-                where: { key: apiKey },
+        if (apiKeyString.length === 64) {
+            // API key validation
+            key = await prisma.APIKey.findUnique({
+                where: { key: apiKeyString },
                 include: { user: true }
             })
-            if (key) {
-                user = key.user
-            }
-        } else if (apiKey.length === 192) {
-            // JWT validation
-            const jwtResult = validateTempToken(apiKey)
-            if (jwtResult?.userId) {
-                user = await prisma.user.findUnique({
-                    where: { id: jwtResult.userId }
-                })
-                if (user) {
-                    key = {
-                        id: 'temp',
-                        isActive: true,
-                        user: user
+            key.apiKeyTempJwt = false
+        } else if (apiKeyString.length === 192) {
+            // JWT token validation
+            const jwtResult = validateTempToken(apiKeyString)
+            if (!jwtResult || !jwtResult.userId) {
+                return res.status(401).json({
+                    error: {
+                        message: 'Invalid or expired JWT token',
+                        type: 'unauthorized'
                     }
-                }
+                })
+            }
+
+            const user = await prisma.user.findUnique({
+                where: { id: jwtResult.userId }
+            })
+            if (!user) {
+                return res.status(401).json({
+                    error: {
+                        message: 'User not found for this JWT token',
+                        type: 'unauthorized'
+                    }
+                })
+            }
+
+            key = {
+                id: null,
+                apiKeyTempJwt: true,
+                isActive: true,
+                user: user
             }
         } else {
             return res.status(401).json({
                 error: {
-                    message: 'Invalid authorization token length: ' + apiKey.length,
+                    message: 'Invalid authorization token length: ' + apiKeyString.length,
                     type: 'unauthorized'
                 }
             })
         }
 
-        if (!key || !user) {
+        if (!key || !key.user || !key.user.id) {
             return res.status(401).json({
                 error: {
                     message: 'Invalid authorization token',
@@ -72,9 +85,9 @@ export const validateApiKey = async (req, res, next) => {
             })
         }
 
-        // Get the model price
-        const model = req.body.model
-        const modelConfig = imageModels[model]
+        // Get the model config
+        const modelName = req.body.model
+        const modelConfig = imageModels[modelName]
         if (!modelConfig) {
             return res.status(404).json({
                 error: {
@@ -84,9 +97,19 @@ export const validateApiKey = async (req, res, next) => {
             })
         }
 
+        // Get the model price
         const usdPrice = modelConfig.price
+        if (typeof usdPrice !== 'number') {
+            return res.status(404).json({
+                error: {
+                    message: 'Model price is not configured properly.',
+                    type: 'invalid_request_error'
+                }
+            })
+        }
         const dbPrice = convertPriceToDbFormat(usdPrice)
         
+        // Check if the user has enough credits
         if (user.credits < dbPrice) {
             return res.status(403).json({
                 error: {
@@ -97,10 +120,9 @@ export const validateApiKey = async (req, res, next) => {
         }
 
         // Pass data through res.locals instead of req
-        res.locals.apiKey = key
-        res.locals.user = user
-        res.locals.modelPrice = dbPrice
-        res.locals.model = model
+        res.locals.key = key
+        res.locals.dbPrice = dbPrice
+        res.locals.modelName = modelName
         next()
     } catch (error) {
         console.error('Error validating API key:', error)
@@ -114,26 +136,26 @@ export const validateApiKey = async (req, res, next) => {
 }
 
 export const logApiUsage = async (req, res, next) => {
-    const startTime = Date.now()
-    const { apiKey, user, modelPrice, model } = res.locals
+    const { key, dbPrice, modelName } = res.locals
 
     try {
         // Use a transaction to ensure both operations succeed or fail together
         const usageEntry = await prisma.$transaction(async (tx) => {
             // Deduct credits
             await tx.user.update({
-                where: { id: user.id },
-                data: { credits: { decrement: modelPrice } }
+                where: { id: key.user.id },
+                data: { credits: { decrement: dbPrice } }
             })
 
             // Create API usage entry
-            return await tx.aPIUsage.create({
+            return await tx.APIUsage.create({
                 data: {
-                    apiKeyId: apiKey.id,
-                    model: model || 'unknown',
-                    provider: imageModels[model]?.providers[0] || 'unknown',
+                    apiKeyId: key.id,
+                    userId: key.user,
+                    model: modelName || 'unknown',
+                    provider: imageModels[modelName]?.providers[0] || 'unknown',
                     prompt: req.body.prompt || '',
-                    cost: modelPrice,
+                    cost: dbPrice,
                     speedMs: 0,
                     imageSize: req.body.size || 'unknown',
                     status: 'processing'
@@ -141,6 +163,7 @@ export const logApiUsage = async (req, res, next) => {
             })
         })
 
+        const startTime = Date.now()
         // Store the original send function
         const originalSend = res.send
 
@@ -151,7 +174,7 @@ export const logApiUsage = async (req, res, next) => {
 
             try {
                 // Update the API usage entry with final details
-                await prisma.aPIUsage.update({
+                await prisma.APIUsage.update({
                     where: { id: usageEntry.id },
                     data: {
                         speedMs,
@@ -163,8 +186,8 @@ export const logApiUsage = async (req, res, next) => {
                 // If the request failed, refund the credits
                 if (res.statusCode !== 200) {
                     await prisma.user.update({
-                        where: { id: user.id },
-                        data: { credits: { increment: modelPrice } }
+                        where: { id: key.user.id },
+                        data: { credits: { increment: dbPrice } }
                     })
                 }
             } catch (error) {

@@ -11,6 +11,7 @@ model User {
   id                        String          @id @default(uuid())
   credits                   Int             @default(0)
   apiKeys                   APIKey[]
+  apiUsage                  APIUsage[]
 }
 
 model APIKey {
@@ -29,8 +30,6 @@ model APIKey {
 model APIUsage {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
-  apiKey                    APIKey          @relation(fields: [apiKeyId], references: [id])
-  apiKeyId                  String
   model                     String
   provider                  String
   prompt                    String
@@ -40,7 +39,13 @@ model APIUsage {
   status                    String
   error                     String?
   metadata                  Json?
+  apiKeyTempJwt             Boolean         @default(false)
+
+  apiKey                    APIKey?          @relation(fields: [apiKeyId], references: [id])
+  apiKeyId                  String?
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
 
   @@index([apiKeyId])
   @@index([createdAt])
-} 
+}
