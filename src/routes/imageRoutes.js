@@ -42,10 +42,10 @@ router.post('/generations', async (req, res) => {
             })
         }
 
-        if (response_format && response_format !== 'b64_json') {
+        if (response_format && response_format !== 'b64_json' && response_format !== 'url') {
             return res.status(400).json({
                 error: {
-                    message: "'response_format' must be 'b64_json'",
+                    message: "'response_format' must be 'b64_json' or 'url'",
                     type: "invalid_request_error"
                 }
             })

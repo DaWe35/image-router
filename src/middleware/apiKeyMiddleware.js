@@ -123,7 +123,7 @@ export const validateApiKey = async (req, res, next) => {
         const dbPrice = convertPriceToDbFormat(usdPrice)
         
         // Check if the user has enough credits
-        if (user.credits < dbPrice) {
+        if (key.user.credits < dbPrice) {
             return res.status(403).json({
                 error: {
                     message: 'Insufficient credits',
@@ -163,7 +163,8 @@ export const logApiUsage = async (req, res, next) => {
             // Create API usage entry
             return await tx.APIUsage.create({
                 data: {
-                    apiKeyId: key.id,
+                    apiKeyId: key.id || undefined,
+                    apiKeyTempJwt: key.apiKeyTempJwt,
                     userId: key.user.id,
                     model: modelName || 'unknown',
                     provider: imageModels[modelName]?.providers[0] || 'unknown',
