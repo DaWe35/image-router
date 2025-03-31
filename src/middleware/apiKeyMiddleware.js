@@ -25,7 +25,16 @@ export const validateApiKey = async (req, res, next) => {
             // API key validation
             key = await prisma.APIKey.findUnique({
                 where: { key: apiKeyString },
-                include: { user: true }
+                select: {
+                    id: true,
+                    isActive: true,
+                    user: {
+                        select: {
+                            id: true,
+                            credits: true
+                        }
+                    }
+                }
             })
             key.apiKeyTempJwt = false
         } else if (apiKeyString.length === 192) {
@@ -41,7 +50,11 @@ export const validateApiKey = async (req, res, next) => {
             }
 
             const user = await prisma.user.findUnique({
-                where: { id: jwtResult.userId }
+                where: { id: jwtResult.userId },
+                select: {
+                    id: true,
+                    credits: true
+                }
             })
             if (!user) {
                 return res.status(401).json({
@@ -151,7 +164,7 @@ export const logApiUsage = async (req, res, next) => {
             return await tx.APIUsage.create({
                 data: {
                     apiKeyId: key.id,
-                    userId: key.user,
+                    userId: key.user.id,
                     model: modelName || 'unknown',
                     provider: imageModels[modelName]?.providers[0] || 'unknown',
                     prompt: req.body.prompt || '',
