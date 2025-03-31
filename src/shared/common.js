@@ -35,11 +35,11 @@ const imageModels = {
     },
     'black-forest-labs/FLUX-1-schnell': {
         providers:['deepinfra'],
-        price: 0.1
+        price: 0.0005
     },
     'black-forest-labs/FLUX-1-dev': {
         providers:['deepinfra'],
-        price: 0.072
+        price: 0.009
     },
     'black-forest-labs/FLUX-pro': {
         providers:['deepinfra'],
@@ -51,19 +51,19 @@ const imageModels = {
     },
     'black-forest-labs/FLUX-1-Redux-dev': {
         providers:['deepinfra'],
-        price: 0.096
+        price: 0.012
     },
     'run-diffusion/Juggernaut-Flux': {
         providers:['deepinfra'],
-        price: 0.072
+        price: 0.009
     },
     'run-diffusion/Juggernaut-Lightning-Flux': {
         providers:['deepinfra'],
-        price: 0.072
+        price: 0.009
     },
     'stabilityai/sdxl-turbo': {
         providers:['deepinfra'],
-        price: 0.0016
+        price: 0.0002
     },
     'recraft-ai/recraft-v3': {
         providers:['replicate'],
