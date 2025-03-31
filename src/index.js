@@ -17,12 +17,32 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 
-// Rate limiting
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+// Rate limiting configurations
+const generalLimiter = rateLimit({
+    windowMs: 1 * 1000, // 1 seconds
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: {
+        error: {
+            message: 'Too many requests, please try again later.',
+            type: 'rate_limit_error'
+        }
+    }
 })
-app.use(limiter)
+
+const imageGenerationLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 30, // limit each IP to 30 requests per minute
+    message: {
+        error: {
+            message: 'Too many image generation requests, please try again later.',
+            type: 'rate_limit_error'
+        }
+    }
+})
+
+// Apply rate limiting to specific routes
+app.use('/v1/openai/images/generations', imageGenerationLimiter)
+app.use(generalLimiter) // Apply general limiter to all other routes
 
 // API key validation and usage logging
 if (process.env.DATABASE_URL) {
