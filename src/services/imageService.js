@@ -1,7 +1,6 @@
 import fetch from 'node-fetch'
 import { imageModels } from '../shared/common.js'
 
-
 export async function generateImage(reqBody) {
     const { model } = reqBody
     const provider = imageModels[model].providers[0]
@@ -29,7 +28,7 @@ export async function generateImage(reqBody) {
     }    
 }
 
-// OpenAI format API call to any provider that supports
+// OpenAI format API call
 async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
     if (!providerKey) {
         throw new Error('Provider API key is not configured. This is an issue on our end.')
@@ -41,7 +40,13 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: JSON.stringify(reqBody)
+        // TODO: Enable customization
+        body: JSON.stringify({
+            prompt: reqBody.prompt,
+            //n: 1,
+            //size: '1024x1024',
+            //response_format: 'url'
+        })
     })
 
     if (!response.ok) {
@@ -56,20 +61,19 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
     return data
 }
 
+// Replicate format API call
 async function generateReplicate({ providerUrl, providerKey, reqBody }) {
-    const convertedReqBody = {
-        input: {
-            prompt: reqBody.prompt
-        }
-    }
-
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: JSON.stringify(convertedReqBody)
+        body: JSON.stringify({
+            input: {
+                prompt: reqBody.prompt
+            }
+        })
     })
     
     if (!response.ok) {
