@@ -43,6 +43,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody }) {
         // TODO: Enable customization
         body: JSON.stringify({
             prompt: reqBody.prompt,
+            model: reqBody.model,
             //n: 1,
             //size: '1024x1024',
             //response_format: 'url'
