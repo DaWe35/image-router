@@ -104,7 +104,7 @@ export const validateApiKey = async (req, res, next) => {
         if (!modelConfig) {
             return res.status(404).json({
                 error: {
-                    message: "'model' is not available",
+                    message: "model '" + modelName + "' is not available",
                     type: "invalid_request_error"
                 }
             })

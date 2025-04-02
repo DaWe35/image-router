@@ -37,7 +37,7 @@ router.post('/generations', async (req, res) => {
         if (!imageModels[model]?.providers[0]) {
             return res.status(404).json({
                 error: {
-                    message: "'model' is not available",
+                    message: "model '" + model + "' is not available",
                     type: "invalid_request_error"
                 }
             })

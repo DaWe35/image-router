@@ -38,6 +38,7 @@ const imageModels = {
         price: 0.0005
     },
     'black-forest-labs/FLUX-1-schnell:free': {
+        aliasOf: 'black-forest-labs/FLUX-1-schnell',
         providers:['deepinfra'],
         price: 0
     },
@@ -70,6 +71,7 @@ const imageModels = {
         price: 0.0002
     },
     'stabilityai/sdxl-turbo:free': {
+        aliasOf: 'stabilityai/sdxl-turbo',
         providers:['deepinfra'],
         price: 0
     },
