@@ -1,6 +1,7 @@
 import express from 'express'
 import { generateImage } from '../services/imageService.js'
 import { imageModels } from '../shared/common.js'
+import { prisma } from '../config/database.js'
 
 const router = express.Router()
 
@@ -49,6 +50,30 @@ router.post('/generations', async (req, res) => {
                     type: "invalid_request_error"
                 }
             })
+        }
+
+        // Check if this is a free model and validate daily usage limit
+        if (model.endsWith(':free')) {
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+
+            const todayUsage = await prisma.APIUsage.count({
+                where: {
+                    model: model,
+                    createdAt: {
+                        gte: today
+                    }
+                }
+            })
+
+            if (todayUsage >= 50) {
+                return res.status(429).json({
+                    error: {
+                        message: "Daily limit of 50 free requests reached for this model",
+                        type: "rate_limit_error"
+                    }
+                })
+            }
         }
 
         const result = await generateImage(req.body)

@@ -37,6 +37,10 @@ const imageModels = {
         providers:['deepinfra'],
         price: 0.0005
     },
+    'black-forest-labs/FLUX-1-schnell:free': {
+        providers:['deepinfra'],
+        price: 0
+    },
     'black-forest-labs/FLUX-1-dev': {
         providers:['deepinfra'],
         price: 0.009
@@ -64,6 +68,10 @@ const imageModels = {
     'stabilityai/sdxl-turbo': {
         providers:['deepinfra'],
         price: 0.0002
+    },
+    'stabilityai/sdxl-turbo:free': {
+        providers:['deepinfra'],
+        price: 0
     },
     'recraft-ai/recraft-v3': {
         providers:['replicate'],
