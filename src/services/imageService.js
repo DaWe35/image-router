@@ -71,6 +71,7 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
+            'Prefer': 'wait',
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
@@ -90,14 +91,14 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
     }
 
     const data = await response.json()
-
+    
     const convertedData = {
         created: Math.floor(new Date(data.created_at).getTime() / 1000),
-        data: {
-            url: data.output[0],
+        data: [{
+            url: data?.output,
             revised_prompt: null,
             original_response_from_provider: data
-        }
+        }]
     }
     return convertedData
 }
