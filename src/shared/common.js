@@ -1,11 +1,83 @@
 const imageModels = {
+    'black-forest-labs/FLUX-1.1-pro': {
+        providers:['deepinfra'],
+        price: 0.04,
+        examples: [
+            {
+                image: '/model-examples/FLUX-1.1-pro.webp'
+            }
+        ]
+    },
+    'black-forest-labs/FLUX-1-schnell': {
+        providers:['deepinfra'],
+        price: 0.0005,
+        examples: [
+            {
+                image: '/model-examples/FLUX-1-schnell.webp'
+            }
+        ]
+    },
+    'black-forest-labs/FLUX-1-schnell:free': {
+        aliasOf: 'black-forest-labs/FLUX-1-schnell',
+        providers:['deepinfra'],
+        price: 0,
+        examples: [
+            {
+                image: '/model-examples/FLUX-1-schnell.webp'
+            }
+        ]
+    },
+    'black-forest-labs/FLUX-1-dev': {
+        providers:['deepinfra'],
+        price: 0.009,
+        examples: [
+            {
+                image: '/model-examples/FLUX-1-dev.webp'
+            }
+        ]
+    },
+    'black-forest-labs/FLUX-pro': {
+        providers:['deepinfra'],
+        price: 0.05,
+        examples: [
+            {
+                image: '/model-examples/FLUX-pro-2025-04-03T14-14-55-833Z.webp'
+            }
+        ]
+    },
+    'stabilityai/sd3.5-medium': {
+        providers:['deepinfra'],
+        price: 0.03,
+        examples: [
+            {
+                image: '/model-examples/sd3.5-medium.webp'
+            }
+        ]
+    },
+    'run-diffusion/Juggernaut-Flux': {
+        providers:['deepinfra'],
+        price: 0.009,
+        examples: [
+            {
+                image: '/model-examples/Juggernaut-Flux-2025-04-03T14-15-04-136Z.webp'
+            }
+        ]
+    },
+    'run-diffusion/Juggernaut-Lightning-Flux': {
+        providers:['deepinfra'],
+        price: 0.009,
+        examples: [
+            {
+                image: '/model-examples/Juggernaut-Lightning-Flux-2025-04-03T14-15-05-487Z.webp'
+            }
+        ]
+    },
     'openai/dall-e-2': {
         providers:['openai'],
 		price: 0.02,
         examples: [
             {
-                prompt: '',
-                image: ''
+                image: '/model-examples/dall-e-2.webp'
             }
         ]
     },
@@ -14,8 +86,7 @@ const imageModels = {
 		price: 0.12,
         examples: [
             {
-                prompt: '',
-                image: ''
+                image: '/model-examples/dall-e-3.webp'
             }
         ]
     },
@@ -24,104 +95,136 @@ const imageModels = {
         price: 0.06,
         examples: [
             {
-                prompt: '',
-                image: ''
+                image: '/model-examples/sd3.5.webp'
             }
         ]
     },
-    'black-forest-labs/FLUX-1.1-pro': {
-        providers:['deepinfra'],
-        price: 0.04
-    },
-    'black-forest-labs/FLUX-1-schnell': {
-        providers:['deepinfra'],
-        price: 0.0005
-    },
-    'black-forest-labs/FLUX-1-schnell:free': {
-        aliasOf: 'black-forest-labs/FLUX-1-schnell',
-        providers:['deepinfra'],
-        price: 0
-    },
-    'black-forest-labs/FLUX-1-dev': {
-        providers:['deepinfra'],
-        price: 0.009
-    },
-    'black-forest-labs/FLUX-pro': {
-        providers:['deepinfra'],
-        price: 0.05
-    },
-    'stabilityai/sd3.5-medium': {
-        providers:['deepinfra'],
-        price: 0.03
-    },
-    'black-forest-labs/FLUX-1-Redux-dev': {
-        providers:['deepinfra'],
-        price: 0.012
-    },
-    'run-diffusion/Juggernaut-Flux': {
-        providers:['deepinfra'],
-        price: 0.009
-    },
-    'run-diffusion/Juggernaut-Lightning-Flux': {
-        providers:['deepinfra'],
-        price: 0.009
-    },
     'stabilityai/sdxl-turbo': {
         providers:['deepinfra'],
-        price: 0.0002
+        price: 0.0002,
+        examples: [
+            {
+                image: '/model-examples/sdxl-turbo.webp'
+            }
+        ]
     },
     'stabilityai/sdxl-turbo:free': {
         aliasOf: 'stabilityai/sdxl-turbo',
         providers:['deepinfra'],
-        price: 0
+        price: 0,
+        examples: [
+            {
+                image: '/model-examples/sdxl-turbo.webp'
+            }
+        ]
     },
     'recraft-ai/recraft-v3': {
         providers:['replicate'],
-        price: 0.04
+        price: 0.04,
+        examples: [
+            {
+                image: '/model-examples/recraft-v3-2025-04-03T15-09-40-800Z.webp'
+            }
+        ]
     },
     'ideogram-ai/ideogram-v2a-turbo': {
         providers:['replicate'],
-        price: 0.025
+        price: 0.025,
+        examples: [
+            {
+                image: '/model-examples/ideogram-v2a-turbo-2025-04-03T15-10-09-820Z.webp'
+            }
+        ]
     },
     'ideogram-ai/ideogram-v2a': {
         providers:['replicate'],
-        price: 0.04
+        price: 0.04,
+        examples: [
+            {
+                image: '/model-examples/ideogram-v2a-2025-04-03T15-10-14-620Z.webp'
+            }
+        ]
     },
     'google/imagen-3': {
         providers:['replicate'],
-        price: 0.05
+        price: 0.05,
+        examples: [
+            {
+                image: '/model-examples/imagen-3-2025-04-03T15-11-15-706Z.webp'
+            }
+        ]
     },
     'google/imagen-3-fast': {
         providers:['replicate'],
-        price: 0.025
+        price: 0.025,
+        examples: [
+            {
+                image: '/model-examples/imagen-3-fast-2025-04-03T15-11-16-597Z.webp'
+            }
+        ]
     },
     'black-forest-labs/flux-1.1-pro-ultra': {
         providers:['replicate'],
-        price: 0.06
+        price: 0.06,
+        examples: [
+            {
+                image: '/model-examples/flux-1.1-pro-ultra-2025-04-03T15-49-06-132Z.webp'
+            }
+        ]
     },
     'luma/photon': {
         providers:['replicate'],
-        price: 0.03
+        price: 0.03,
+        examples: [
+            {
+                image: '/model-examples/photon-2025-04-03T15-07-51-501Z.webp'
+            }
+        ]
     },
     'luma/photon-flash': {
         providers:['replicate'],
-        price: 0.01
+        price: 0.01,
+        examples: [
+            {
+                image: '/model-examples/photon-flash-2025-04-03T14-22-54-572Z.webp'
+            }
+        ]
     },
     'recraft-ai/recraft-v3-svg': {
         providers:['replicate'],
-        price: 0.08
+        price: 0.08,
+        examples: [
+            {
+                image: '/model-examples/recraft-v3-svg-2025-04-03T15-34-40-865Z.svg'
+            }
+        ]
     },
     'minimax/image-01': {
         providers:['replicate'],
-        price: 0.01
+        price: 0.01,
+        examples: [
+            {
+                image: '/model-examples/image-01.webp'
+            }
+        ]
     },
     'stability-ai/stable-diffusion-3.5-large': {
         providers:['replicate'],
-        price: 0.065
+        price: 0.065,
+        examples: [
+            {
+                image: '/model-examples/stable-diffusion-3.5-large.webp'
+            }
+        ]
     },
     'stability-ai/stable-diffusion-3.5-large-turbo': {
         providers:['replicate'],
-        price: 0.04
+        price: 0.04,
+        examples: [
+            {
+                image: '/model-examples/stable-diffusion-3.5-large-turbo.webp'
+            }
+        ]
     }
 }
 
