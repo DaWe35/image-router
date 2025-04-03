@@ -26,7 +26,7 @@ export async function generateImage(reqBody) {
             providerKey = process.env.DEEPINFRA_API_KEY
             return generateOpenAI({ providerUrl, providerKey, reqBody, modelName })
         case 'replicate':
-            providerUrl = `https://api.replicate.com/v1/models/${providerModel}/predictions`
+            providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
             providerKey = process.env.REPLICATE_API_KEY
             return generateReplicate({ providerUrl, providerKey, reqBody, modelName })
     }    
