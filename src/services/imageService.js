@@ -95,7 +95,7 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
     const convertedData = {
         created: Math.floor(new Date(data.created_at).getTime() / 1000),
         data: [{
-            url: data?.output,
+            url: data?.output || null,
             revised_prompt: null,
             original_response_from_provider: data
         }]
