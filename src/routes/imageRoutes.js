@@ -76,7 +76,7 @@ router.post('/generations', async (req, res) => {
             }
         }
 
-        const result = await generateImage(req.body)
+        const result = await generateImage(req.body, res.locals.key.user.id)
         res.json(result)
 
     } catch (error) {

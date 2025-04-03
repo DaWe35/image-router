@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import { imageModels } from '../shared/common.js'
 
-export async function generateImage(reqBody) {
+export async function generateImage(reqBody, userId) {
     const { model } = reqBody
     const modelConfig = imageModels[model]
     const provider = modelConfig.providers[0]
@@ -20,11 +20,11 @@ export async function generateImage(reqBody) {
             providerUrl = 'https://api.openai.com/v1/images/generations'
             providerKey = process.env.OPENAI_API_KEY
             const modelNameWithoutOpenAI = modelName.replace('openai/', '')
-            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName: modelNameWithoutOpenAI })
+            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName: modelNameWithoutOpenAI, userId })
         case 'deepinfra':
             providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
             providerKey = process.env.DEEPINFRA_API_KEY
-            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName })
+            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName, userId })
         case 'replicate':
             providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
             providerKey = process.env.REPLICATE_API_KEY
@@ -33,7 +33,7 @@ export async function generateImage(reqBody) {
 }
 
 // OpenAI format API call
-async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName }) {
+async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, userId }) {
     if (!providerKey) {
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
@@ -48,6 +48,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName }) 
         body: JSON.stringify({
             prompt: reqBody.prompt,
             model: modelName,
+            user: userId,
             //n: 1,
             //size: '1024x1024',
             //response_format: 'url'
