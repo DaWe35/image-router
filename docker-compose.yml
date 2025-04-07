@@ -15,7 +15,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "127.0.0.1:${PORT}:3000"
+      - "${PORT}:3000"
     environment:
       - NODE_ENV=production
     networks:
