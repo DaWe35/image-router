@@ -93,12 +93,12 @@ async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName,
     if (!response.ok) {
         const errorResponse = await response.json()
         const formattedError = {
-            "status": errorResponse?.status,
-            "statusText": errorResponse?.statusText,
-            "error": {
-              "error": {
-                "message": errorResponse?.error?.message,
-                "type": errorResponse?.error?.type || errorResponse?.statusText
+            status: errorResponse?.status,
+            statusText: errorResponse?.statusText,
+            error: {
+              error: {
+                message: errorResponse?.error?.message,
+                type: errorResponse?.error?.type || errorResponse?.statusText
               }
             },
             original_response_from_provider: errorResponse
