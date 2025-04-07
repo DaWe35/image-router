@@ -29,6 +29,11 @@ export async function generateImage(reqBody, userId) {
             providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
             providerKey = process.env.REPLICATE_API_KEY
             return generateReplicate({ providerUrl, providerKey, reqBody, modelName })
+        case 'google':
+            const modelNameWithoutGoogle = modelName.replace('google/', '')
+            providerKey = process.env.GOOGLE_GEMINI_API_KEY
+            providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelNameWithoutGoogle}:generateContent?key=${providerKey}`
+            return generateGoogle({ providerUrl, providerKey, reqBody, modelName, userId })
     }    
 }
 
@@ -148,4 +153,71 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
         }]
     }
     return convertedData
+}
+
+
+// OpenAI format API call
+async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, userId }) {
+    if (!providerKey) {
+        throw new Error('Provider API key is not configured. This is an issue on our end.')
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "contents": [{
+                "parts": [
+                    {"text": reqBody.prompt}
+                ]
+            }],
+            "generationConfig":{"responseModalities":["Text","Image"]}
+        })
+    })
+
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        const formattedError = {
+            status: errorResponse?.error?.code,
+            statusText: errorResponse?.error?.status,
+            error: {
+              error: {
+                message: errorResponse?.error?.message,
+                type: errorResponse?.error?.status
+              }
+            },
+            original_response_from_provider: errorResponse
+          }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    const data = await response.json()
+
+    if (data?.candidates[0]?.content?.parts[0]?.inlineData?.data) {
+        return {
+            created: Math.floor(new Date().getTime() / 1000),
+            data: [{
+                b64_json: data?.candidates[0]?.content?.parts[0]?.inlineData?.data || null,
+                revised_prompt: null,
+                original_response_from_provider: data
+            }]
+        }
+    } else {
+        return {
+            status: 200,
+            statusText: 'No image generated',
+            error: {
+              error: {
+                message: data?.candidates[0]?.content?.parts[0]?.text || null,
+                type: 'No image generated'
+              }
+            },
+            original_response_from_provider: errorResponse
+          }
+    }
 }

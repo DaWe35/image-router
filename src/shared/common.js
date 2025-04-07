@@ -252,7 +252,19 @@ const imageModels = {
                 image: '/model-examples/stable-diffusion-3.5-large-turbo.webp'
             }
         ]
-    }
+    },
+    'google/gemini-2.0-flash-exp': {
+        aliasOf: 'google/gemini-2.0-flash-exp-image-generation',
+        providers:['google'],
+        price: 0,
+        arenaScore: 966,
+    },
+    'google/gemini-2.0-flash-exp:free': {
+        aliasOf: 'google/gemini-2.0-flash-exp-image-generation',
+        providers:['google'],
+        price: 0,
+        arenaScore: 966,
+    },
 }
 
 export { imageModels }
