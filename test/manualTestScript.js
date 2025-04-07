@@ -8,7 +8,7 @@ import { imageModels } from '../src/shared/common.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const API_URL = 'http://localhost:4000/v1/openai/images/generations'
+const API_URL = 'https://ir-api.myqa.cc/v1/openai/images/generations'
 const DEEPINFRA_API_KEY = process.env.DEEPINFRA_API_KEY
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
@@ -89,7 +89,7 @@ async function testImageGeneration(model, prompt) {
 
     // Prepare request body
     const requestBody = {
-        prompt,
+        // prompt,
         model,
         size: "512x512",
         n: 1,
@@ -98,7 +98,7 @@ async function testImageGeneration(model, prompt) {
 
     // Test local API
     try {
-        console.log('Making request to local API...')
+        console.log('Making request to Image Router API...')
         const localResponse = await makeRequest(API_URL, {
             'Content-Type': 'application/json'
         }, requestBody, outputDir, 'local')

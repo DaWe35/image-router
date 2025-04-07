@@ -24,7 +24,7 @@ export async function generateImage(reqBody, userId) {
         case 'deepinfra':
             providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
             providerKey = process.env.DEEPINFRA_API_KEY
-            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName, userId })
+            return generateDeepInfra({ providerUrl, providerKey, reqBody, modelName, userId })
         case 'replicate':
             providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
             providerKey = process.env.REPLICATE_API_KEY
@@ -60,6 +60,52 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
         throw {
             status: response.status,
             errorResponse: errorResponse
+        }
+    }
+
+    const data = await response.json()
+    return data
+}
+
+// OpenAI format API call
+async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName, userId }) {
+    if (!providerKey) {
+        throw new Error('Provider API key is not configured. This is an issue on our end.')
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        // TODO: Enable customization
+        body: JSON.stringify({
+            prompt: reqBody.prompt,
+            model: modelName,
+            user: userId,
+            //n: 1,
+            //size: '1024x1024',
+            //response_format: 'url'
+        })
+    })
+
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        const formattedError = {
+            "status": errorResponse.status,
+            "statusText": errorResponse.statusText,
+            "error": {
+              "error": {
+                "message": errorResponse.error.message,
+                "type": errorResponse.statusText
+              }
+            },
+            original_response_from_provider: errorResponse
+          }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
         }
     }
 
