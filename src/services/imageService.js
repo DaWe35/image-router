@@ -209,7 +209,7 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
         }
     } else {
         return {
-            status: 200,
+            status: 406,
             statusText: 'No image generated',
             error: {
               error: {
