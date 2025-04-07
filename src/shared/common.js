@@ -256,7 +256,7 @@ const imageModels = {
     'google/gemini-2.0-flash-exp': {
         aliasOf: 'google/gemini-2.0-flash-exp-image-generation',
         providers:['google'],
-        price: 0,
+        price: 0.01,
         arenaScore: 966,
     },
     'google/gemini-2.0-flash-exp:free': {
