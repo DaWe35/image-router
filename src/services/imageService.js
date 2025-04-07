@@ -208,16 +208,19 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
             }]
         }
     } else {
-        return {
+        throw {
             status: 406,
-            statusText: 'No image generated',
-            error: {
-              error: {
-                message: data?.candidates[0]?.content?.parts[0]?.text || null,
-                type: 'No image generated'
+            errorResponse: {
+                status: 406,
+                statusText: 'No image generated',
+                error: {
+                  error: {
+                    message: data?.candidates[0]?.content?.parts[0]?.text || null,
+                    type: 'No image generated'
+                  }
+                },
+                original_response_from_provider: data
               }
-            },
-            original_response_from_provider: data
-          }
+        }
     }
 }
