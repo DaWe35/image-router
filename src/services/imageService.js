@@ -217,7 +217,7 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
                 type: 'No image generated'
               }
             },
-            original_response_from_provider: errorResponse
+            original_response_from_provider: data
           }
     }
 }
