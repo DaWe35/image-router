@@ -258,12 +258,22 @@ const imageModels = {
         providers:['google'],
         price: 0.01,
         arenaScore: 966,
+        examples: [
+            {
+                image: '/model-examples/gemini-2.0-flash-exp_free-2025-04-07T22-34-11-327Z.webp'
+            }
+        ]
     },
     'google/gemini-2.0-flash-exp:free': {
         aliasOf: 'google/gemini-2.0-flash-exp-image-generation',
         providers:['google'],
         price: 0,
         arenaScore: 966,
+        examples: [
+            {
+                image: '/model-examples/gemini-2.0-flash-exp_free-2025-04-07T22-34-11-327Z.webp'
+            }
+        ]
     },
 }
 
