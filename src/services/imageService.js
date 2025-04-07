@@ -101,10 +101,8 @@ async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName,
             status: errorResponse?.status,
             statusText: errorResponse?.statusText,
             error: {
-              error: {
                 message: errorResponse?.error?.message,
                 type: errorResponse?.error?.type || errorResponse?.statusText
-              }
             },
             original_response_from_provider: errorResponse
           }
@@ -183,10 +181,8 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
             status: errorResponse?.error?.code,
             statusText: errorResponse?.error?.status,
             error: {
-              error: {
                 message: errorResponse?.error?.message,
                 type: errorResponse?.error?.status
-              }
             },
             original_response_from_provider: errorResponse
           }
@@ -214,10 +210,8 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
                 status: 406,
                 statusText: 'No image generated',
                 error: {
-                  error: {
                     message: data?.candidates[0]?.content?.parts[0]?.text || null,
                     type: 'No image generated'
-                  }
                 },
                 original_response_from_provider: data
               }
