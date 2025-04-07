@@ -1,29 +1,24 @@
 # Image Router API
 
-A simple API router for image generation services that follows the OpenAI API schema. This service acts as a proxy between your application and DeepInfra's image generation API.
+A simple API router for image generation models. This service acts as a proxy between your application and other image generation APIs, simplifying the process of using different models.
+
+## [Documentation](https://ir-docs.myqa.cc/) - [Demo](https://ir.myqa.cc/)
 
 ## Features
 
-- OpenAI-compatible API endpoints
+- OpenAI compatible API endpoint
 - Rate limiting
-- Security headers with Helmet
-- CORS support
-- Docker support
-- Health check endpoint
+- Free and paid model usage tracking
 
 ## Prerequisites
 
 - Docker and Docker Compose
-- DeepInfra API key
+- API keys for the models you want to use
 
 ## Setup
 
 1. Clone the repository
-2. Create a `.env` file in the root directory with your DeepInfra API key:
-   ```
-   OPENAI_API_KEY=your_api_key_here
-   PORT=3000
-   ```
+2. Create a `.env` file and add your API keys
 
 ## Running the Service
 
@@ -36,39 +31,11 @@ The service will be available at `http://localhost:3000`
 
 ## API Endpoints
 
-### Generate Image
-```
-POST /v1/images/generations
-```
+See [API Reference](https://ir-docs.myqa.cc/)
 
-Request body:
-```json
-{
-  "prompt": "A beautiful sunset over mountains",
-  "n": 1,
-  "size": "1024x1024",
-  "model": "stabilityai/sdxl-turbo"
-}
-```
+## Upcoming Features and Limitations
 
-Parameters:
-- `prompt` (required): Description of the image to generate
-- `n` (optional): Number of images to generate (default: 1)
-- `size` (optional): Image size (256x256, 512x512, or 1024x1024)
-- `model` (optional): Model to use (stabilityai/sdxl-turbo)
-
-Example curl command:
-```bash
-curl -X POST http://localhost:3000/v1/images/generations \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer your_api_key_here" \
-  -d '{
-    "prompt": "A beautiful sunset over mountains",
-    "n": 1,
-    "size": "128x128",
-    "model": "stabilityai/sdxl-turbo"
-  }'
-```
+See [Upcoming Features](https://ir-docs.myqa.cc/upcoming-features/)
 
 ### Health Check
 ```
@@ -78,18 +45,6 @@ GET /health
 Example curl command:
 ```bash
 curl http://localhost:3000/health
-```
-
-## Error Handling
-
-The API follows OpenAI's error response format:
-```json
-{
-  "error": {
-    "message": "Error description",
-    "type": "error_type"
-  }
-}
 ```
 
 ## Security
