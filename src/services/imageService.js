@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import { imageModels } from '../shared/common.js'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 
 export async function generateImage(reqBody, userId) {
     const { model } = reqBody
@@ -160,6 +161,15 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
 
+    // Get webshare proxy credentials from environment variables
+    const proxyUrl = process.env.PROXY_URL
+
+    // Create proxy agent if all proxy credentials are available
+    let agent = null
+    if (proxyUrl) {
+        agent = new HttpsProxyAgent(proxyUrl)
+    }
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -172,7 +182,8 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
                 ]
             }],
             "generationConfig":{"responseModalities":["Text","Image"]}
-        })
+        }),
+        agent
     })
 
     if (!response.ok) {
