@@ -18,7 +18,8 @@
     "express-rate-limit": "^7.1.5",
     "node-fetch": "^3.3.2",
     "@prisma/client": "^5.10.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "https-proxy-agent": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.3",
