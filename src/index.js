@@ -12,6 +12,10 @@ dotenv.config()
 const app = express()
 const port = 3000
 
+// Enable trust proxy - required when behind reverse proxies (Docker, etc.)
+// This allows express-rate-limit to correctly identify client IPs
+app.set('trust proxy', true)
+
 // Middleware
 app.use(helmet())
 app.use(cors())
