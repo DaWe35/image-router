@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import { imageModels } from '../shared/common.js'
-import { HttpsProxyAgent } from 'https-proxy-agent'
+import pkg from 'https-proxy-agent'
+const { HttpsProxyAgent } = pkg
 
 export async function generateImage(reqBody, userId) {
     const { model } = reqBody
