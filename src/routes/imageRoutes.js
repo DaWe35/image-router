@@ -59,7 +59,10 @@ router.post('/generations', async (req, res) => {
 
             const todayUsage = await prisma.APIUsage.count({
                 where: {
-                    model: model,
+                    userId: res.locals.key.user.id,
+                    model: {
+                        endsWith: ':free'
+                    },
                     createdAt: {
                         gte: today
                     }
@@ -69,7 +72,7 @@ router.post('/generations', async (req, res) => {
             if (todayUsage >= 50) {
                 return res.status(429).json({
                     error: {
-                        message: "Daily limit of 50 free requests reached for this model",
+                        message: "Daily limit of 50 free requests reached for your account",
                         type: "rate_limit_error"
                     }
                 })
