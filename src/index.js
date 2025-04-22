@@ -14,7 +14,9 @@ const port = 3000
 
 // Enable trust proxy - required when behind reverse proxies (Docker, etc.)
 // This allows express-rate-limit to correctly identify client IPs
-app.set('trust proxy', true)
+// app.set('trust proxy', true)
+// Using a more secure configuration for proxies
+app.set('trust proxy', process.env.PROXY_COUNT)
 
 // Middleware
 app.use(helmet())
@@ -30,7 +32,9 @@ const generalLimiter = rateLimit({
             message: 'Too many requests, please try again later.',
             type: 'rate_limit_error'
         }
-    }
+    },
+    standardHeaders: true,
+    legacyHeaders: false
 })
 
 const imageGenerationLimiter = rateLimit({
@@ -41,7 +45,9 @@ const imageGenerationLimiter = rateLimit({
             message: 'Too many image generation requests, please try again later.',
             type: 'rate_limit_error'
         }
-    }
+    },
+    standardHeaders: true,
+    legacyHeaders: false
 })
 
 // Apply rate limiting to specific routes
@@ -52,6 +58,8 @@ app.use(generalLimiter) // Apply general limiter to all other routes
 if (process.env.DATABASE_URL) {
     app.use('/v1/openai/images/generations', validateApiKey, logApiUsage)
 }
+
+app.get('/ip', (request, response) => response.send(request.ip))
 
 // Routes
 app.use('/v1/openai/images', imageRoutes)
