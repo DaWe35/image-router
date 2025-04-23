@@ -23,10 +23,16 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 
+// Custom key generator for rate limiting, preferring Cloudflare header
+const ipKeyGenerator = (req) => {
+    return req.headers['cf-connecting-ip'] || req.ip
+}
+
 // Rate limiting configurations
 const generalLimiter = rateLimit({
     windowMs: 1 * 1000, // 1 seconds
-    max: 100, // limit each IP to 100 requests per windowMs
+    max: 20, // limit each IP to 20 requests per windowMs
+    ipKeyGenerator, // Use custom key generator
     message: {
         error: {
             message: 'Too many requests, please try again later.',
@@ -40,6 +46,7 @@ const generalLimiter = rateLimit({
 const imageGenerationLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     max: 30, // limit each IP to 30 requests per minute
+    keyGenerator: ipKeyGenerator, // Use custom key generator
     message: {
         error: {
             message: 'Too many image generation requests, please try again later.',
@@ -50,23 +57,45 @@ const imageGenerationLimiter = rateLimit({
     legacyHeaders: false
 })
 
-// Apply rate limiting to specific routes
-app.use('/v1/openai/images/generations', imageGenerationLimiter)
+// API Key based rate limiting configuration
+const apiKeyLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 30, // limit each API key to 60 requests per hour
+    keyGenerator: (req) => {
+        // Assuming validateApiKey middleware attaches apiKeyData object with key property
+        return req.apiKeyData?.key || 'no-api-key' // Use a default key if API key isn't found (shouldn't happen after validateApiKey)
+    },
+    message: {
+        error: {
+            message: 'API key rate limit exceeded, please try again later.',
+            type: 'rate_limit_error'
+        }
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => !req.apiKeyData?.key // Skip if API key validation didn't run or failed
+})
+
 app.use(generalLimiter) // Apply general limiter to all other routes
 
 // API key validation and usage logging
 if (process.env.DATABASE_URL) {
-    app.use('/v1/openai/images/generations', validateApiKey, logApiUsage)
+    // Apply middleware chain for image generation: IP Limit -> Validate Key -> Key Limit -> Log Usage
+    app.use(
+        '/v1/openai/images/generations',
+        imageGenerationLimiter, // First, limit by IP
+        validateApiKey,         // Then, validate the API key
+        apiKeyLimiter,          // Then, limit by API key
+        logApiUsage             // Finally, log usage if all checks passed
+    )
+} else {
+    app.use('/v1/openai/images/generations', imageGenerationLimiter)
 }
 
 // Modified IP endpoint to show headers for debugging
 app.get('/ip', (request, response) => {
-    console.log('Request Headers:', request.headers)
-    console.log('Request IP:', request.ip)
-    response.json({
-        ip: request.ip,
-        headers: request.headers
-    })
+    const clientIp = request.headers['cf-connecting-ip'] || request.ip
+    response.json({ ip: clientIp })
 })
 
 // Routes
