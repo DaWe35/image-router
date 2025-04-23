@@ -45,6 +45,31 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
 
+    let parameters = {
+        prompt: reqBody.prompt,
+        model: modelName,
+        user: userId,
+        n: 1,
+        size: '1024x1024',
+        quality: "standard",
+    }
+    
+    if (modelName === 'gpt-image-1') {
+        parameters.moderation = 'low'
+        parameters.quality = "medium"
+        // protect against long prompts, because input token calculation is not implemented yet
+        if (reqBody.prompt.length > 4000) {
+            throw {
+                status: 400,
+                errorResponse: {
+                    message: 'Prompt is too long. Please keep it under 4000 characters. If you encounter this issue multiple times, please contact me - I will fix it for you.',
+                    type: 'Prompt too long'
+                }
+            }
+        }
+        //parameters.background = "transparent"
+    }
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -52,14 +77,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
             'Authorization': `Bearer ${providerKey}`
         },
         // TODO: Enable customization
-        body: JSON.stringify({
-            prompt: reqBody.prompt,
-            model: modelName,
-            user: userId,
-            //n: 1,
-            //size: '1024x1024',
-            //response_format: 'url'
-        })
+        body: JSON.stringify(parameters)
     })
 
     if (!response.ok) {
