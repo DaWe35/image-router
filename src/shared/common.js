@@ -84,7 +84,7 @@ const imageModels = {
     },
     'openai/dall-e-2': {
         providers:['openai'],
-		price: 0.02,
+		price: 0.016,
         arenaScore: 714,
         examples: [
             {
@@ -94,11 +94,23 @@ const imageModels = {
     },
     'openai/dall-e-3': {
         providers:['openai'],
-		price: 0.12,
+		price: 0.08,
         arenaScore: 927,
         examples: [
             {
                 image: '/model-examples/dall-e-3.webp'
+            }
+        ]
+    },
+    'openai/gpt-image-1': {
+        // https://platform.openai.com/docs/guides/image-generation?image-generation-model=gpt-image-1
+        // https://platform.openai.com/docs/models/gpt-image-1
+        providers:['openai'],
+		price: 0.05,
+        arenaScore: 1156,
+        examples: [
+            {
+                image: '/model-examples/.webp'
             }
         ]
     },
