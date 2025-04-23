@@ -59,7 +59,15 @@ if (process.env.DATABASE_URL) {
     app.use('/v1/openai/images/generations', validateApiKey, logApiUsage)
 }
 
-app.get('/ip', (request, response) => response.send(request.ip))
+// Modified IP endpoint to show headers for debugging
+app.get('/ip', (request, response) => {
+    console.log('Request Headers:', request.headers)
+    console.log('Request IP:', request.ip)
+    response.json({
+        ip: request.ip,
+        headers: request.headers
+    })
+})
 
 // Routes
 app.use('/v1/openai/images', imageRoutes)
