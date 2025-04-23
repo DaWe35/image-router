@@ -110,7 +110,7 @@ const imageModels = {
         arenaScore: 1156,
         examples: [
             {
-                image: '/model-examples/.webp'
+                image: '/model-examples/gpt-image-1.webp'
             }
         ]
     },
