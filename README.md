@@ -1,8 +1,8 @@
-# Image Router API
+# ImageRouter API
 
 A simple API router for image generation models. This service acts as a proxy between your application and other image generation APIs, simplifying the process of using different models.
 
-## [Documentation](https://ir-docs.myqa.cc/) - [Demo](https://ir.myqa.cc/)
+## [Documentation](https://ir-docs.myqa.cc/) - [ImageRouter](https://ir.myqa.cc/)
 
 ## Features
 

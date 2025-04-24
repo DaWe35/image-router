@@ -98,7 +98,7 @@ async function testImageGeneration(model, prompt) {
 
     // Test local API
     try {
-        console.log('Making request to Image Router API...')
+        console.log('Making request to ImageRouter API...')
         const localResponse = await makeRequest(API_URL, {
             'Content-Type': 'application/json'
         }, requestBody, outputDir, 'local')
