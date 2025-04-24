@@ -196,7 +196,7 @@ export const logApiUsage = async (req, res, next) => {
                         error: res.statusCode !== 200 ? JSON.stringify(data?.errorResponse) : null
                     }
                 })
-                console.log(JSON.stringify(data))
+                console.log(data)
 
                 // If the request failed, refund the credits
                 if (res.statusCode !== 200) {
