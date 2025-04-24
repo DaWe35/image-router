@@ -202,7 +202,7 @@ export const logApiUsage = async (req, res, next) => {
                     data: {
                         speedMs,
                         status: res.statusCode === 200 ? 'success' : 'error',
-                        error: res.statusCode !== 200 ? JSON.stringify(parsedData?.error?.message || parsedData) : null
+                        error: res.statusCode !== 200 ? parsedData?.error?.message || parsedData : null
                     }
                 })
 
