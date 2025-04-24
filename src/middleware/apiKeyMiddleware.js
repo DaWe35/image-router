@@ -186,6 +186,15 @@ export const logApiUsage = async (req, res, next) => {
             const endTime = Date.now()
             const speedMs = endTime - startTime
 
+            let parsedData
+            try {
+                parsedData = JSON.parse(data)
+            } catch (e) {
+                // If data is not a valid JSON string, handle accordingly
+                // For now, we'll assume it might be plain text or already an object
+                parsedData = data 
+            }
+
             try {
                 // Update the API usage entry with final details
                 await prisma.APIUsage.update({
@@ -193,12 +202,12 @@ export const logApiUsage = async (req, res, next) => {
                     data: {
                         speedMs,
                         status: res.statusCode === 200 ? 'success' : 'error',
-                        error: res.statusCode !== 200 ? JSON.stringify(data?.errorResponse) : null
+                        error: res.statusCode !== 200 ? JSON.stringify(parsedData?.error?.message || parsedData) : null
                     }
                 })
-                console.log(data)
-                console.log(data?.error)
-                console.log(data?.error?.message)
+                console.log(parsedData) // Logging the parsed object might be more useful
+                console.log(parsedData?.error)
+                console.log(parsedData?.error?.message)
 
                 // If the request failed, refund the credits
                 if (res.statusCode !== 200) {
