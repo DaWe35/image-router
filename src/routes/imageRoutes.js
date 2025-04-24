@@ -52,33 +52,6 @@ router.post('/generations', async (req, res) => {
             })
         }
 
-        // Check if this is a free model and validate daily usage limit
-        if (model.endsWith(':free')) {
-            const today = new Date()
-            today.setHours(0, 0, 0, 0)
-
-            const todayUsage = await prisma.APIUsage.count({
-                where: {
-                    userId: res.locals.key.user.id,
-                    model: {
-                        endsWith: ':free'
-                    },
-                    createdAt: {
-                        gte: today
-                    }
-                }
-            })
-
-            if (todayUsage >= 50) {
-                return res.status(429).json({
-                    error: {
-                        message: "Daily limit of 50 free requests reached for your account",
-                        type: "rate_limit_error"
-                    }
-                })
-            }
-        }
-
         const result = await generateImage(req.body, res.locals.key.user.id)
         res.json(result)
 
