@@ -196,6 +196,9 @@ export const logApiUsage = async (req, res, next) => {
                         error: res.statusCode !== 200 ? data?.error?.message : null
                     }
                 })
+                if (res.statusCode !== 200) {
+                    console.log('Error generating image:', usageEntry.id, data?.error?.message)
+                }
 
                 // If the request failed, refund the credits
                 if (res.statusCode !== 200) {
