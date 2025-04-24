@@ -25,14 +25,14 @@ app.use(express.json())
 
 // Custom key generator for rate limiting, preferring Cloudflare header
 const ipKeyGenerator = (req) => {
-    return req.headers['cf-connecting-ip'] || req.ip
+    return process.env.PROXY_COUNT > 0 ? req.headers['cf-connecting-ip'] : req.ip
 }
 
 // Rate limiting configurations
 const generalLimiter = rateLimit({
     windowMs: 1 * 1000, // 1 seconds
     max: 20, // limit each IP to 20 requests per windowMs
-    ipKeyGenerator, // Use custom key generator
+    keyGenerator: ipKeyGenerator, // Use custom key generator
     message: {
         error: {
             message: 'Too many requests, please try again later.',
@@ -58,12 +58,12 @@ const imageGenerationLimiter = rateLimit({
 })
 
 // API Key based rate limiting configuration
-const apiKeyLimiter = rateLimit({
+const userLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 30, // limit each API key to 60 requests per hour
-    keyGenerator: (req) => {
-        // Assuming validateApiKey middleware attaches apiKeyData object with key property
-        return req.apiKeyData?.key || 'no-api-key' // Use a default key if API key isn't found (shouldn't happen after validateApiKey)
+    max: 30, // limit each API key to 60 requests
+    keyGenerator: (req, res) => {
+        const { key } = res.locals
+        return key.user.id
     },
     message: {
         error: {
@@ -72,8 +72,7 @@ const apiKeyLimiter = rateLimit({
         }
     },
     standardHeaders: true,
-    legacyHeaders: false,
-    skip: (req) => !req.apiKeyData?.key // Skip if API key validation didn't run or failed
+    legacyHeaders: false
 })
 
 app.use(generalLimiter) // Apply general limiter to all other routes
@@ -85,7 +84,7 @@ if (process.env.DATABASE_URL) {
         '/v1/openai/images/generations',
         imageGenerationLimiter, // First, limit by IP
         validateApiKey,         // Then, validate the API key
-        apiKeyLimiter,          // Then, limit by API key
+        userLimiter,          // Then, limit by API key
         logApiUsage             // Finally, log usage if all checks passed
     )
 } else {
