@@ -43,9 +43,9 @@ const generalLimiter = rateLimit({
     legacyHeaders: false
 })
 
-const imageGenerationLimiter = rateLimit({
-    windowMs: 20 * 1000, // 1 minute
-    max: 20, // limit each IP to 30 requests per minute
+const ipLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 30, // limit each IP to 30 requests per minute
     keyGenerator: ipKeyGenerator, // Use custom key generator
     message: {
         error: {
@@ -59,8 +59,8 @@ const imageGenerationLimiter = rateLimit({
 
 // API Key based rate limiting configuration
 const userLimiter = rateLimit({
-    windowMs: 20 * 1000, // 1 minute
-    max: 20, // limit each API key to 60 requests
+    windowMs: 60 * 1000, // 1 minute
+    max: 30, // limit each API key to 60 requests
     keyGenerator: (req, res) => {
         return res.locals.key.user.id
     },
@@ -136,14 +136,14 @@ if (process.env.DATABASE_URL) {
     // Apply middleware chain for image generation: IP Limit -> Validate Key -> Key Limit -> Check Free Tier -> Log Usage
     app.use(
         '/v1/openai/images/generations',
-        imageGenerationLimiter, // First, limit by IP
+        ipLimiter, // First, limit by IP
         validateApiKey,         // Then, validate the API key
         userLimiter,            // Then, limit by API key total reqs
         freeTierLimiter,        // Then, check daily free limit if applicable
         logApiUsage             // Finally, log usage if all checks passed
     )
 } else {
-    app.use('/v1/openai/images/generations', imageGenerationLimiter)
+    app.use('/v1/openai/images/generations', ipLimiter)
 }
 
 // Modified IP endpoint to show headers for debugging
