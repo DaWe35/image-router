@@ -205,9 +205,6 @@ export const logApiUsage = async (req, res, next) => {
                         error: res.statusCode !== 200 ? JSON.stringify(parsedData?.error?.message || parsedData) : null
                     }
                 })
-                console.log(parsedData) // Logging the parsed object might be more useful
-                console.log(parsedData?.error)
-                console.log(parsedData?.error?.message)
 
                 // If the request failed, refund the credits
                 if (res.statusCode !== 200) {
