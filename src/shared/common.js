@@ -106,7 +106,26 @@ const imageModels = {
         // https://platform.openai.com/docs/guides/image-generation?image-generation-model=gpt-image-1
         // https://platform.openai.com/docs/models/gpt-image-1
         providers:['openai'],
-		price: 0.05,
+        price: 'dynamic',
+        priceExamples: {
+            min: 0.011,
+            average: 0.167,
+            max: 0.5,
+        },
+        parameters: {
+            quality: {
+                default: "auto",
+                values: ["auto", "low", "medium", "high"]
+            },
+            size: {
+                default: "auto",
+                values: ["auto", "1024x1024", "1024x1536", "1536x1024"]
+            },
+            /* background: {
+                default: "auto",
+                values: ["auto", "transparent", "opaque"]
+            } */
+        },
         arenaScore: 1156,
         examples: [
             {

@@ -3,8 +3,9 @@ import { imageModels } from '../shared/common.js'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 
-export async function generateImage(reqBody, userId) {
-    const { model } = reqBody
+export async function generateImage(req, userId) {
+    const startTime = Date.now()
+    const { model } = req.body
     const modelConfig = imageModels[model]
     const provider = modelConfig.providers[0]
     
@@ -17,36 +18,42 @@ export async function generateImage(reqBody, userId) {
 
     let providerUrl
     let providerKey
+    let result
     switch (provider) {
         case 'openai':
             providerUrl = 'https://api.openai.com/v1/images/generations'
             providerKey = process.env.OPENAI_API_KEY
             const modelNameWithoutOpenAI = modelName.replace('openai/', '')
-            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName: modelNameWithoutOpenAI, userId })
+            result = await generateOpenAI({ providerUrl, providerKey, req, modelName: modelNameWithoutOpenAI, userId })
+            break
         case 'deepinfra':
             providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
             providerKey = process.env.DEEPINFRA_API_KEY
-            return generateDeepInfra({ providerUrl, providerKey, reqBody, modelName, userId })
+            result = await generateDeepInfra({ providerUrl, providerKey, req, modelName, userId })
+            break
         case 'replicate':
             providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
             providerKey = process.env.REPLICATE_API_KEY
-            return generateReplicate({ providerUrl, providerKey, reqBody, modelName })
+            result = await generateReplicate({ providerUrl, providerKey, req, modelName })
         case 'google':
             const modelNameWithoutGoogle = modelName.replace('google/', '')
             providerKey = process.env.GOOGLE_GEMINI_API_KEY
             providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelNameWithoutGoogle}:generateContent?key=${providerKey}`
-            return generateGoogle({ providerUrl, providerKey, reqBody, modelName, userId })
-    }    
+            result = await generateGoogle({ providerUrl, providerKey, req, modelName, userId })
+            break
+    }
+    result.responseTime = Date.now() - startTime
+    return result
 }
 
 // OpenAI format API call
-async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, userId }) {
+async function generateOpenAI({ providerUrl, providerKey, req, modelName, userId }) {
     if (!providerKey) {
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
 
     let parameters = {
-        prompt: reqBody.prompt,
+        prompt: req.body.prompt,
         model: modelName,
         user: userId,
         n: 1,
@@ -58,7 +65,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
         parameters.moderation = 'low'
         parameters.quality = "medium"
         // protect against long prompts, because input token calculation is not implemented yet
-        if (reqBody.prompt.length > 4000) {
+        if (req.body.prompt.length > 4000) {
             throw {
                 status: 400,
                 errorResponse: {
@@ -93,7 +100,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName, userId }) {
+async function generateDeepInfra({ providerUrl, providerKey, req, modelName, userId }) {
     if (!providerKey) {
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
@@ -106,7 +113,7 @@ async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName,
         },
         // TODO: Enable customization
         body: JSON.stringify({
-            prompt: reqBody.prompt,
+            prompt: req.body.prompt,
             model: modelName,
             user: userId,
             //n: 1,
@@ -137,7 +144,7 @@ async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName,
 }
 
 // Replicate format API call
-async function generateReplicate({ providerUrl, providerKey, reqBody }) {
+async function generateReplicate({ providerUrl, providerKey, req }) {
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -147,7 +154,7 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
         },
         body: JSON.stringify({
             input: {
-                prompt: reqBody.prompt
+                prompt: req.body.prompt
             }
         })
     })
@@ -175,7 +182,7 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, userId }) {
+async function generateGoogle({ providerUrl, providerKey, req, modelName, userId }) {
     if (!providerKey) {
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
@@ -197,7 +204,7 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
         body: JSON.stringify({
             "contents": [{
                 "parts": [
-                    {"text": reqBody.prompt}
+                    {"text": req.body.prompt}
                 ]
             }],
             "generationConfig":{"responseModalities":["Text","Image"]}

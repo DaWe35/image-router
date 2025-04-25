@@ -4,7 +4,7 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import { imageRoutes } from './routes/imageRoutes.js'
-import { validateApiKey, logApiUsage } from './middleware/apiKeyMiddleware.js'
+import { validateApiKey } from './middleware/apiKeyMiddleware.js'
 import { prisma } from './config/database.js'
 
 dotenv.config()
@@ -140,7 +140,6 @@ if (process.env.DATABASE_URL) {
         validateApiKey,         // Then, validate the API key
         userLimiter,            // Then, limit by API key total reqs
         freeTierLimiter,        // Then, check daily free limit if applicable
-        logApiUsage             // Finally, log usage if all checks passed
     )
 } else {
     app.use('/v1/openai/images/generations', ipLimiter)
