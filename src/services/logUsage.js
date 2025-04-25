@@ -85,7 +85,7 @@ export async function refundUsage(req, res, usageLogEntry, errorToLog) {
 }
 
 
-export async function postLogUsage(req, res, usageLogEntry, imageResult) {
+export async function postLogUsage(req, res, usageLogEntry, actualPrice, responseTime) {
     const { key } = res.locals
     const modelName = req.body.model
     const modelConfig = imageModels[modelName]
@@ -96,7 +96,6 @@ export async function postLogUsage(req, res, usageLogEntry, imageResult) {
         // Use a transaction to update both user balance and API usage together
         await prisma.$transaction(async (tx) => {
             // Calculate actual price for successful requests
-            const actualPrice = calculateDynamicPrice(modelName, imageResult)
             const actualPriceInt = convertPriceToDbFormat(actualPrice)
             
             // Refund the difference between max price and actual price
@@ -112,7 +111,7 @@ export async function postLogUsage(req, res, usageLogEntry, imageResult) {
             await tx.APIUsage.update({
                 where: { id: usageLogEntry.id },
                 data: {
-                    speedMs: imageResult.responseTime,
+                    speedMs: responseTime,
                     status: 'success',
                     cost: actualPriceInt // Update to actual cost
                 }

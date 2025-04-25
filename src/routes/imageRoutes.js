@@ -33,12 +33,14 @@ router.post('/generations', async (req, res) => {
                 throw error
             }
             
-            const postLogSuccess = await postLogUsage(req, res, usageLogEntry, imageResult)
+            const actualPrice = calculateDynamicPrice(req.body.model, imageResult)
+            const postLogSuccess = await postLogUsage(req, res, usageLogEntry, actualPrice, imageResult.responseTime)
             if (postLogSuccess !== true) {
                 console.error('Error in postLogUsage for image generation:', JSON.stringify(req.body))
                 throw new Error('Failed to postlog usage')
             }
 
+            imageResult.cost = actualPrice
             res.json(imageResult)
         } catch (error) {
             // If the error is already in the correct format, forward it as-is
