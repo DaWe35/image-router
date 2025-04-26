@@ -13,7 +13,7 @@ router.get('/models', (req, res) => {
 
 // POST /v1/images/generations
 router.post('/generations', async (req, res) => {
-    const error = validateParams(req.body)
+    const error = validateParams(req)
     if (error) {
         return res.status(400).json({
             error: {

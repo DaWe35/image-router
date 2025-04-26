@@ -1,4 +1,5 @@
 import { imageModels } from '../shared/common.js'
+import { estimateMaxPrice } from '../shared/priceCalculator.js'
 
 export const validateParams = (req) => {
     const { prompt, model, response_format } = req.body
@@ -31,7 +32,6 @@ export const validateParams = (req) => {
     if (response_format && response_format !== 'b64_json' && response_format !== 'url') {
         return "'response_format' must be 'b64_json' or 'url'"
     }
-
 
     return null
 }
