@@ -27,9 +27,9 @@ router.post('/generations', async (req, res) => {
 
             let imageResult
             try {
-                imageResult = await generateImage(req.body, res.locals.key.user.id)
+                imageResult = await generateImage(req, res.locals.key.user.id)
             } catch (error) {
-                const errorToLog = error?.errorResponse.message || error.message || 'unknown error'
+                const errorToLog = error?.errorResponse?.message || error?.message || 'unknown error'
                 await refundUsage(req, res, usageLogEntry, errorToLog)
                 throw error
             }
