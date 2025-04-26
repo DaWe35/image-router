@@ -1,29 +1,27 @@
 import { imageModels } from '../shared/common.js'
 import { prisma } from '../config/database.js'
-import { estimateMaxPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
+import { preCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
-export async function preLogUsage(req, res) {
-    const { key } = res.locals
-    const modelName = req.body.model
-    const modelConfig = imageModels[modelName]
+export async function preLogUsage(params, apiKey) {
+    const modelConfig = imageModels[params.model]
 
-    const maxPriceUsd = estimateMaxPrice(modelConfig)
+    const maxPriceUsd = preCalcPrice(params.model, params.size, params.quality)
     const maxPriceInt = convertPriceToDbFormat(maxPriceUsd)
     
     // Check if the user has enough credits
-    if (key.user.credits < maxPriceInt) {
-        throw new Error('Insufficient credits, please topup your ImageRouter account')
+    if (apiKey.user.credits < maxPriceInt) {
+        throw new Error('Insufficient credits (this model needs minimum $' + maxPriceUsd + ' credits), please topup your ImageRouter account: https://ir.myqa.cc/pricing')
     }
 
-    if (key.user.isActive === false) {
+    if (apiKey.user.isActive === false) {
         throw new Error('Your account is inactive, please contact support')
     }
 
-    if (key.user.id === null) {
+    if (apiKey.user.id === null) {
         throw new Error('Your account is not registered, please contact support')
     }
 
-    if (key.id === null && key.apiKeyTempJwt === false) {
+    if (apiKey.id === null && apiKey.apiKeyTempJwt === false) {
         throw new Error('Your API key is not found, please contact support')
     }
 
@@ -31,38 +29,36 @@ export async function preLogUsage(req, res) {
     const usageLogEntry = await prisma.$transaction(async (tx) => {
         // Deduct maximum estimated credits initially
         await tx.user.update({
-            where: { id: key.user.id },
+            where: { id: apiKey.user.id },
             data: { credits: { decrement: maxPriceInt } }
         })
 
         // Create API usage entry
         return await tx.APIUsage.create({
             data: {
-                apiKeyId: key.id || undefined,
-                apiKeyTempJwt: key.apiKeyTempJwt,
-                userId: key.user.id,
-                model: modelName,
+                apiKeyId: apiKey.id || undefined,
+                apiKeyTempJwt: apiKey.apiKeyTempJwt,
+                userId: apiKey.user.id,
+                model: params.model,
                 provider: modelConfig?.providers[0],
-                prompt: req.body.prompt || '',
+                prompt: params.prompt || '',
                 cost: maxPriceInt, // Initial cost is max price
                 speedMs: 0,
-                imageSize: req.body.size || 'unknown',
+                imageSize: params.size || 'unknown',
                 status: 'processing'
             }
         })
     })
-    console.log('Pre-log usage, charged', maxPriceInt)
     return usageLogEntry
 }
 
-export async function refundUsage(req, res, usageLogEntry, errorToLog) {
-    const { key } = res.locals
+export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
     try {            
         // Use a transaction to update both user balance and API usage together
         await prisma.$transaction(async (tx) => {
             // Refund the full amount if request failed
             await tx.user.update({
-                where: { id: key.user.id },
+                where: { id: apiKey.user.id },
                 data: { credits: { increment: usageLogEntry.cost } }
             })
             
@@ -85,24 +81,18 @@ export async function refundUsage(req, res, usageLogEntry, errorToLog) {
 }
 
 
-export async function postLogUsage(req, res, usageLogEntry, actualPrice, responseTime) {
-    const { key } = res.locals
-    const modelName = req.body.model
-    const modelConfig = imageModels[modelName]
-    const maxPriceUsd = estimateMaxPrice(modelConfig)
+export async function postLogUsage(params, apiKey, usageLogEntry, actualPriceInt, latency) {
+    const maxPriceUsd = preCalcPrice(params.model, params.size, params.quality)
     const maxPriceInt = convertPriceToDbFormat(maxPriceUsd)
 
     try {
         // Use a transaction to update both user balance and API usage together
         await prisma.$transaction(async (tx) => {
-            // Calculate actual price for successful requests
-            const actualPriceInt = convertPriceToDbFormat(actualPrice)
-            
             // Refund the difference between max price and actual price
             const refundAmount = maxPriceInt - actualPriceInt
-            if (refundAmount > 0) {
+            if (refundAmount != 0) {
                 await tx.user.update({
-                    where: { id: key.user.id },
+                    where: { id: apiKey.user.id },
                     data: { credits: { increment: refundAmount } }
                 })
             }
@@ -111,16 +101,15 @@ export async function postLogUsage(req, res, usageLogEntry, actualPrice, respons
             await tx.APIUsage.update({
                 where: { id: usageLogEntry.id },
                 data: {
-                    speedMs: responseTime,
+                    speedMs: latency,
                     status: 'success',
                     cost: actualPriceInt // Update to actual cost
                 }
             })
-            console.log('Usage updated, refunded', refundAmount)
         })
         return true
     } catch (error) {
-        console.error('Error updating API usage:', JSON.stringify(req.body), error)
+        console.error('Error updating API usage. Params:', JSON.stringify(params), error)
         // Log the error but don't fail the response
         return false
     }

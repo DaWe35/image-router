@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
-import { imageModels } from '../shared/common.js'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
+import { imageModels } from '../shared/common.js'
 
 export async function generateImage(req, userId) {
     const startTime = Date.now()
@@ -42,7 +42,7 @@ export async function generateImage(req, userId) {
             result = await generateGoogle({ providerUrl, providerKey, req, modelName, userId })
             break
     }
-    result.responseTime = Date.now() - startTime
+    result.latency = Date.now() - startTime
     return result
 }
 
@@ -52,30 +52,21 @@ async function generateOpenAI({ providerUrl, providerKey, req, modelName, userId
         throw new Error('Provider API key is not configured. This is an issue on our end.')
     }
 
+
     let parameters = {
         prompt: req.body.prompt,
         model: modelName,
         user: userId,
         n: 1,
-        size: '1024x1024',
-        quality: "standard",
     }
+
+    const size = getSize(req)
+    if (size) parameters.size = size
+
+    const quality = getQuality(req)
+    if (quality) parameters.quality = quality
     
-    if (modelName === 'gpt-image-1') {
-        parameters.moderation = 'low'
-        parameters.quality = "medium"
-        // protect against long prompts, because input token calculation is not implemented yet
-        if (req.body.prompt.length > 4000) {
-            throw {
-                status: 400,
-                errorResponse: {
-                    message: 'Prompt is too long. Please keep it under 4000 characters. If you encounter this issue multiple times, please contact me - I will fix it for you.',
-                    type: 'Prompt too long'
-                }
-            }
-        }
-        //parameters.background = "transparent"
-    }
+    if (modelName === 'gpt-image-1') parameters.moderation = 'low'
 
     const response = await fetch(providerUrl, {
         method: 'POST',

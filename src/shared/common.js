@@ -84,7 +84,25 @@ const imageModels = {
     },
     'openai/dall-e-2': {
         providers:['openai'],
-		price: 0.016,
+		price: 'dynamic',
+        priceExamples: {
+            min: 0.016,
+            average: 0.02,
+            max: 0.02,
+        },
+        parameters: {
+            quality: {
+                default: "standard",
+                values: ["standard"],
+                synonyms: {
+                    "medium": "standard",
+                }
+            },
+            size: {
+                values: ["auto", "256x256", "512x512", "1024x1024"],
+                default: "1024x1024",
+            },
+        },
         arenaScore: 714,
         examples: [
             {
@@ -95,6 +113,20 @@ const imageModels = {
     'openai/dall-e-3': {
         providers:['openai'],
 		price: 0.08,
+        parameters: {
+            quality: {
+                default: "standard",
+                values: ["standard", "hd"],
+                synonyms: {
+                    "medium": "standard",
+                    "high": "hd",
+                }
+            },
+            size: {
+                values: ["auto", "1024x1024", "1024x1792", "1792x1024"],
+                default: "auto",
+            },
+        },
         arenaScore: 927,
         examples: [
             {
@@ -115,11 +147,19 @@ const imageModels = {
         parameters: {
             quality: {
                 default: "auto",
-                values: ["auto", "low", "medium", "high"]
+                values: ["auto", "low", "medium", "high"],
+                /* range: {
+                    min: 1,
+                    max: 50,
+                }, */
+                synonyms: {
+                    "standard": "medium",
+                    "hd": "high",
+                }
             },
             size: {
+                values: ["auto", "1024x1024", "1024x1536", "1536x1024"],
                 default: "auto",
-                values: ["auto", "1024x1024", "1024x1536", "1536x1024"]
             },
             /* background: {
                 default: "auto",
