@@ -116,8 +116,8 @@ export async function postLogUsage(req, res, usageLogEntry, actualPrice, respons
                     cost: actualPriceInt // Update to actual cost
                 }
             })
+            console.log('Usage updated, refunded', refundAmount)
         })
-        console.log('Usage updated, refunded', refundAmount)
         return true
     } catch (error) {
         console.error('Error updating API usage:', JSON.stringify(req.body), error)
