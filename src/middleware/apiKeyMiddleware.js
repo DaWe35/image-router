@@ -1,7 +1,5 @@
 import { prisma } from '../config/database.js'
-import { imageModels } from '../shared/common.js'
 import { validateTempToken } from '../shared/tempAuth.js'
-import { convertPriceToDbFormat, estimateMaxPrice, calculateDynamicPrice } from '../services/priceCalculator.js'
 
 export const validateApiKey = async (req, res, next) => {
     const authHeader = req.headers['authorization']

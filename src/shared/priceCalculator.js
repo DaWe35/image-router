@@ -10,9 +10,10 @@ export function estimateMaxPrice(modelConfig) {
     return modelConfig.price
 }
 
-export function calculateDynamicPrice(modelName, response) {
+export function calculateDynamicPrice(modelName, imageResult) {
     if (modelName === 'openai/gpt-image-1') {
-        // TODO: Calculate price based on response
+        // TODO: Calculate price based on imageResult
+        console.log(imageResult)
         return modelConfig.priceExamples.average
     }
     return modelConfig.price

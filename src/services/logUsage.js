@@ -1,6 +1,6 @@
 import { imageModels } from '../shared/common.js'
 import { prisma } from '../config/database.js'
-import { estimateMaxPrice, calculateDynamicPrice, convertPriceToDbFormat } from '../utils/pricing.js'
+import { estimateMaxPrice, convertPriceToDbFormat } from '../utils/pricing.js'
 
 export async function preLogUsage(req, res) {
     const { key } = res.locals

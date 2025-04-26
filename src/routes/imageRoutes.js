@@ -3,6 +3,7 @@ import { generateImage } from '../services/imageService.js'
 import { imageModels } from '../shared/common.js'
 import { validateParams } from '../services/validateParams.js'
 import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
+import { calculateDynamicPrice } from '../shared/priceCalculator.js'
 const router = express.Router()
 
 // GET /v1/images/models
