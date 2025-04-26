@@ -114,6 +114,18 @@ const imageModels = {
             }
         ]
     },
+    'openai/gpt-image-1-high-temporary': {
+        // https://platform.openai.com/docs/guides/image-generation?image-generation-model=gpt-image-1
+        // https://platform.openai.com/docs/models/gpt-image-1
+        providers:['openai'],
+		price: 0.17,
+        arenaScore: 1156,
+        examples: [
+            {
+                image: '/model-examples/gpt-image-1.webp'
+            }
+        ]
+    },
     'stabilityai/sd3.5': {
         providers:['deepinfra'],
         price: 0.06,

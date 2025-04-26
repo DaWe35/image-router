@@ -47,16 +47,20 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
 
     let parameters = {
         prompt: reqBody.prompt,
-        model: modelName,
+        model: reqBody.model,
         user: userId,
         n: 1,
         size: '1024x1024',
         quality: "standard",
     }
     
-    if (modelName === 'gpt-image-1') {
+    if (modelName === 'gpt-image-1' || modelName === 'gpt-image-1-high-temporary') {
         parameters.moderation = 'low'
-        parameters.quality = "medium"
+        if (modelName === 'gpt-image-1-high-temporary') {
+            parameters.quality = "high"
+        } else {
+            parameters.quality = "medium"
+        }
         // protect against long prompts, because input token calculation is not implemented yet
         if (reqBody.prompt.length > 4000) {
             throw {
