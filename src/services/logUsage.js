@@ -23,8 +23,8 @@ export async function preLogUsage(req, res) {
         throw new Error('Your account is not registered, please contact support')
     }
 
-    if (key.id === null) {
-        throw new Error('Your API key is not registered, please contact support')
+    if (key.id === null && key.apiKeyTempJwt === false) {
+        throw new Error('Your API key is not found, please contact support')
     }
 
     // Use a transaction to ensure both operations succeed or fail together
