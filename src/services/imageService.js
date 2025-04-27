@@ -58,6 +58,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
         parameters.moderation = 'low'
         if (modelName === 'gpt-image-1-high-temporary') {
             parameters.quality = "high"
+            parameters.model = "gpt-image-1"
         } else {
             parameters.quality = "medium"
         }
