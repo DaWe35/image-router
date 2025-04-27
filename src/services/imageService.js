@@ -46,8 +46,8 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
     }
 
     let parameters = {
-        prompt: modelName,
-        model: reqBody.model,
+        prompt: reqBody.prompt,
+        model: modelName,
         user: userId,
         n: 1,
         size: '1024x1024',
