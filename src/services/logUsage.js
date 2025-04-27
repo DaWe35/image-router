@@ -1,9 +1,9 @@
-import { imageModels } from '../shared/common.js'
+import { models } from '../shared/models/index.js'
 import { prisma } from '../config/database.js'
 import { preCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
 export async function preLogUsage(params, apiKey) {
-    const modelConfig = imageModels[params.model]
+    const modelConfig = models[params.model]
 
     const maxPriceUsd = preCalcPrice(params.model, params.size, params.quality)
     const maxPriceInt = convertPriceToDbFormat(maxPriceUsd)

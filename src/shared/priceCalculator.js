@@ -1,4 +1,4 @@
-import { imageModels } from './common.js'
+import { models } from './models/index.js'
 
 // Convert USD price to database format (multiply by 10000 to get 4 decimal places)
 export function convertPriceToDbFormat(usdPrice) {
@@ -8,7 +8,7 @@ export function convertPriceToDbFormat(usdPrice) {
 // Pre-calculate the price for the model. This is used to deduct credits before the image is generated.
 // If the price cannot be calculated before image generation, return the max price.
 export function preCalcPrice(modelName, size, quality) {
-    const modelConfig = imageModels[modelName]
+    const modelConfig = models[modelName]
 
     switch (modelName) {
         case 'openai/dall-e-2':
@@ -28,7 +28,7 @@ export function preCalcPrice(modelName, size, quality) {
 
 // Post-calculate the price for models that cannot be estimated before image generation.
 export function postCalcPrice(modelName, imageResult) {
-    const modelConfig = imageModels[modelName]
+    const modelConfig = models[modelName]
     
     // Calculate price for GPT-Image-1 after the image is generated and refund the difference
     if (modelName === 'openai/gpt-image-1') {

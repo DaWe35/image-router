@@ -1,12 +1,12 @@
 import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
-import { imageModels } from '../shared/common.js'
+import { models } from '../shared/models/index.js'
 
 export async function generateImage(req, userId) {
     const startTime = Date.now()
     const { model } = req.body
-    const modelConfig = imageModels[model]
+    const modelConfig = models[model]
     const provider = modelConfig.providers[0]
     
     if (!provider) {
@@ -59,9 +59,6 @@ async function generateOpenAI({ providerUrl, providerKey, req, modelName, userId
         user: userId,
         n: 1,
     }
-
-    const size = getSize(req)
-    if (size) parameters.size = size
 
     const quality = getQuality(req)
     if (quality) parameters.quality = quality

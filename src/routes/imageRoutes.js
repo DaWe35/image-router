@@ -1,14 +1,14 @@
 import express from 'express'
 import { generateImage } from '../services/imageService.js'
-import { imageModels } from '../shared/common.js'
-import { validateParams, getSize, getQuality } from '../services/validateParams.js'
+import { models } from '../shared/models/index.js'
+import { validateParams } from '../services/validateParams.js'
 import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
 import { postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 const router = express.Router()
 
 // GET /v1/images/models
 router.get('/models', (req, res) => {
-    res.json(imageModels)
+    res.json(models)
 })
 
 // POST /v1/images/generations
