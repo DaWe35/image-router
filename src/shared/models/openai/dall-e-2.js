@@ -31,4 +31,4 @@ class DallE2 {
   }
 }
 
-export default DallE2 
+export default DallE2

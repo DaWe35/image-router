@@ -76,7 +76,9 @@ const modelInstances = [
 const models = {}
 modelInstances.forEach(instance => {
   const modelData = instance.getData()
-  models[modelData.id] = modelData
+  const modelId = modelData.id
+  delete modelData.id
+  models[modelId] = modelData
 })
 
 export { models } 
