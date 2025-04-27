@@ -7,12 +7,8 @@ class DallE2 {
       providers: [{
         name: 'openai',
         pricing: {
-          type: PRICING_TYPES.POST_GENERATION,
-          range: {
-            min: 0.016,
-            average: 0.02,
-            max: 0.02,
-          },
+          type: PRICING_TYPES.FIXED,
+          value: 0.02,
         }
       }],
       arenaScore: 714,

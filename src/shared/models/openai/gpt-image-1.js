@@ -28,6 +28,19 @@ class GptImage1 {
   getData() {
     return this.data
   }
+
+  postCalcPrice(imageResult) {
+      const inputTextPrice = 0.000005
+      const inputImagePrice = 0.00001
+      const outputImagePrice = 0.00004
+
+      const inputTextTokens = imageResult.usage.input_tokens_details.text_tokens
+      const inputImageTokens = imageResult.usage.input_tokens_details.image_tokens
+      const outputImageTokens = imageResult.usage.output_tokens
+
+      const totalPrice = inputTextPrice * inputTextTokens + inputImagePrice * inputImageTokens + outputImagePrice * outputImageTokens
+      return totalPrice
+  }
 }
 
 export default GptImage1 

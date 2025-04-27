@@ -1,16 +1,16 @@
 import { models } from '../shared/models/index.js'
 import { prisma } from '../config/database.js'
-import { preCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
+import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
 export async function preLogUsage(params, apiKey) {
     const modelConfig = models[params.model]
 
-    const maxPriceUsd = preCalcPrice(params.model, params.size, params.quality)
-    const maxPriceInt = convertPriceToDbFormat(maxPriceUsd)
+    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality)
+    const prePriceInt = convertPriceToDbFormat(prePriceUsd)
     
     // Check if the user has enough credits
-    if (apiKey.user.credits < maxPriceInt) {
-        throw new Error('Insufficient credits (this model needs minimum $' + maxPriceUsd + ' credits), please topup your ImageRouter account: https://ir.myqa.cc/pricing')
+    if (apiKey.user.credits < prePriceInt) {
+        throw new Error('Insufficient credits (this model needs minimum $' + prePriceUsd + ' credits), please topup your ImageRouter account: https://ir.myqa.cc/pricing')
     }
 
     if (apiKey.user.isActive === false) {
@@ -30,7 +30,7 @@ export async function preLogUsage(params, apiKey) {
         // Deduct maximum estimated credits initially
         await tx.user.update({
             where: { id: apiKey.user.id },
-            data: { credits: { decrement: maxPriceInt } }
+            data: { credits: { decrement: prePriceInt } }
         })
 
         // Create API usage entry
@@ -42,7 +42,7 @@ export async function preLogUsage(params, apiKey) {
                 model: params.model,
                 provider: modelConfig?.providers[0],
                 prompt: params.prompt || '',
-                cost: maxPriceInt, // Initial cost is max price
+                cost: prePriceInt, // Initial cost is max price
                 speedMs: 0,
                 imageSize: params.size || 'unknown',
                 status: 'processing'
@@ -81,15 +81,18 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
 }
 
 
-export async function postLogUsage(params, apiKey, usageLogEntry, actualPriceInt, latency) {
-    const maxPriceUsd = preCalcPrice(params.model, params.size, params.quality)
-    const maxPriceInt = convertPriceToDbFormat(maxPriceUsd)
+export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
+    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality)
+    const prePriceInt = convertPriceToDbFormat(prePriceUsd)
+
+    const postPrice = postCalcPrice(params.model, imageResult)
+    const postPriceInt = convertPriceToDbFormat(postPrice)
 
     try {
         // Use a transaction to update both user balance and API usage together
         await prisma.$transaction(async (tx) => {
             // Refund the difference between max price and actual price
-            const refundAmount = maxPriceInt - actualPriceInt
+            const refundAmount = prePriceInt - postPriceInt
             if (refundAmount != 0) {
                 await tx.user.update({
                     where: { id: apiKey.user.id },
@@ -101,16 +104,16 @@ export async function postLogUsage(params, apiKey, usageLogEntry, actualPriceInt
             await tx.APIUsage.update({
                 where: { id: usageLogEntry.id },
                 data: {
-                    speedMs: latency,
+                    speedMs: imageResult.latency,
                     status: 'success',
-                    cost: actualPriceInt // Update to actual cost
+                    cost: postPriceInt // Update to actual cost
                 }
             })
         })
-        return true
+        return postPriceInt
     } catch (error) {
-        console.error('Error updating API usage. Params:', JSON.stringify(params), error)
-        // Log the error but don't fail the response
-        return false
+        console.error('Error in postLogUsage for image generation:', JSON.stringify(params), error)
+        throw new Error('Failed to postlog usage')
+
     }
 }

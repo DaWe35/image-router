@@ -27,14 +27,7 @@ router.post('/generations', async (req, res) => {
                 throw error
             }
             
-            const postPrice = postCalcPrice(params.model, imageResult)
-            const postPriceInt = convertPriceToDbFormat(postPrice)
-            const postLogSuccess = await postLogUsage(params, res.locals.key, usageLogEntry, postPriceInt, imageResult.latency)
-            if (postLogSuccess !== true) {
-                console.error('Error in postLogUsage for image generation:', JSON.stringify(params))
-                throw new Error('Failed to postlog usage')
-            }
-
+            const postPriceInt = await postLogUsage(params, res.locals.key, usageLogEntry, imageResult)
             imageResult.cost = postPriceInt/10000
             res.json(imageResult)
         } catch (error) {
