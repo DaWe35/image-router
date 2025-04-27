@@ -8,7 +8,7 @@ class GptImage1 {
         name: 'openai',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: postCalcPrice,
+          postCalcFunction: this.postCalcPrice,
           range: {
             min: 0.011,
             average: 0.167,

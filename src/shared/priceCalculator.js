@@ -1,5 +1,5 @@
 import { models } from './models/index.js'
-import { PRICING_TYPES } from '../PricingScheme.js'
+import { PRICING_TYPES } from './PricingScheme.js'
 
 // Convert USD price to database format (multiply by 10000 to get 4 decimal places)
 export function convertPriceToDbFormat(usdPrice) {
