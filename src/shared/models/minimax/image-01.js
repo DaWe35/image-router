@@ -5,7 +5,7 @@ class Image01 {
     this.data = {
       id: 'minimax/image-01',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,

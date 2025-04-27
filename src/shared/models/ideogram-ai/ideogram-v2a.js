@@ -5,7 +5,7 @@ class IdeogramV2a {
     this.data = {
       id: 'ideogram-ai/ideogram-v2a',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.04,

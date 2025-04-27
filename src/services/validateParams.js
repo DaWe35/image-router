@@ -1,7 +1,7 @@
 import { models } from '../shared/models/index.js'
 
 export function validateParams(req) {
-    const { prompt, model, response_format, quality } = req.body
+    const { prompt, model, response_format, size, quality } = req.body
 
     if (!prompt) throw new Error("'prompt' is a required parameter")
     if (!model) throw new Error("'model' is a required parameter")
@@ -9,16 +9,19 @@ export function validateParams(req) {
     // Validate model parameter and config
     const modelConfig = models[model]
     if (!modelConfig) throw new Error("model '" + model + "' is not available")
-    if (!modelConfig?.providers[0]) throw new Error("model provider for '" + model + "' is not available")
+    if (!modelConfig?.providers[0].id) throw new Error("model provider for '" + model + "' is not available")
 
     // Validate response_format parameter
     if (response_format) {
         throw new Error("'response_format' is not yet supported. Depending on the model, you'll get a base64 encoded image or a url to the image, but it cannot be changed now.")
+    }    // Validate response_format parameter
+    if (size) {
+        throw new Error("'size' is not yet supported.")
     }
     // Validate quality parameter. Can be low, medium, high.
     if (quality) {
-        if (quality !== 'low' && quality !== 'medium' && quality !== 'high') {
-            throw new Error("'quality' must be 'low', 'medium', or 'high'")
+        if (quality !== 'auto' && quality !== 'low' && quality !== 'medium' && quality !== 'high') {
+            throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
         }
     }
 

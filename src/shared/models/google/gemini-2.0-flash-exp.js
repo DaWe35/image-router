@@ -6,7 +6,7 @@ class Gemini20FlashExp {
       id: 'google/gemini-2.0-flash-exp',
       aliasOf: 'google/gemini-2.0-flash-exp-image-generation',
       providers: [{
-        name: 'google',
+        id: 'google',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,

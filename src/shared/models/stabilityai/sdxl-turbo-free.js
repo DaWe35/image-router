@@ -6,7 +6,7 @@ class SdxlTurboFree {
       id: 'stabilityai/sdxl-turbo:free',
       aliasOf: 'stabilityai/sdxl-turbo',
       providers: [{
-        name: 'deepinfra',
+        id: 'deepinfra',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,

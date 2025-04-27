@@ -5,7 +5,7 @@ class GptImage1 {
     this.data = {
       id: 'openai/gpt-image-1',
       providers: [{
-        name: 'openai',
+        id: 'openai',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,
@@ -14,7 +14,8 @@ class GptImage1 {
             average: 0.167,
             max: 0.5
           },
-        }
+        },
+        applyQuality: this.applyQuality
       }],
       arenaScore: 1156,
       examples: [
@@ -40,6 +41,14 @@ class GptImage1 {
 
       const totalPrice = inputTextPrice * inputTextTokens + inputImagePrice * inputImageTokens + outputImagePrice * outputImageTokens
       return totalPrice
+  }
+
+  applyQuality(params, quality) {
+    const validQualities = ['auto', 'low', 'medium', 'high'] // future proofing
+    if (validQualities.includes(quality)) {
+      params.quality = quality
+    }
+    return params
   }
 }
 

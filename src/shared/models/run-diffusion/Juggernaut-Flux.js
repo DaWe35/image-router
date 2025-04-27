@@ -5,7 +5,7 @@ class JuggernautFlux {
     this.data = {
       id: 'run-diffusion/Juggernaut-Flux',
       providers: [{
-        name: 'deepinfra',
+        id: 'deepinfra',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.009,

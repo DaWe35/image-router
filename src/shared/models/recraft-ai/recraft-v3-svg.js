@@ -5,7 +5,7 @@ class RecraftV3Svg {
     this.data = {
       id: 'recraft-ai/recraft-v3-svg',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.08,

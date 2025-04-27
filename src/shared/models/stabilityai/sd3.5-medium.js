@@ -5,7 +5,7 @@ class Sd35Medium {
     this.data = {
       id: 'stabilityai/sd3.5-medium',
       providers: [{
-        name: 'deepinfra',
+        id: 'deepinfra',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.03,

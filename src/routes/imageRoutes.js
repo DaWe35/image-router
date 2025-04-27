@@ -3,7 +3,6 @@ import { generateImage } from '../services/imageService.js'
 import { models } from '../shared/models/index.js'
 import { validateParams } from '../services/validateParams.js'
 import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
-import { postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 const router = express.Router()
 
 // GET /v1/images/models
@@ -14,20 +13,21 @@ router.get('/models', (req, res) => {
 // POST /v1/images/generations
 router.post('/generations', async (req, res) => {
     try{
+        const apiKey = res.locals.key
         const params = validateParams(req)
         try {
-            const usageLogEntry = await preLogUsage(params, res.locals.key)
+            const usageLogEntry = await preLogUsage(params, apiKey)
 
             let imageResult
             try {
-                imageResult = await generateImage(req, res.locals.key.user.id)
+                imageResult = await generateImage(params, apiKey.user.id)
             } catch (error) {
                 const errorToLog = error?.errorResponse?.message || error?.message || 'unknown error'
-                await refundUsage(res.locals.key, usageLogEntry, errorToLog)
+                await refundUsage(apiKey, usageLogEntry, errorToLog)
                 throw error
             }
             
-            const postPriceInt = await postLogUsage(params, res.locals.key, usageLogEntry, imageResult)
+            const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, imageResult)
             imageResult.cost = postPriceInt/10000
             res.json(imageResult)
         } catch (error) {

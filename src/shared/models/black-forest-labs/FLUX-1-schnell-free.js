@@ -6,7 +6,7 @@ class Flux1SchnellFree {
       id: 'black-forest-labs/FLUX-1-schnell:free',
       aliasOf: 'black-forest-labs/FLUX-1-schnell',
       providers: [{
-        name: 'deepinfra',
+        id: 'deepinfra',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,

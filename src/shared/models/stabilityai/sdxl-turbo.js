@@ -6,7 +6,7 @@ class SdxlTurbo {
       id: 'stabilityai/sdxl-turbo',
       providers: [
         {
-          name: 'deepinfra',
+          id: 'deepinfra',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0.0002,

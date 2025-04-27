@@ -40,7 +40,7 @@ export async function preLogUsage(params, apiKey) {
                 apiKeyTempJwt: apiKey.apiKeyTempJwt,
                 userId: apiKey.user.id,
                 model: params.model,
-                provider: modelConfig?.providers[0],
+                provider: modelConfig?.providers[0].id,
                 prompt: params.prompt || '',
                 cost: prePriceInt, // Initial cost is max price
                 speedMs: 0,
@@ -49,6 +49,7 @@ export async function preLogUsage(params, apiKey) {
             }
         })
     })
+    console.log('pre-charged', prePriceUsd)
     return usageLogEntry
 }
 
@@ -85,8 +86,8 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
     const prePriceUsd = preCalcPrice(params.model, params.size, params.quality)
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
 
-    const postPrice = postCalcPrice(params.model, imageResult)
-    const postPriceInt = convertPriceToDbFormat(postPrice)
+    const postPriceUsd = postCalcPrice(params.model, params.size, params.quality, imageResult)
+    const postPriceInt = convertPriceToDbFormat(postPriceUsd)
 
     try {
         // Use a transaction to update both user balance and API usage together
@@ -110,6 +111,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
                 }
             })
         })
+        console.log('post-charged', postPriceUsd)
         return postPriceInt
     } catch (error) {
         console.error('Error in postLogUsage for image generation:', JSON.stringify(params), error)

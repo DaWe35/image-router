@@ -5,7 +5,7 @@ class DallE3 {
     this.data = {
       id: 'openai/dall-e-3',
       providers: [{
-        name: 'openai',
+        id: 'openai',
         pricing: {
           type: PRICING_TYPES.CALCULATED,
           calcFunction: this.calculatePrice,
@@ -14,7 +14,8 @@ class DallE3 {
             average: this.calculatePrice('medium'),
             max: this.calculatePrice('high')
           },
-        }
+        },
+        applyQuality: this.applyQuality
       }],
       arenaScore: 927,
       examples: [
@@ -39,6 +40,12 @@ class DallE3 {
       default:
         return 0.04
     }
+  }
+
+  applyQuality(params, quality) {
+    // 'low' and 'medium' and default map to 'standard', 'high' maps to 'hd'
+    params.quality = (quality === 'high') ? 'hd' : 'standard'
+    return params
   }
 }
 

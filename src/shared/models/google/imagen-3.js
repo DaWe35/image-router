@@ -5,7 +5,7 @@ class Imagen3 {
     this.data = {
       id: 'google/imagen-3',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.05,

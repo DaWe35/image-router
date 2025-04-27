@@ -5,7 +5,7 @@ class Flux1Dev {
     this.data = {
       id: 'black-forest-labs/FLUX-1-dev',
       providers: [{
-        name: 'deepinfra',
+        id: 'deepinfra',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.009,

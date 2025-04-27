@@ -71,7 +71,7 @@ async function testImageGeneration(model, prompt) {
     fs.mkdirSync(outputDir, { recursive: true })
 
     // Get provider info
-    const provider = models[model].providers[0]
+    const provider = models[model].providers[0].id
     let providerUrl, providerKey
 
     switch (provider) {

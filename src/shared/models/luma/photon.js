@@ -5,7 +5,7 @@ class Photon {
     this.data = {
       id: 'luma/photon',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.03,

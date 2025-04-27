@@ -5,7 +5,7 @@ class Imagen3Fast {
     this.data = {
       id: 'google/imagen-3-fast',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.025,

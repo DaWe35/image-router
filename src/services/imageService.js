@@ -3,43 +3,36 @@ import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
 
-export async function generateImage(req, userId) {
+export async function generateImage(params, userId) {
     const startTime = Date.now()
-    const { model } = req.body
-    const modelConfig = models[model]
-    const provider = modelConfig.providers[0]
+    const modelConfig = models[params.model]
+    const provider = modelConfig.providers[0].id
     
     if (!provider) {
         throw new Error('Invalid model specified')
     }
 
     // Use the alias model if available, otherwise use the original model
-    const modelName = modelConfig.aliasOf || model
+    const modelToUse = modelConfig.aliasOf || params.model
 
-    let providerUrl
-    let providerKey
+    // Apply quality if available and a function is defined
+    if (params.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
+        params = modelConfig.providers[0]?.applyQuality(params, params.quality)
+    }
+
     let result
     switch (provider) {
         case 'openai':
-            providerUrl = 'https://api.openai.com/v1/images/generations'
-            providerKey = process.env.OPENAI_API_KEY
-            const modelNameWithoutOpenAI = modelName.replace('openai/', '')
-            result = await generateOpenAI({ providerUrl, providerKey, req, modelName: modelNameWithoutOpenAI, userId })
+            result = await generateOpenAI({ params, modelToUse, userId })
             break
         case 'deepinfra':
-            providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
-            providerKey = process.env.DEEPINFRA_API_KEY
-            result = await generateDeepInfra({ providerUrl, providerKey, req, modelName, userId })
+            result = await generateDeepInfra({ params, modelToUse, userId })
             break
         case 'replicate':
-            providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
-            providerKey = process.env.REPLICATE_API_KEY
-            result = await generateReplicate({ providerUrl, providerKey, req, modelName })
+            result = await generateReplicate({ params, modelToUse })
+            break
         case 'google':
-            const modelNameWithoutGoogle = modelName.replace('google/', '')
-            providerKey = process.env.GOOGLE_GEMINI_API_KEY
-            providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelNameWithoutGoogle}:generateContent?key=${providerKey}`
-            result = await generateGoogle({ providerUrl, providerKey, req, modelName, userId })
+            result = await generateGoogle({ params, modelToUse, userId })
             break
     }
     result.latency = Date.now() - startTime
@@ -47,23 +40,16 @@ export async function generateImage(req, userId) {
 }
 
 // OpenAI format API call
-async function generateOpenAI({ providerUrl, providerKey, req, modelName, userId }) {
-    if (!providerKey) {
-        throw new Error('Provider API key is not configured. This is an issue on our end.')
-    }
+async function generateOpenAI({ params, modelToUse, userId }) {
+    const providerUrl = 'https://api.openai.com/v1/images/generations'
+    const providerKey = process.env.OPENAI_API_KEY
+    const modelToUseWithoutOpenAI = modelToUse.replace('openai/', '')
 
 
-    let parameters = {
-        prompt: req.body.prompt,
-        model: modelName,
-        user: userId,
-        n: 1,
-    }
-
-    const quality = getQuality(req)
-    if (quality) parameters.quality = quality
-    
-    if (modelName === 'gpt-image-1') parameters.moderation = 'low'
+    params.model = modelToUseWithoutOpenAI // override model
+    params.user = userId
+    params.n = 1
+    if (modelToUseWithoutOpenAI === 'gpt-image-1') params.moderation = 'low'
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -72,7 +58,7 @@ async function generateOpenAI({ providerUrl, providerKey, req, modelName, userId
             'Authorization': `Bearer ${providerKey}`
         },
         // TODO: Enable customization
-        body: JSON.stringify(parameters)
+        body: JSON.stringify(params)
     })
 
     if (!response.ok) {
@@ -88,10 +74,9 @@ async function generateOpenAI({ providerUrl, providerKey, req, modelName, userId
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ providerUrl, providerKey, req, modelName, userId }) {
-    if (!providerKey) {
-        throw new Error('Provider API key is not configured. This is an issue on our end.')
-    }
+async function generateDeepInfra({ params, modelToUse, userId }) {
+    const providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
+    const providerKey = process.env.DEEPINFRA_API_KEY
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -101,8 +86,8 @@ async function generateDeepInfra({ providerUrl, providerKey, req, modelName, use
         },
         // TODO: Enable customization
         body: JSON.stringify({
-            prompt: req.body.prompt,
-            model: modelName,
+            prompt: params.prompt,
+            model: modelToUse,
             user: userId,
             //n: 1,
             //size: '1024x1024',
@@ -132,7 +117,10 @@ async function generateDeepInfra({ providerUrl, providerKey, req, modelName, use
 }
 
 // Replicate format API call
-async function generateReplicate({ providerUrl, providerKey, req }) {
+async function generateReplicate({ params, modelToUse }) {
+    const providerUrl = `https://api.replicate.com/v1/models/${modelToUse}/predictions`
+    const providerKey = process.env.REPLICATE_API_KEY
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -142,7 +130,7 @@ async function generateReplicate({ providerUrl, providerKey, req }) {
         },
         body: JSON.stringify({
             input: {
-                prompt: req.body.prompt
+                prompt: params.prompt
             }
         })
     })
@@ -170,10 +158,10 @@ async function generateReplicate({ providerUrl, providerKey, req }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ providerUrl, providerKey, req, modelName, userId }) {
-    if (!providerKey) {
-        throw new Error('Provider API key is not configured. This is an issue on our end.')
-    }
+async function generateGoogle({ params, modelToUse, userId }) {
+    const modelToUseWithoutGoogle = modelToUse.replace('google/', '')
+    const providerKey = process.env.GOOGLE_GEMINI_API_KEY
+    const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUseWithoutGoogle}:generateContent?key=${providerKey}`
 
     // Get webshare proxy credentials from environment variables
     const proxyUrl = process.env.PROXY_URL
@@ -192,7 +180,7 @@ async function generateGoogle({ providerUrl, providerKey, req, modelName, userId
         body: JSON.stringify({
             "contents": [{
                 "parts": [
-                    {"text": req.body.prompt}
+                    {"text": params.prompt}
                 ]
             }],
             "generationConfig":{"responseModalities":["Text","Image"]}

@@ -5,7 +5,7 @@ class Flux11ProUltra {
     this.data = {
       id: 'black-forest-labs/flux-1.1-pro-ultra',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.06,

@@ -5,11 +5,12 @@ class DallE2 {
     this.data = {
       id: 'openai/dall-e-2',
       providers: [{
-        name: 'openai',
+        id: 'openai',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.02,
-        }
+        },
+        applyQuality: this.applyQuality
       }],
       arenaScore: 714,
       examples: [
@@ -22,6 +23,11 @@ class DallE2 {
 
   getData() {
     return this.data
+  }
+
+  applyQuality(params, quality) {
+    params.quality = 'standard'
+    return params
   }
 }
 

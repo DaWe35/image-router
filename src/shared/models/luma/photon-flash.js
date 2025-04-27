@@ -5,7 +5,7 @@ class PhotonFlash {
     this.data = {
       id: 'luma/photon-flash',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,

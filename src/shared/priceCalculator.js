@@ -10,6 +10,7 @@ export function convertPriceToDbFormat(usdPrice) {
 // If the price cannot be calculated before image generation, return the max price.
 export function preCalcPrice(modelName, size, quality) {
     const modelConfig = models[modelName]
+
     switch (modelConfig.providers[0].pricing.type) {
         case PRICING_TYPES.FIXED:
             return modelConfig.providers[0].pricing.value
@@ -23,13 +24,13 @@ export function preCalcPrice(modelName, size, quality) {
 }
 
 // Post-calculate the price for models that cannot be estimated before image generation.
-export function postCalcPrice(modelName, imageResult) {
+export function postCalcPrice(modelName, size, quality, imageResult) {
     const modelConfig = models[modelName]
     if (modelConfig.providers[0].pricing.type === PRICING_TYPES.POST_GENERATION) {
         return modelConfig.providers[0].pricing.postCalcFunction(imageResult)
     } else {
     // return the pre-calculated price as default
-    return preCalcPrice(modelConfig)
+    return preCalcPrice(modelName, size, quality)
     }
 
 }

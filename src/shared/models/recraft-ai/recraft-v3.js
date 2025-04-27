@@ -5,7 +5,7 @@ class RecraftV3 {
     this.data = {
       id: 'recraft-ai/recraft-v3',
       providers: [{
-        name: 'replicate',
+        id: 'replicate',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.04,
