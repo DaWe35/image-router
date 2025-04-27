@@ -4,8 +4,9 @@ const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
 
 export async function generateImage(params, userId) {
+    let fetchParams = structuredClone(params) // prevent side effects
     const startTime = Date.now()
-    const modelConfig = models[params.model]
+    const modelConfig = models[fetchParams.model]
     const provider = modelConfig.providers[0].id
     
     if (!provider) {
@@ -13,26 +14,26 @@ export async function generateImage(params, userId) {
     }
 
     // Use the alias model if available, otherwise use the original model
-    const modelToUse = modelConfig.aliasOf || params.model
+    const modelToUse = modelConfig.aliasOf || fetchParams.model
 
     // Apply quality if available and a function is defined
-    if (params.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
-        params = modelConfig.providers[0]?.applyQuality(params, params.quality)
+    if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
+        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams, fetchParams.quality)
     }
 
     let result
     switch (provider) {
         case 'openai':
-            result = await generateOpenAI({ params, modelToUse, userId })
+            result = await generateOpenAI({ fetchParams, modelToUse, userId })
             break
         case 'deepinfra':
-            result = await generateDeepInfra({ params, modelToUse, userId })
+            result = await generateDeepInfra({ fetchParams, modelToUse, userId })
             break
         case 'replicate':
-            result = await generateReplicate({ params, modelToUse })
+            result = await generateReplicate({ fetchParams, modelToUse })
             break
         case 'google':
-            result = await generateGoogle({ params, modelToUse, userId })
+            result = await generateGoogle({ fetchParams, modelToUse, userId })
             break
     }
     result.latency = Date.now() - startTime
@@ -40,16 +41,15 @@ export async function generateImage(params, userId) {
 }
 
 // OpenAI format API call
-async function generateOpenAI({ params, modelToUse, userId }) {
+async function generateOpenAI({ fetchParams, modelToUse, userId }) {
     const providerUrl = 'https://api.openai.com/v1/images/generations'
     const providerKey = process.env.OPENAI_API_KEY
     const modelToUseWithoutOpenAI = modelToUse.replace('openai/', '')
 
-
-    params.model = modelToUseWithoutOpenAI // override model
-    params.user = userId
-    params.n = 1
-    if (modelToUseWithoutOpenAI === 'gpt-image-1') params.moderation = 'low'
+    fetchParams.model = modelToUseWithoutOpenAI // override model
+    fetchParams.user = userId
+    fetchParams.n = 1
+    if (modelToUseWithoutOpenAI === 'gpt-image-1') fetchParams.moderation = 'low'
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -58,7 +58,7 @@ async function generateOpenAI({ params, modelToUse, userId }) {
             'Authorization': `Bearer ${providerKey}`
         },
         // TODO: Enable customization
-        body: JSON.stringify(params)
+        body: JSON.stringify(fetchParams)
     })
 
     if (!response.ok) {
@@ -74,7 +74,7 @@ async function generateOpenAI({ params, modelToUse, userId }) {
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ params, modelToUse, userId }) {
+async function generateDeepInfra({ fetchParams, modelToUse, userId }) {
     const providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
     const providerKey = process.env.DEEPINFRA_API_KEY
 
@@ -86,7 +86,7 @@ async function generateDeepInfra({ params, modelToUse, userId }) {
         },
         // TODO: Enable customization
         body: JSON.stringify({
-            prompt: params.prompt,
+            prompt: fetchParams.prompt,
             model: modelToUse,
             user: userId,
             //n: 1,
@@ -117,7 +117,7 @@ async function generateDeepInfra({ params, modelToUse, userId }) {
 }
 
 // Replicate format API call
-async function generateReplicate({ params, modelToUse }) {
+async function generateReplicate({ fetchParams, modelToUse }) {
     const providerUrl = `https://api.replicate.com/v1/models/${modelToUse}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
@@ -130,7 +130,7 @@ async function generateReplicate({ params, modelToUse }) {
         },
         body: JSON.stringify({
             input: {
-                prompt: params.prompt
+                prompt: fetchParams.prompt
             }
         })
     })
@@ -158,7 +158,7 @@ async function generateReplicate({ params, modelToUse }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ params, modelToUse, userId }) {
+async function generateGoogle({ fetchParams, modelToUse, userId }) {
     const modelToUseWithoutGoogle = modelToUse.replace('google/', '')
     const providerKey = process.env.GOOGLE_GEMINI_API_KEY
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUseWithoutGoogle}:generateContent?key=${providerKey}`
@@ -180,7 +180,7 @@ async function generateGoogle({ params, modelToUse, userId }) {
         body: JSON.stringify({
             "contents": [{
                 "parts": [
-                    {"text": params.prompt}
+                    {"text": fetchParams.prompt}
                 ]
             }],
             "generationConfig":{"responseModalities":["Text","Image"]}
