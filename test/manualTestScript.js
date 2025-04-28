@@ -4,7 +4,7 @@
 import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
-import { imageModels } from '../src/shared/common.js'
+import { models } from '../src/shared/models/index.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -71,7 +71,7 @@ async function testImageGeneration(model, prompt) {
     fs.mkdirSync(outputDir, { recursive: true })
 
     // Get provider info
-    const provider = imageModels[model].providers[0]
+    const provider = models[model].providers[0].id
     let providerUrl, providerKey
 
     switch (provider) {

@@ -1,79 +1,55 @@
 import fetch from 'node-fetch'
-import { imageModels } from '../shared/common.js'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
+import { models } from '../shared/models/index.js'
 
-export async function generateImage(reqBody, userId) {
-    const { model } = reqBody
-    const modelConfig = imageModels[model]
-    const provider = modelConfig.providers[0]
+export async function generateImage(params, userId) {
+    let fetchParams = structuredClone(params) // prevent side effects
+    const startTime = Date.now()
+    const modelConfig = models[fetchParams.model]
+    const provider = modelConfig.providers[0].id
     
     if (!provider) {
         throw new Error('Invalid model specified')
     }
 
     // Use the alias model if available, otherwise use the original model
-    const modelName = modelConfig.aliasOf || model
+    const modelToUse = modelConfig.aliasOf || fetchParams.model
 
-    let providerUrl
-    let providerKey
+    // Apply quality if available and a function is defined
+    if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
+        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams, fetchParams.quality)
+    }
+
+    let result
     switch (provider) {
         case 'openai':
-            providerUrl = 'https://api.openai.com/v1/images/generations'
-            providerKey = process.env.OPENAI_API_KEY
-            const modelNameWithoutOpenAI = modelName.replace('openai/', '')
-            return generateOpenAI({ providerUrl, providerKey, reqBody, modelName: modelNameWithoutOpenAI, userId })
+            result = await generateOpenAI({ fetchParams, modelToUse, userId })
+            break
         case 'deepinfra':
-            providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
-            providerKey = process.env.DEEPINFRA_API_KEY
-            return generateDeepInfra({ providerUrl, providerKey, reqBody, modelName, userId })
+            result = await generateDeepInfra({ fetchParams, modelToUse, userId })
+            break
         case 'replicate':
-            providerUrl = `https://api.replicate.com/v1/models/${modelName}/predictions`
-            providerKey = process.env.REPLICATE_API_KEY
-            return generateReplicate({ providerUrl, providerKey, reqBody, modelName })
+            result = await generateReplicate({ fetchParams, modelToUse })
+            break
         case 'google':
-            const modelNameWithoutGoogle = modelName.replace('google/', '')
-            providerKey = process.env.GOOGLE_GEMINI_API_KEY
-            providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelNameWithoutGoogle}:generateContent?key=${providerKey}`
-            return generateGoogle({ providerUrl, providerKey, reqBody, modelName, userId })
-    }    
+            result = await generateGoogle({ fetchParams, modelToUse, userId })
+            break
+    }
+    result.latency = Date.now() - startTime
+    return result
 }
 
 // OpenAI format API call
-async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, userId }) {
-    if (!providerKey) {
-        throw new Error('Provider API key is not configured. This is an issue on our end.')
-    }
+async function generateOpenAI({ fetchParams, modelToUse, userId }) {
+    const providerUrl = 'https://api.openai.com/v1/images/generations'
+    const providerKey = process.env.OPENAI_API_KEY
+    const modelToUseWithoutOpenAI = modelToUse.replace('openai/', '')
 
-    let parameters = {
-        prompt: reqBody.prompt,
-        model: modelName,
-        user: userId,
-        n: 1,
-        size: '1024x1024',
-        quality: "standard",
-    }
-    
-    if (modelName === 'gpt-image-1' || modelName === 'gpt-image-1-high-temporary') {
-        parameters.moderation = 'low'
-        if (modelName === 'gpt-image-1-high-temporary') {
-            parameters.quality = "high"
-            parameters.model = "gpt-image-1"
-        } else {
-            parameters.quality = "medium"
-        }
-        // protect against long prompts, because input token calculation is not implemented yet
-        if (reqBody.prompt.length > 4000) {
-            throw {
-                status: 400,
-                errorResponse: {
-                    message: 'Prompt is too long. Please keep it under 4000 characters. If you encounter this issue multiple times, please contact me - I will fix it for you.',
-                    type: 'Prompt too long'
-                }
-            }
-        }
-        //parameters.background = "transparent"
-    }
+    fetchParams.model = modelToUseWithoutOpenAI // override model
+    fetchParams.user = userId
+    fetchParams.n = 1
+    if (modelToUseWithoutOpenAI === 'gpt-image-1') fetchParams.moderation = 'low'
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -82,7 +58,7 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
             'Authorization': `Bearer ${providerKey}`
         },
         // TODO: Enable customization
-        body: JSON.stringify(parameters)
+        body: JSON.stringify(fetchParams)
     })
 
     if (!response.ok) {
@@ -98,10 +74,9 @@ async function generateOpenAI({ providerUrl, providerKey, reqBody, modelName, us
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName, userId }) {
-    if (!providerKey) {
-        throw new Error('Provider API key is not configured. This is an issue on our end.')
-    }
+async function generateDeepInfra({ fetchParams, modelToUse, userId }) {
+    const providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
+    const providerKey = process.env.DEEPINFRA_API_KEY
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -111,8 +86,8 @@ async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName,
         },
         // TODO: Enable customization
         body: JSON.stringify({
-            prompt: reqBody.prompt,
-            model: modelName,
+            prompt: fetchParams.prompt,
+            model: modelToUse,
             user: userId,
             //n: 1,
             //size: '1024x1024',
@@ -142,7 +117,10 @@ async function generateDeepInfra({ providerUrl, providerKey, reqBody, modelName,
 }
 
 // Replicate format API call
-async function generateReplicate({ providerUrl, providerKey, reqBody }) {
+async function generateReplicate({ fetchParams, modelToUse }) {
+    const providerUrl = `https://api.replicate.com/v1/models/${modelToUse}/predictions`
+    const providerKey = process.env.REPLICATE_API_KEY
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -152,7 +130,7 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
         },
         body: JSON.stringify({
             input: {
-                prompt: reqBody.prompt
+                prompt: fetchParams.prompt
             }
         })
     })
@@ -180,10 +158,10 @@ async function generateReplicate({ providerUrl, providerKey, reqBody }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, userId }) {
-    if (!providerKey) {
-        throw new Error('Provider API key is not configured. This is an issue on our end.')
-    }
+async function generateGoogle({ fetchParams, modelToUse, userId }) {
+    const modelToUseWithoutGoogle = modelToUse.replace('google/', '')
+    const providerKey = process.env.GOOGLE_GEMINI_API_KEY
+    const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUseWithoutGoogle}:generateContent?key=${providerKey}`
 
     // Get webshare proxy credentials from environment variables
     const proxyUrl = process.env.PROXY_URL
@@ -202,7 +180,7 @@ async function generateGoogle({ providerUrl, providerKey, reqBody, modelName, us
         body: JSON.stringify({
             "contents": [{
                 "parts": [
-                    {"text": reqBody.prompt}
+                    {"text": fetchParams.prompt}
                 ]
             }],
             "generationConfig":{"responseModalities":["Text","Image"]}
