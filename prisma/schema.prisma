@@ -27,6 +27,13 @@ model APIKey {
   usage                     APIUsage[]
 }
 
+enum Quality {
+  auto
+  low
+  medium
+  high
+}
+
 model APIUsage {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
@@ -36,6 +43,7 @@ model APIUsage {
   cost                      Int
   speedMs                   Int
   imageSize                 String
+  quality                   Quality?
   status                    String
   error                     String?
   metadata                  Json?

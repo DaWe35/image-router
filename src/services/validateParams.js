@@ -20,10 +20,11 @@ export function validateParams(req) {
     }
     // Validate quality parameter. Can be low, medium, high.
     if (quality) {
-        if (quality !== 'auto' && quality !== 'low' && quality !== 'medium' && quality !== 'high') {
+        const qualityLower = quality.toLowerCase()
+        if (qualityLower !== 'auto' && qualityLower !== 'low' && qualityLower !== 'medium' && qualityLower   !== 'high') {
             throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
         }
     }
 
-    return { prompt, model, quality }
+    return { prompt, model, quality: qualityLower }
 }

@@ -45,6 +45,7 @@ export async function preLogUsage(params, apiKey) {
                 cost: prePriceInt, // Initial cost is max price
                 speedMs: 0,
                 imageSize: params.size || 'unknown',
+                quality: params.quality ? params.quality : 'auto',
                 status: 'processing'
             }
         })
