@@ -19,8 +19,8 @@ export function validateParams(req) {
         throw new Error("'size' is not yet supported.")
     }
     // Validate quality parameter. Can be low, medium, high.
+    const qualityLower = quality.toLowerCase()
     if (quality) {
-        const qualityLower = quality.toLowerCase()
         if (qualityLower !== 'auto' && qualityLower !== 'low' && qualityLower !== 'medium' && qualityLower   !== 'high') {
             throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
         }
