@@ -29,6 +29,12 @@ docker compose up
 
 The service will be available at `http://localhost:3000`
 
+## After database migrations
+
+```bash
+sudo npx prisma generate
+```
+
 ## API Endpoints
 
 See [API Reference](https://ir-docs.myqa.cc/)
