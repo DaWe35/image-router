@@ -3,7 +3,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 class TestImage {
   constructor() {
     this.data = {
-      id: 'test',
+      id: 'test/test',
       providers: [{
         id: 'test',
         pricing: {

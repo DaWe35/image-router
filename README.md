@@ -29,6 +29,16 @@ docker compose up
 
 The service will be available at `http://localhost:3000`
 
+## Running Tests
+
+To run tests inside the Docker container:
+
+```bash
+# Run tests with console output visible
+docker compose exec api npm test -- --verbose
+
+```
+
 ## After database migrations
 
 ```bash

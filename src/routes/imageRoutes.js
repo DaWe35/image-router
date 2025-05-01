@@ -12,9 +12,10 @@ router.get('/models', (req, res) => {
 
 // POST /v1/images/generations
 router.post('/generations', async (req, res) => {
-    try{
+    try {
         const apiKey = res.locals.key
         const params = validateParams(req)
+        
         try {
             const usageLogEntry = await preLogUsage(params, apiKey)
 
