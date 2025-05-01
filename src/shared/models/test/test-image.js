@@ -16,7 +16,7 @@ class TestImage {
       arenaScore: 0,
       examples: [
         {
-          image: '/model-examples/test-image.webp'
+          image: '/model-examples/test.webp'
         }
       ]
     }
