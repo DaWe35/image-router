@@ -32,7 +32,7 @@ The service will be available at `http://localhost:3000`
 ## After database migrations
 
 ```bash
-sudo npx prisma generate
+docker compose -f docker-compose.generate.yml up
 ```
 
 ## API Endpoints
