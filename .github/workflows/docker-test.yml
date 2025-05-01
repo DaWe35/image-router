@@ -1,0 +1,23 @@
+name: Run Tests in Docker
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  docker-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run tests in Docker
+        run: docker-compose -f docker-compose.test.yml up --build --exit-code-from test
+        env:
+          # Use in-memory database for tests
+          DATABASE_URL: "file::memory:"

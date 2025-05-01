@@ -1,4 +1,6 @@
 import fetch from 'node-fetch'
+import fs from 'fs/promises'
+import path from 'path'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
@@ -7,7 +9,7 @@ export async function generateImage(params, userId) {
     let fetchParams = structuredClone(params) // prevent side effects
     const startTime = Date.now()
     const modelConfig = models[fetchParams.model]
-    const provider = modelConfig.providers[0].id
+    const provider = modelConfig?.providers[0]?.id
     
     if (!provider) {
         throw new Error('Invalid model specified')
@@ -34,6 +36,9 @@ export async function generateImage(params, userId) {
             break
         case 'google':
             result = await generateGoogle({ fetchParams, modelToUse, userId })
+            break
+        case 'test':
+            result = await generateTest({ fetchParams, modelToUse, userId })
             break
     }
     result.latency = Date.now() - startTime
@@ -229,5 +234,26 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
                 original_response_from_provider: data
               }
         }
+    }
+}
+
+async function generateTest({ fetchParams, modelToUse, userId }) {
+    // Read the image file
+    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+    const imageBuffer = await fs.readFile(imagePath)
+    const b64_json = imageBuffer.toString('base64')
+    
+    // Return a random placeholder image
+    return {
+        created: Date.now(),
+        data: [{
+            url: `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`,
+            b64_json,
+            revised_prompt: null,
+            original_response_from_provider: {
+                "yeah": "this is m.t.",
+                "whats up": "btw?"
+            }
+        }]
     }
 }

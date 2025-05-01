@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  test:
+    container_name: image-router-api-test
+    image: node:20-bookworm
+    working_dir: /app
+    command: >
+      sh -c '
+        npm install &&
+        npm run test
+      '
+    volumes:
+      - .:/app
+    environment:
+      NODE_ENV: test
+      # Add environment variables for free models testing
+      OPENAI_API_KEY: test-key
+      DEEPINFRA_API_KEY: test-key
+      REPLICATE_API_KEY: test-key
+      GOOGLE_GEMINI_API_KEY: test-key
+      # Use in-memory database for tests
+      DATABASE_URL: "file::memory:"
+    # Make sure to exit with the same code as the npm test command
+    # This is important for CI/CD pipelines
+    init: true
+    networks:
+      - wasp-network
+
+networks:
+  wasp-network:
+    name: wasp-network 

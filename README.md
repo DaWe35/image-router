@@ -35,6 +35,14 @@ The service will be available at `http://localhost:3000`
 docker compose -f docker-compose.generate.yml up
 ```
 
+## Running Tests
+
+```bash
+docker-compose -f docker-compose.test.yml up
+```
+
+Tests will also run automatically on GitHub after pushing to the repository.
+
 ## API Endpoints
 
 See [API Reference](https://ir-docs.myqa.cc/)
