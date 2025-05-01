@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api:
     container_name: image-router-api

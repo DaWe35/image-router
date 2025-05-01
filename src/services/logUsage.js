@@ -22,7 +22,7 @@ export async function preLogUsage(params, apiKey) {
     }
 
     if (apiKey.id === null && apiKey.apiKeyTempJwt === false) {
-        throw new Error('Your API key is not found, please contact support')
+        throw new Error('API key is not found, please contact support')
     }
 
     // Use a transaction to ensure both operations succeed or fail together

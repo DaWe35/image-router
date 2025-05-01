@@ -34,7 +34,9 @@ The service will be available at `http://localhost:3000`
 To run tests inside the Docker container:
 
 ```bash
-docker compose exec api npm test
+# Run tests with console output visible
+docker compose exec api npm test -- --verbose
+
 ```
 
 ## After database migrations
