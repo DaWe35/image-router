@@ -261,7 +261,7 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
 
 async function generateTest({ fetchParams, modelToUse, userId }) {
     // Read the image file
-    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+    const imagePath = path.resolve(`src/shared/models/test/${fetchParams?.quality || 'auto'}.png`)
     const imageBuffer = await fs.readFile(imagePath)
     const b64_json = imageBuffer.toString('base64')
     
