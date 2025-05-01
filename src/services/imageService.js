@@ -247,7 +247,7 @@ async function generateTest({ fetchParams, modelToUse, userId }) {
     return {
         created: Date.now(),
         data: [{
-            url: `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`,
+            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/tests/src/shared/models/test/${fetchParams.quality}.png`,
             b64_json,
             revised_prompt: null,
             original_response_from_provider: {
