@@ -1,3 +1,5 @@
+import fs from 'fs/promises'
+import path from 'path'
 import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
@@ -7,7 +9,7 @@ export async function generateImage(params, userId) {
     let fetchParams = structuredClone(params) // prevent side effects
     const startTime = Date.now()
     const modelConfig = models[fetchParams.model]
-    const provider = modelConfig.providers[0].id
+    const provider = modelConfig?.providers[0]?.id
     
     if (!provider) {
         throw new Error('Invalid model specified')
@@ -34,6 +36,9 @@ export async function generateImage(params, userId) {
             break
         case 'google':
             result = await generateGoogle({ fetchParams, modelToUse, userId })
+            break
+        case 'test':
+            result = await generateTest({ fetchParams, modelToUse, userId })
             break
     }
     result.latency = Date.now() - startTime
@@ -204,30 +209,73 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
             errorResponse: formattedError
         }
     }
-
+    
     const data = await response.json()
 
-    if (data?.candidates[0]?.content?.parts[0]?.inlineData?.data) {
+    // Find image data in any part of the response
+    let imageData = null
+    if (data?.candidates?.[0]?.content?.parts) {
+        for (const part of data.candidates[0].content.parts) {
+            if (part?.inlineData?.data) {
+                imageData = part.inlineData.data
+                break
+            }
+        }
+    }
+
+    if (imageData) {
         return {
             created: Math.floor(new Date().getTime() / 1000),
             data: [{
-                b64_json: data?.candidates[0]?.content?.parts[0]?.inlineData?.data || null,
+                b64_json: imageData,
                 revised_prompt: null,
                 original_response_from_provider: data
             }]
         }
     } else {
+        // Try to find text response in the parts
+        let textResponse = null
+        if (data?.candidates?.[0]?.content?.parts) {
+            for (const part of data.candidates[0].content.parts) {
+                if (part?.text) {
+                    textResponse = part.text
+                    break
+                }
+            }
+        }
+
         throw {
             status: 406,
             errorResponse: {
                 status: 406,
                 statusText: 'No image generated',
                 error: {
-                    message: data?.candidates[0]?.content?.parts[0]?.text || null,
+                    message: textResponse || 'No image or text found in response',
                     type: 'No image generated'
                 },
                 original_response_from_provider: data
               }
         }
+    }
+}
+
+async function generateTest({ fetchParams, modelToUse, userId }) {
+    // Read the image file
+    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+    const imageBuffer = await fs.readFile(imagePath)
+    const b64_json = imageBuffer.toString('base64')
+
+    // Return a random placeholder image
+    return {
+        created: Date.now(),
+        data: [{
+            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/tests/src/shared/models/test/${fetchParams.quality}.png`,
+            b64_json,
+            revised_prompt: null,
+            original_response_from_provider: {
+                "yeah": "this is m.t.",
+                "whats up": "btw?"
+            }
+        }]
     }
 }
