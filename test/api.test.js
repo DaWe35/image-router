@@ -162,7 +162,7 @@ describe('Image Router API Tests', () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: 'test',
+                    model: 'test/test',
                     prompt: 'A photo of a cat',
                     quality: 'low'
                 })
@@ -187,7 +187,7 @@ describe('Image Router API Tests', () => {
                     'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: 'test'
+                    model: 'test/test'
                 })
             })
 
@@ -239,7 +239,7 @@ describe('Image Router API Tests', () => {
                     'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: 'test',
+                    model: 'test/test',
                     prompt: 'A photo of a cat',
                     response_format: 'url'
                 })
@@ -258,7 +258,7 @@ describe('Image Router API Tests', () => {
                     'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: 'test',
+                    model: 'test/test',
                     prompt: 'A photo of a cat',
                     size: '1024x1024'
                 })
@@ -277,7 +277,7 @@ describe('Image Router API Tests', () => {
                     'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: 'test',
+                    model: 'test/test',
                     prompt: 'A photo of a cat',
                     quality: 'invalid'
                 })
@@ -300,7 +300,7 @@ describe('Image Router API Tests', () => {
                         'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
                     },
                     body: JSON.stringify({
-                        model: 'test',
+                        model: 'test/test',
                         prompt: 'A photo of a cat',
                         quality
                     })
