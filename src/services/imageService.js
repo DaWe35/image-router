@@ -212,23 +212,45 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
 
     const data = await response.json()
 
-    if (data?.candidates[0]?.content?.parts[0]?.inlineData?.data) {
+    // Find image data in any part of the response
+    let imageData = null
+    if (data?.candidates?.[0]?.content?.parts) {
+        for (const part of data.candidates[0].content.parts) {
+            if (part?.inlineData?.data) {
+                imageData = part.inlineData.data
+                break
+            }
+        }
+    }
+
+    if (imageData) {
         return {
             created: Math.floor(new Date().getTime() / 1000),
             data: [{
-                b64_json: data?.candidates[0]?.content?.parts[0]?.inlineData?.data || null,
+                b64_json: imageData,
                 revised_prompt: null,
                 original_response_from_provider: data
             }]
         }
     } else {
+        // Try to find text response in the parts
+        let textResponse = null
+        if (data?.candidates?.[0]?.content?.parts) {
+            for (const part of data.candidates[0].content.parts) {
+                if (part?.text) {
+                    textResponse = part.text
+                    break
+                }
+            }
+        }
+
         throw {
             status: 406,
             errorResponse: {
                 status: 406,
                 statusText: 'No image generated',
                 error: {
-                    message: data?.candidates[0]?.content?.parts[0]?.text || null,
+                    message: textResponse || 'No image or text found in response',
                     type: 'No image generated'
                 },
                 original_response_from_provider: data
