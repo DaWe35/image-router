@@ -1,9 +1,42 @@
 import express from 'express'
+import multer from 'multer'
+import path from 'path'
 import { generateImage } from '../services/imageService.js'
 import { models } from '../shared/models/index.js'
 import { validateParams } from '../services/validateParams.js'
 import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
 const router = express.Router()
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, '/tmp')
+    },
+    filename: function(req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({ 
+    storage: storage,
+    limits: {
+        fileSize: 25 * 1024 * 1024 // 25MB max file size
+    }
+})
+
+// Error handler for multer errors
+const handleMulterError = (err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({
+            error: {
+                message: `File upload error: ${err.message}`,
+                type: 'invalid_request_error'
+            }
+        })
+    }
+    next(err)
+}
 
 // GET /v1/images/models
 router.get('/models', (req, res) => {
@@ -12,10 +45,38 @@ router.get('/models', (req, res) => {
 
 // POST /v1/images/generations
 router.post('/generations', async (req, res) => {
+    await generateImageWrapper(req, res)
+})
+
+// POST /v1/images/edits
+router.post('/edits', 
+    upload.fields([
+        { name: 'image', maxCount: 16 },
+        { name: 'image[]', maxCount: 16 },
+        { name: 'mask', maxCount: 1 },
+        { name: 'mask[]', maxCount: 1 }
+    ]), 
+    handleMulterError,
+    (req, res, next) => {
+        if (req.files['image[]'] && !req.files.image) {
+            req.files.image = req.files['image[]']
+            delete req.files['image[]']
+        }
+        if (req.files['mask[]'] && !req.files.mask) {
+            req.files.mask = req.files['mask[]']
+            delete req.files['mask[]']
+        }
+        next()
+    },
+    async (req, res) => {
+        await generateImageWrapper(req, res)
+    }
+)
+
+async function generateImageWrapper(req, res) {
     try {
         const apiKey = res.locals.key
         const params = validateParams(req)
-        
         try {
             const usageLogEntry = await preLogUsage(params, apiKey)
 
@@ -55,6 +116,6 @@ router.post('/generations', async (req, res) => {
             }
         })
     }
-})
+}
 
 export const imageRoutes = router 

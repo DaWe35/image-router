@@ -25,7 +25,7 @@ class DallE2 {
     return this.data
   }
 
-  applyQuality(params, quality) {
+  applyQuality(params) {
     params.quality = 'standard'
     return params
   }

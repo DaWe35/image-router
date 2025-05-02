@@ -1,7 +1,9 @@
 import { models } from '../shared/models/index.js'
 
+// Validate the parameters for the image generation request and return only the valid parameters
 export function validateParams(req) {
-    const { prompt, model, response_format, size, quality, image, mask } = req.body
+    const { prompt, model, response_format, size, quality } = req.body
+    const files = req.files || {}
 
     if (!prompt) throw new Error("'prompt' is a required parameter")
     if (!model) throw new Error("'model' is a required parameter")
@@ -26,18 +28,23 @@ export function validateParams(req) {
             throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
         }
     }
-
-    // Validate image parameter
-    let validatedImage
-    if (image) {
-        validatedImage = image
+    
+    // Initialize validFiles object
+    let validFiles = {}
+    
+    // Validate image parameter - can be multiple images (up to 16)
+    if (files.image) {
+        validFiles.image = files.image
+        // Ensure we don't exceed the maximum number of images
+        if (Array.isArray(validFiles.image) && validFiles.image.length > 16) {
+            throw new Error("Maximum of 16 images can be uploaded")
+        }
     }
     
     // Validate mask parameter
-    let validatedMask
-    if (mask) {
-        validatedMask = mask
+    if (files.mask) {
+        validFiles.mask = files.mask
     }
 
-    return { prompt, model, quality: qualityLower, image: validatedImage, mask: validatedMask }
+    return { prompt, model, quality: qualityLower, files: validFiles }
 }

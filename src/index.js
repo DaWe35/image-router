@@ -141,8 +141,18 @@ if (process.env.DATABASE_URL) {
         userLimiter,            // Then, limit by API key total reqs
         freeTierLimiter,        // Then, check daily free limit if applicable
     )
+    
+    // Apply middleware chain for image edits: IP Limit -> Validate Key -> Key Limit -> Check Free Tier
+    app.use(
+        '/v1/openai/images/edits',
+        ipLimiter, // First, limit by IP
+        validateApiKey,         // Then, validate the API key
+        userLimiter,            // Then, limit by API key total reqs
+        freeTierLimiter,        // Then, check daily free limit if applicable
+    )
 } else {
     app.use('/v1/openai/images/generations', ipLimiter)
+    app.use('/v1/openai/images/edits', ipLimiter)
 }
 
 // Modified IP endpoint to show headers for debugging

@@ -26,9 +26,8 @@ class TestImage {
     return this.data
   }
 
-  applyQuality(params, quality) {
-    // Simply store the quality parameter
-    params.quality = quality
+  applyQuality(params) {
+    // Change nothing, values are already valited in validateParams.js
     return params
   }
 

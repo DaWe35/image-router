@@ -42,9 +42,9 @@ class DallE3 {
     }
   }
 
-  applyQuality(params, quality) {
+  applyQuality(params) {
     // 'low' and 'medium' and default map to 'standard', 'high' maps to 'hd'
-    params.quality = (quality === 'high') ? 'hd' : 'standard'
+    params.quality = (params.quality === 'high') ? 'hd' : 'standard'
     return params
   }
 }

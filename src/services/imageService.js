@@ -4,6 +4,24 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
+import FormData from 'form-data'
+
+// Helper function to convert an object to FormData
+function objectToFormData(obj) {
+    const formData = new FormData()
+    
+    Object.entries(obj).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            if (Array.isArray(value)) {
+                value.forEach(item => formData.append(key, item))
+            } else {
+                formData.append(key, value)
+            }
+        }
+    })
+    
+    return formData
+}
 
 export async function generateImage(params, userId) {
     let fetchParams = structuredClone(params) // prevent side effects
@@ -20,16 +38,25 @@ export async function generateImage(params, userId) {
 
     // Apply quality if available and a function is defined
     if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
-        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams, fetchParams.quality)
+        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
     }
 
-    if (fetchParams.image && typeof modelConfig.providers[0]?.applyImage === 'function') {
-        fetchParams = modelConfig.providers[0]?.applyImage(fetchParams, fetchParams.image)
+    if (fetchParams.files.image) {
+        if (typeof modelConfig.providers[0]?.applyImage === 'function') {
+            fetchParams = modelConfig.providers[0]?.applyImage(fetchParams)
+        } else {
+            throw new Error('Image processing not supported for this model')
+        }
     }
 
-    if (fetchParams.mask && typeof modelConfig.providers[0]?.applyMask === 'function') {
-        fetchParams = modelConfig.providers[0]?.applyMask(fetchParams, fetchParams.mask)
+    if (fetchParams.files.mask) {
+        if (typeof modelConfig.providers[0]?.applyMask === 'function') {
+            fetchParams = modelConfig.providers[0]?.applyMask(fetchParams)
+        } else {
+            throw new Error('Mask processing not supported for this model')
+        }
     }
+    delete fetchParams.files
 
     let result
     switch (provider) {
@@ -55,22 +82,28 @@ export async function generateImage(params, userId) {
 
 // OpenAI format API call
 async function generateOpenAI({ fetchParams, modelToUse, userId }) {
-    const providerUrl = 'https://api.openai.com/v1/images/generations'
+    // Detect if this is an edit request
+    const isEdit = Boolean(fetchParams.image)
+    const providerUrl = isEdit ? 'https://api.openai.com/v1/images/edits' : 'https://api.openai.com/v1/images/generations'
     const providerKey = process.env.OPENAI_API_KEY
-    const modelToUseWithoutOpenAI = modelToUse.replace('openai/', '')
-
-    fetchParams.model = modelToUseWithoutOpenAI // override model
+    
+    // Set up basic parameters
+    fetchParams.model = modelToUse.replace('openai/', '')
     fetchParams.user = userId
     fetchParams.n = 1
-    if (modelToUseWithoutOpenAI === 'gpt-image-1') fetchParams.moderation = 'low'
+    if (fetchParams.model === 'gpt-image-1') fetchParams.moderation = 'low'
+
+    const headers = {
+        'Authorization': `Bearer ${providerKey}`
+    }
+    if (!isEdit) {
+        headers['Content-Type'] = 'application/json'
+    }
 
     const response = await fetch(providerUrl, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${providerKey}`
-        },
-        body: JSON.stringify(fetchParams)
+        headers,
+        body: isEdit ? objectToFormData(fetchParams) : JSON.stringify(fetchParams)
     })
 
     if (!response.ok) {
