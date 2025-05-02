@@ -1,7 +1,7 @@
 import { models } from '../shared/models/index.js'
 
 export function validateParams(req) {
-    const { prompt, model, response_format, size, quality } = req.body
+    const { prompt, model, response_format, size, quality, image, mask } = req.body
 
     if (!prompt) throw new Error("'prompt' is a required parameter")
     if (!model) throw new Error("'model' is a required parameter")
@@ -27,5 +27,17 @@ export function validateParams(req) {
         }
     }
 
-    return { prompt, model, quality: qualityLower }
+    // Validate image parameter
+    let validatedImage
+    if (image) {
+        validatedImage = image
+    }
+    
+    // Validate mask parameter
+    let validatedMask
+    if (mask) {
+        validatedMask = mask
+    }
+
+    return { prompt, model, quality: qualityLower, image: validatedImage, mask: validatedMask }
 }

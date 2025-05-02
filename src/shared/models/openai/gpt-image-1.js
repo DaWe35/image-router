@@ -15,7 +15,9 @@ class GptImage1 {
             max: 0.5
           },
         },
-        applyQuality: this.applyQuality
+        applyQuality: this.applyQuality,
+        applyImage: this.applyImage,
+        applyMask: this.applyMask
       }],
       arenaScore: 1156,
       examples: [
@@ -48,6 +50,16 @@ class GptImage1 {
     if (validQualities.includes(quality)) {
       params.quality = quality
     }
+    return params
+  }
+
+  applyImage(params, image) {
+    params.image = image    
+    return params
+  }
+
+  applyMask(params, mask) {
+    params.mask = mask
     return params
   }
 }

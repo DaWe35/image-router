@@ -23,6 +23,14 @@ export async function generateImage(params, userId) {
         fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams, fetchParams.quality)
     }
 
+    if (fetchParams.image && typeof modelConfig.providers[0]?.applyImage === 'function') {
+        fetchParams = modelConfig.providers[0]?.applyImage(fetchParams, fetchParams.image)
+    }
+
+    if (fetchParams.mask && typeof modelConfig.providers[0]?.applyMask === 'function') {
+        fetchParams = modelConfig.providers[0]?.applyMask(fetchParams, fetchParams.mask)
+    }
+
     let result
     switch (provider) {
         case 'openai':
@@ -62,7 +70,6 @@ async function generateOpenAI({ fetchParams, modelToUse, userId }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        // TODO: Enable customization
         body: JSON.stringify(fetchParams)
     })
 
