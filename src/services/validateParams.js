@@ -24,8 +24,9 @@ export function validateParams(req) {
     let qualityLower
     if (quality) {
         qualityLower = quality.toLowerCase()
-        if (qualityLower !== 'auto' && qualityLower !== 'low' && qualityLower !== 'medium' && qualityLower   !== 'high') {
-            throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
+        const allowedQualities = ['auto', 'low', 'medium', 'high']
+        if (!allowedQualities.includes(qualityLower)) {
+            throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
         }
     }
     

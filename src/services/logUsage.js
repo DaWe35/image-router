@@ -10,7 +10,7 @@ export async function preLogUsage(params, apiKey) {
     
     // Check if the user has enough credits
     if (apiKey.user.credits < prePriceInt) {
-        throw new Error('Insufficient credits (this model needs minimum $' + prePriceUsd + ' credits), please topup your ImageRouter account: https://ir.myqa.cc/pricing')
+        throw new Error(`Insufficient credits (this model needs minimum $${prePriceUsd} credits), please topup your ImageRouter account: https://ir.myqa.cc/pricing`)
     }
 
     if (apiKey.user.isActive === false) {
@@ -95,7 +95,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
         await prisma.$transaction(async (tx) => {
             // Refund the difference between max price and actual price
             const refundAmount = prePriceInt - postPriceInt
-            if (refundAmount != 0) {
+            if (refundAmount !== 0) {
                 await tx.user.update({
                     where: { id: apiKey.user.id },
                     data: { credits: { increment: refundAmount } }

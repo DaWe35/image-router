@@ -4,10 +4,10 @@ import { validateTempToken } from '../shared/tempAuth.js'
 export const validateApiKey = async (req, res, next) => {
     const authHeader = req.headers['authorization']
 
-    if (!authHeader) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({
             error: {
-                message: 'Authorization header is required',
+                message: 'Authorization header must be provided as Bearer token',
                 type: 'unauthorized'
             }
         })
@@ -15,7 +15,7 @@ export const validateApiKey = async (req, res, next) => {
 
     try {
         let key = null
-        const apiKeyString = authHeader.substring(7) // Remove 'Bearer ' prefix
+        const apiKeyString = authHeader.slice(7).trim() // Remove 'Bearer ' prefix and trim whitespace
 
         if (apiKeyString.length === 64) {
             // API key validation
@@ -70,7 +70,7 @@ export const validateApiKey = async (req, res, next) => {
         } else {
             return res.status(401).json({
                 error: {
-                    message: 'Invalid authorization token length: ' + apiKeyString.length,
+                    message: `Invalid authorization token length: ${apiKeyString.length}`,
                     type: 'unauthorized'
                 }
             })
