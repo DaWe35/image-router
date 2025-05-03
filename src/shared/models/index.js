@@ -82,6 +82,14 @@ modelInstances.forEach(instance => {
   const modelData = instance.getData()
   const modelId = modelData.id
   delete modelData.id
+  
+  // Add feature support flags
+  modelData.params = {
+    quality: typeof modelData.providers[0]?.applyQuality === 'function',
+    image: typeof modelData.providers[0]?.applyImage === 'function',
+    mask: typeof modelData.providers[0]?.applyMask === 'function'
+  }
+  
   models[modelId] = modelData
 })
 
