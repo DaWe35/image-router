@@ -16,7 +16,7 @@ export function validateParams(req) {
     // Validate response_format parameter
     if (response_format) {
         throw new Error("'response_format' is not yet supported. Depending on the model, you'll get a base64 encoded image or a url to the image, but it cannot be changed now.")
-    }    // Validate response_format parameter
+    }
     if (size) {
         throw new Error("'size' is not yet supported.")
     }

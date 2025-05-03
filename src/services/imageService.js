@@ -58,24 +58,20 @@ export async function generateImage(params, userId) {
     }
     delete fetchParams.files
 
-    let result
-    switch (provider) {
-        case 'openai':
-            result = await generateOpenAI({ fetchParams, modelToUse, userId })
-            break
-        case 'deepinfra':
-            result = await generateDeepInfra({ fetchParams, modelToUse, userId })
-            break
-        case 'replicate':
-            result = await generateReplicate({ fetchParams, modelToUse })
-            break
-        case 'google':
-            result = await generateGoogle({ fetchParams, modelToUse, userId })
-            break
-        case 'test':
-            result = await generateTest({ fetchParams, modelToUse, userId })
-            break
+    const providerHandlers = {
+      openai: generateOpenAI,
+      deepinfra: generateDeepInfra,
+      replicate: generateReplicate,
+      google: generateGoogle,
+      test: generateTest
     }
+
+    const handler = providerHandlers[provider]
+    if (!handler) {
+      throw new Error(`No handler implemented for provider ${provider}`)
+    }
+
+    const result = await handler({ fetchParams, modelToUse, userId })
     result.latency = Date.now() - startTime
     return result
 }
