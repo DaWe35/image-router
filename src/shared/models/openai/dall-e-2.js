@@ -12,7 +12,7 @@ class DallE2 {
         },
         applyQuality: this.applyQuality
       }],
-      arenaScore: 714,
+      arena_score: 714,
       examples: [
         {
           image: '/model-examples/dall-e-2.webp'

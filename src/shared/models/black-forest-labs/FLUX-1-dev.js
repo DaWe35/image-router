@@ -11,7 +11,7 @@ class Flux1Dev {
           value: 0.009,
         }
       }],
-      arenaScore: 1042,
+      arena_score: 1042,
       examples: [
         {
           image: '/model-examples/FLUX-1-dev.webp'

@@ -84,7 +84,7 @@ modelInstances.forEach(instance => {
   delete modelData.id
   
   // Add feature support flags
-  modelData.params = {
+  modelData.supported_params = {
     quality: typeof modelData.providers[0]?.applyQuality === 'function',
     image: typeof modelData.providers[0]?.applyImage === 'function',
     mask: typeof modelData.providers[0]?.applyMask === 'function'

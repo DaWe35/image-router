@@ -11,7 +11,7 @@ class Flux11Pro {
           value: 0.04,
         }
       }],
-      arenaScore: 1079,
+      arena_score: 1079,
       examples: [
         {
           image: '/model-examples/FLUX-1.1-pro.webp'

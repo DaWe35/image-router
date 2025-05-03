@@ -11,7 +11,7 @@ class IdeogramV2aTurbo {
           value: 0.025,
         }
       }],
-      arenaScore: 991,
+      arena_score: 991,
       examples: [
         {
           image: '/model-examples/ideogram-v2a-turbo-2025-04-03T15-10-09-820Z.webp'

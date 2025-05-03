@@ -11,7 +11,7 @@ class Flux11ProUltra {
           value: 0.06,
         }
       }],
-      arenaScore: null,
+      arena_score: null,
       examples: [
         {
           image: '/model-examples/flux-1.1-pro-ultra-2025-04-03T15-49-06-132Z.webp'

@@ -11,7 +11,7 @@ class Sd35Medium {
           value: 0.03,
         }
       }],
-      arenaScore: 935,
+      arena_score: 935,
       examples: [
         {
           image: '/model-examples/sd3.5-medium.webp'

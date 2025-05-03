@@ -11,7 +11,7 @@ class IdeogramV2a {
           value: 0.04,
         }
       }],
-      arenaScore: 997,
+      arena_score: 997,
       examples: [
         {
           image: '/model-examples/ideogram-v2a-2025-04-03T15-10-14-620Z.webp'

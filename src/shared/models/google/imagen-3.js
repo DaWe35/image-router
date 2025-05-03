@@ -11,7 +11,7 @@ class Imagen3 {
           value: 0.05,
         }
       }],
-      arenaScore: 1084,
+      arena_score: 1084,
       examples: [
         {
           image: '/model-examples/imagen-3-2025-04-03T15-11-15-706Z.webp'

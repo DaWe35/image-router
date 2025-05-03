@@ -12,7 +12,7 @@ class Flux1SchnellFree {
           value: 0,
         }
       }],
-      arenaScore: 1000,
+      arena_score: 1000,
       examples: [
         {
           image: '/model-examples/FLUX-1-schnell.webp'

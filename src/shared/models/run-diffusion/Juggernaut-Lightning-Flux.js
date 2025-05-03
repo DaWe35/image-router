@@ -11,7 +11,7 @@ class JuggernautLightningFlux {
           value: 0.009,
         }
       }],
-      arenaScore: null,
+      arena_score: null,
       examples: [
         {
           image: '/model-examples/Juggernaut-Lightning-Flux-2025-04-03T14-15-05-487Z.webp'

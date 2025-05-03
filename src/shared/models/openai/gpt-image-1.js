@@ -20,7 +20,7 @@ class GptImage1 {
         applyImage: this.applyImage,
         applyMask: this.applyMask
       }],
-      arenaScore: 1156,
+      arena_score: 1156,
       examples: [
         {
           image: '/model-examples/gpt-image-1.webp'

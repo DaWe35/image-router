@@ -11,7 +11,7 @@ class Image01 {
           value: 0.01,
         }
       }],
-      arenaScore: 1044,
+      arena_score: 1044,
       examples: [
         {
           image: '/model-examples/image-01.webp'

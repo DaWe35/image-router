@@ -11,7 +11,7 @@ class Flux1Schnell {
           value: 0.0005,
         }
       }],
-      arenaScore: 1000,
+      arena_score: 1000,
       examples: [
         {
           image: '/model-examples/FLUX-1-schnell.webp'

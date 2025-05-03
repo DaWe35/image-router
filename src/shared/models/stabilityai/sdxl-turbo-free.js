@@ -12,7 +12,7 @@ class SdxlTurboFree {
           value: 0,
         }
       }],
-      arenaScore: 1030,
+      arena_score: 1030,
       examples: [
         {
           image: '/model-examples/sdxl-turbo.webp'

@@ -13,7 +13,7 @@ class TestImage {
         applyQuality: this.applyQuality,
         generate: this.generateRandomImage
       }],
-      arenaScore: 0,
+      arena_score: 0,
       examples: [
         {
           image: '/model-examples/test.webp'
