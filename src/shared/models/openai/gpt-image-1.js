@@ -58,7 +58,8 @@ class GptImage1 {
 
   applyImage(params) {
     if (Array.isArray(params.files.image)) {
-      // For multiple images, return paths to the image files
+      // For multiple images, add each image stream to an array
+      // The objectToFormData function will handle appending each image with the same key
       params.image = params.files.image.map(image => {
         return fs.createReadStream(image.path)
       })

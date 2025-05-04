@@ -13,7 +13,12 @@ function objectToFormData(obj) {
     Object.entries(obj).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             if (Array.isArray(value)) {
-                value.forEach(item => formData.append(key, item))
+                if (key === 'image') {
+                    // For OpenAI image arrays, use the array syntax (image[]=value)
+                    value.forEach(item => formData.append(`${key}[]`, item))
+                } else {
+                    value.forEach(item => formData.append(key, item))
+                }
             } else {
                 formData.append(key, value)
             }
