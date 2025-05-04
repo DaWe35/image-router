@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
 class GptImage1 {
@@ -15,9 +16,11 @@ class GptImage1 {
             max: 0.5
           },
         },
-        applyQuality: this.applyQuality
+        applyQuality: this.applyQuality,
+        applyImage: this.applyImage,
+        applyMask: this.applyMask
       }],
-      arenaScore: 1156,
+      arena_score: 1156,
       examples: [
         {
           image: '/model-examples/gpt-image-1.webp'
@@ -43,11 +46,34 @@ class GptImage1 {
       return totalPrice
   }
 
-  applyQuality(params, quality) {
+  applyQuality(params) {
     const validQualities = ['auto', 'low', 'medium', 'high'] // future proofing
-    if (validQualities.includes(quality)) {
-      params.quality = quality
+    if (validQualities.includes(params.quality)) {
+      params.quality = params.quality
+    } else {
+      throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
     }
+    return params
+  }
+
+  applyImage(params) {
+    if (Array.isArray(params.files.image)) {
+      // For multiple images, return paths to the image files
+      params.image = params.files.image.map(image => {
+        return fs.createReadStream(image.path)
+      })
+    } else {
+      // For a single image, return the path to the image file
+      params.image = fs.createReadStream(params.files.image.path)
+    }
+
+    delete params.files.image
+    return params
+  }
+
+  applyMask(params) {
+    params.mask = fs.createReadStream(params.files.mask.path)
+    delete params.files.mask
     return params
   }
 }

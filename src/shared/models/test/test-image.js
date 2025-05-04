@@ -13,7 +13,7 @@ class TestImage {
         applyQuality: this.applyQuality,
         generate: this.generateRandomImage
       }],
-      arenaScore: 0,
+      arena_score: 0,
       examples: [
         {
           image: '/model-examples/test.webp'
@@ -26,9 +26,8 @@ class TestImage {
     return this.data
   }
 
-  applyQuality(params, quality) {
-    // Simply store the quality parameter
-    params.quality = quality
+  applyQuality(params) {
+    // Change nothing, values are already valited in validateParams.js
     return params
   }
 

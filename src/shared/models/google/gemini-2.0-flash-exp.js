@@ -12,7 +12,7 @@ class Gemini20FlashExp {
           value: 0.01,
         }
       }],
-      arenaScore: 966,
+      arena_score: 966,
       examples: [
         {
           image: '/model-examples/gemini-2.0-flash-exp_free-2025-04-07T22-34-11-327Z.webp'

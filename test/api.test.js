@@ -46,8 +46,8 @@ describe('Image Router API Tests', () => {
                 })
 
                 // Check optional properties
-                if (model.arenaScore !== null) {
-                    expect(typeof model.arenaScore).toBe('number')
+                if (model.arena_score !== null) {
+                    expect(typeof model.arena_score).toBe('number')
                 }
                 if (model.examples) {
                     expect(Array.isArray(model.examples)).toBe(true)

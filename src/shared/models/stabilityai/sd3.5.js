@@ -21,7 +21,7 @@ class Sd35 {
           }
         } */
     ],
-      arenaScore: 1027,
+      arena_score: 1027,
       examples: [
         {
           image: '/model-examples/sd3.5.webp'

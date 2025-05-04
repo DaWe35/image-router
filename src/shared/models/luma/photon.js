@@ -11,7 +11,7 @@ class Photon {
           value: 0.03,
         }
       }],
-      arenaScore: 1031,
+      arena_score: 1031,
       examples: [
         {
           image: '/model-examples/photon-2025-04-03T15-07-51-501Z.webp'

@@ -11,7 +11,7 @@ class Imagen3Fast {
           value: 0.025,
         }
       }],
-      arenaScore: null,
+      arena_score: null,
       examples: [
         {
           image: '/model-examples/imagen-3-fast-2025-04-03T15-11-16-597Z.webp'

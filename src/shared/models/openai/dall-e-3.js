@@ -17,7 +17,7 @@ class DallE3 {
         },
         applyQuality: this.applyQuality
       }],
-      arenaScore: 927,
+      arena_score: 927,
       examples: [
         {
           image: '/model-examples/dall-e-3.webp'
@@ -42,9 +42,9 @@ class DallE3 {
     }
   }
 
-  applyQuality(params, quality) {
+  applyQuality(params) {
     // 'low' and 'medium' and default map to 'standard', 'high' maps to 'hd'
-    params.quality = (quality === 'high') ? 'hd' : 'standard'
+    params.quality = (params.quality === 'high') ? 'hd' : 'standard'
     return params
   }
 }

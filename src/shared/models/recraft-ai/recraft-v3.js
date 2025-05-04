@@ -11,7 +11,7 @@ class RecraftV3 {
           value: 0.04,
         }
       }],
-      arenaScore: 1105,
+      arena_score: 1105,
       examples: [
         {
           image: '/model-examples/recraft-v3-2025-04-03T15-09-40-800Z.webp'

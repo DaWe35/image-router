@@ -131,19 +131,12 @@ const freeTierLimiter = async (req, res, next) => {
 
 app.use(generalLimiter) // Apply general limiter to all other routes
 
-// API key validation and usage logging
-if (process.env.DATABASE_URL) {
-    // Apply middleware chain for image generation: IP Limit -> Validate Key -> Key Limit -> Check Free Tier -> Log Usage
-    app.use(
-        '/v1/openai/images/generations',
-        ipLimiter, // First, limit by IP
-        validateApiKey,         // Then, validate the API key
-        userLimiter,            // Then, limit by API key total reqs
-        freeTierLimiter,        // Then, check daily free limit if applicable
-    )
-} else {
-    app.use('/v1/openai/images/generations', ipLimiter)
-}
+// Define a protected middleware chain based on DATABASE_URL availability
+const protectedChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userLimiter, freeTierLimiter] : [ipLimiter]
+
+// Apply the protected middleware chain to both image generations and edits routes
+app.use('/v1/openai/images/generations', ...protectedChain)
+app.use('/v1/openai/images/edits', ...protectedChain)
 
 // Modified IP endpoint to show headers for debugging
 app.get('/ip', (request, response) => {

@@ -11,7 +11,7 @@ class PhotonFlash {
           value: 0.01,
         }
       }],
-      arenaScore: 964,
+      arena_score: 964,
       examples: [
         {
           image: '/model-examples/photon-flash-2025-04-03T14-22-54-572Z.webp'

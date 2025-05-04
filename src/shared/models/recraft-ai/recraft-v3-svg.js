@@ -11,7 +11,7 @@ class RecraftV3Svg {
           value: 0.08,
         }
       }],
-      arenaScore: null,
+      arena_score: null,
       examples: [
         {
           image: '/model-examples/recraft-v3-svg-2025-04-03T15-34-40-865Z.svg'
