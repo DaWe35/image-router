@@ -23,7 +23,7 @@
     "https-proxy-agent": "^5.0.1",
     "jest": "^29.7.0",
     "multer": "1.4.5-lts.2",
-    "form-data": "^4.0.0"
+    "formdata-node": "^6.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.3",

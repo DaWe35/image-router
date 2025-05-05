@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
-import FormData from 'form-data'
+import { FormData } from 'formdata-node'
 
 // Helper function to convert an object to FormData
 function objectToFormData(obj) {
