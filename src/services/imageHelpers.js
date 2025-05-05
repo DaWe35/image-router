@@ -5,29 +5,24 @@ export function objectToFormData(obj) {
     const formData = new FormData()
     
     Object.entries(obj).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-            // Special handling for image files (can be multiple)
-            if (key === 'image') {
-                if (Array.isArray(value)) {
-                    // Handle multiple images
-                    value.forEach(item => {
-                        if (item.blob && item.filename) {
-                            formData.append(`${key}[]`, item.blob, item.filename)
-                        }
-                    })
-                } else if (value.blob && value.filename) {
-                    // Handle single image
-                    formData.append(key, value.blob, value.filename)
-                }
-            } 
-            // Special handling for mask file (always single)
-            else if (key === 'mask' && value.blob && value.filename) {
+        if (value === undefined || value === null) return
+        
+        // Handle file uploads (image or mask)
+        if ((key === 'image' || key === 'mask') && value) {
+            if (Array.isArray(value) && key === 'image') {
+                // Handle multiple images
+                value.forEach(item => {
+                    if (item.blob && item.filename) {
+                        formData.append(`${key}[]`, item.blob, item.filename)
+                    }
+                })
+            } else if (value.blob && value.filename) {
+                // Handle single file
                 formData.append(key, value.blob, value.filename)
             }
-            // For all other fields, handle normally
-            else {
-                formData.append(key, value)
-            }
+        } else {
+            // For all other fields
+            formData.append(key, value)
         }
     })
     
