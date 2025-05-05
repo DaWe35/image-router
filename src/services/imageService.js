@@ -5,6 +5,8 @@ import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
 import { FormData, File } from "formdata-node"
+import {Readable} from "stream"
+import {FormDataEncoder} from "form-data-encoder"
 
 function multerToFormData(multerFile) {
     const imageFile = new File([multerFile.buffer], multerFile.originalname, { type: multerFile.mimetype })
@@ -13,13 +15,13 @@ function multerToFormData(multerFile) {
 
 // Helper function to convert an object to FormData
 function objectToFormData(obj) {
+    console.log('objectToFormData', obj)
     const formData = new FormData()
     for (const [key, value] of Object.entries(obj)) {
         if (value === undefined || value === null) continue
 
         if (key === 'image') {
             // Image can be a single file or an array of files
-            console.log('image', value)
             if (Array.isArray(value)) {
                 value.forEach(file => {
                     formData.append(`${key}[]`, multerToFormData(file))
@@ -38,8 +40,16 @@ function objectToFormData(obj) {
             formData.append(key, value)
         }
     }
-    console.log(formData.getAll('image'))
-    return formData
+    console.log('_______-')
+    console.log('prompt:', formData.getAll('prompt'))
+    console.log('image:', formData.getAll('image'))
+    console.log('image[]:', formData.getAll('image[]'))
+
+    const encoder = new FormDataEncoder(formData)
+
+
+
+    return Readable.from(encoder)
 }
 
 export async function generateImage(params, userId) {
@@ -120,6 +130,7 @@ async function generateOpenAI({ fetchParams, modelToUse, userId }) {
         headers,
         body: isEdit ? objectToFormData(fetchParams) : JSON.stringify(fetchParams)
     })
+    console.log('response FORM DATA', await response.formData())
 
     if (!response.ok) {
         const errorResponse = await response.json()
@@ -316,7 +327,8 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
 
 async function generateTest({ fetchParams, modelToUse, userId }) {
     if (modelToUse === 'test/echo') {
-        throw new Error(JSON.stringify(fetchParams))
+        const isEdit = Boolean(fetchParams.image)
+        throw new Error(JSON.stringify(isEdit ? objectToFormData(fetchParams) : JSON.stringify(fetchParams)))
     } else if (modelToUse === 'test/test') {
         // Read the image file
         const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)

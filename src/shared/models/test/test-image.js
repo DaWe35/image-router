@@ -30,8 +30,6 @@ class TestImage {
     // Change nothing, values are already valited in validateParams.js
     return params
   }
-
-
 }
 
 export default TestImage 
