@@ -4,7 +4,6 @@ class SdxlTurboFree {
   constructor() {
     this.data = {
       id: 'stabilityai/sdxl-turbo:free',
-      aliasOf: 'stabilityai/sdxl-turbo',
       providers: [{
         id: 'deepinfra',
         pricing: {
@@ -13,6 +12,7 @@ class SdxlTurboFree {
         }
       }],
       arena_score: 1030,
+      release_date: '2024-10-22',
       examples: [
         {
           image: '/model-examples/sdxl-turbo.webp'
@@ -23,6 +23,10 @@ class SdxlTurboFree {
 
   getData() {
     return this.data
+  }
+
+  getModelToUse(quality) {
+    return 'stabilityai/sdxl-turbo'
   }
 }
 

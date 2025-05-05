@@ -22,6 +22,7 @@ class SdxlTurbo {
         } */
     ],
       arena_score: 1030,
+      release_date: '2024-10-22',
       examples: [
         {
           image: '/model-examples/sdxl-turbo.webp'

@@ -14,6 +14,7 @@ class TestImage {
         generate: this.generateRandomImage
       }],
       arena_score: 0,
+      release_date: '2025-05-04',
       examples: [
         {
           image: '/model-examples/test.webp'

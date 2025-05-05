@@ -12,6 +12,7 @@ class RecraftV3 {
         }
       }],
       arena_score: 1105,
+      release_date: '2024-10-30',
       examples: [
         {
           image: '/model-examples/recraft-v3-2025-04-03T15-09-40-800Z.webp'

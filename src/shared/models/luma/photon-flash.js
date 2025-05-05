@@ -12,6 +12,7 @@ class PhotonFlash {
         }
       }],
       arena_score: 964,
+      release_date: '2024-12-03',
       examples: [
         {
           image: '/model-examples/photon-flash-2025-04-03T14-22-54-572Z.webp'

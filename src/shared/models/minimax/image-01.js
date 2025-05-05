@@ -12,6 +12,7 @@ class Image01 {
         }
       }],
       arena_score: 1044,
+      release_date: '2025-05-05',
       examples: [
         {
           image: '/model-examples/image-01.webp'

@@ -12,6 +12,7 @@ class Flux1Schnell {
         }
       }],
       arena_score: 1000,
+      release_date: '2024-08-01',
       examples: [
         {
           image: '/model-examples/FLUX-1-schnell.webp'

@@ -12,6 +12,7 @@ class Photon {
         }
       }],
       arena_score: 1031,
+      release_date: '2024-12-03',
       examples: [
         {
           image: '/model-examples/photon-2025-04-03T15-07-51-501Z.webp'

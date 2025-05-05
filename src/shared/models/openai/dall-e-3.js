@@ -18,6 +18,7 @@ class DallE3 {
         applyQuality: this.applyQuality
       }],
       arena_score: 927,
+      release_date: '2023-10-20',
       examples: [
         {
           image: '/model-examples/dall-e-3.webp'
@@ -28,6 +29,10 @@ class DallE3 {
 
   getData() {
     return this.data
+  }
+
+  getModelToUse(quality) {
+    return 'dall-e-3'
   }
 
   calculatePrice(quality) {

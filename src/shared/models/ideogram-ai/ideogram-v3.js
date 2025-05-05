@@ -1,9 +1,9 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class IdeogramV2a {
+class IdeogramV3 {
   constructor() {
     this.data = {
-      id: 'ideogram-ai/ideogram-v2a',
+      id: 'ideogram-ai/ideogram-v3',
       providers: [{
         id: 'replicate',
         pricing: {
@@ -16,11 +16,11 @@ class IdeogramV2a {
           },
         }
       }],
-      arena_score: 997,
-      release_date: '2025-02-27',
+      arena_score: 1088,
+      release_date: '2025-03-26',
       examples: [
         {
-          image: '/model-examples/ideogram-v2a-2025-04-03T15-10-14-620Z.webp'
+          image: ''
         }
       ]
     }
@@ -29,16 +29,20 @@ class IdeogramV2a {
   getData() {
     return this.data
   }
-  
+
   getModelToUse(quality) {
-    if (quality === 'low') return 'ideogram-ai/ideogram-v2a-turbo'
-    return 'ideogram-ai/ideogram-v2a'
+    if (quality === 'low') return 'ideogram-ai/ideogram-v3-turbo'
+    if (quality === 'medium') return 'ideogram-ai/ideogram-v3-balanced'
+    if (quality === 'high') return 'ideogram-ai/ideogram-v3-quality'
+    return 'ideogram-ai/ideogram-v3-balanced'
   }
 
   calculatePrice(quality) {
-    if (quality === 'low') return 0.025
-    return 0.04
+    if (quality === 'low') return 0.04
+    if (quality === 'medium') return 0.07
+    if (quality === 'high') return 0.1
+    return 0.07
   }
 }
 
-export default IdeogramV2a 
+export default IdeogramV3

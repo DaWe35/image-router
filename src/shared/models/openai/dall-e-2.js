@@ -16,6 +16,7 @@ class DallE2 {
         applyMask: this.applyMask */
       }],
       arena_score: 714,
+      release_date: '2022-04-6',
       examples: [
         {
           image: '/model-examples/dall-e-2.webp'
@@ -31,6 +32,10 @@ class DallE2 {
   applyQuality(params) {
     delete params.quality // Dall-E 2 does not support quality, even if their docs say it does. Default quality is standard, no other options available..
     return params
+  }
+
+  getModelToUse(quality) {
+    return 'dall-e-2'
   }
 
 /*   async applyImage(params) {

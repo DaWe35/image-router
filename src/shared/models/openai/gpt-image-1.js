@@ -21,6 +21,7 @@ class GptImage1 {
         applyMask: this.applyMask
       }],
       arena_score: 1156,
+      release_date: '2025-04-23',
       examples: [
         {
           image: '/model-examples/gpt-image-1.webp'
@@ -31,6 +32,10 @@ class GptImage1 {
 
   getData() {
     return this.data
+  }
+
+  getModelToUse(quality) {
+    return 'gpt-image-1'
   }
 
   postCalcPrice(imageResult) {

@@ -5,7 +5,6 @@ class Gemini20FlashExpFree {
   constructor() {
     this.data = {
       id: 'google/gemini-2.0-flash-exp:free',
-      aliasOf: 'google/gemini-2.0-flash-exp-image-generation',
       providers: [{
         id: 'google',
         pricing: {
@@ -25,6 +24,10 @@ class Gemini20FlashExpFree {
 
   getData() {
     return this.data
+  }
+
+  getModelToUse(quality) {
+    return 'gemini-2.0-flash-exp-image-generation'
   }
 
   async applyImage(params) {

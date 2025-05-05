@@ -12,6 +12,7 @@ class Flux11Pro {
         }
       }],
       arena_score: 1079,
+      release_date: '2024-11-02',
       examples: [
         {
           image: '/model-examples/FLUX-1.1-pro.webp'

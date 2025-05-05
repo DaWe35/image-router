@@ -16,8 +16,10 @@ export async function generateImage(params, userId) {
         throw new Error('Invalid model specified')
     }
 
-    // Use the alias model if available, otherwise use the original model
-    const modelToUse = modelConfig.aliasOf || fetchParams.model
+    // Use the alias model if available
+    if (typeof modelConfig.providers[0]?.getModelToUse === 'function') {
+        fetchParams.model = modelConfig.providers[0]?.getModelToUse(fetchParams.quality)
+    }
 
     // Apply quality if available and a function is defined
     if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
@@ -54,20 +56,19 @@ export async function generateImage(params, userId) {
       throw new Error(`No handler implemented for provider ${provider}`)
     }
 
-    const result = await handler({ fetchParams, modelToUse, userId })
+    const result = await handler({ fetchParams, userId })
     result.latency = Date.now() - startTime
     return result
 }
 
 // OpenAI format API call
-async function generateOpenAI({ fetchParams, modelToUse, userId }) {
+async function generateOpenAI({ fetchParams, userId }) {
     // Detect if this is an edit request
     const isEdit = Boolean(fetchParams.image)
     const providerUrl = isEdit ? 'https://api.openai.com/v1/images/edits' : 'https://api.openai.com/v1/images/generations'
     const providerKey = process.env.OPENAI_API_KEY
     
     // Set up basic parameters
-    fetchParams.model = modelToUse.replace('openai/', '')
     fetchParams.user = userId
     fetchParams.n = 1
     if (fetchParams.model === 'gpt-image-1') fetchParams.moderation = 'low'
@@ -104,7 +105,7 @@ async function generateOpenAI({ fetchParams, modelToUse, userId }) {
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ fetchParams, modelToUse, userId }) {
+async function generateDeepInfra({ fetchParams, userId }) {
     const providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
     const providerKey = process.env.DEEPINFRA_API_KEY
 
@@ -117,7 +118,7 @@ async function generateDeepInfra({ fetchParams, modelToUse, userId }) {
         // TODO: Enable customization
         body: JSON.stringify({
             prompt: fetchParams.prompt,
-            model: modelToUse,
+            model: fetchParams.model,
             user: userId,
             //n: 1,
             //size: '1024x1024',
@@ -147,8 +148,8 @@ async function generateDeepInfra({ fetchParams, modelToUse, userId }) {
 }
 
 // Replicate format API call
-async function generateReplicate({ fetchParams, modelToUse }) {
-    const providerUrl = `https://api.replicate.com/v1/models/${modelToUse}/predictions`
+async function generateReplicate({ fetchParams }) {
+    const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
     const response = await fetch(providerUrl, {
@@ -188,10 +189,9 @@ async function generateReplicate({ fetchParams, modelToUse }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ fetchParams, modelToUse, userId }) {
-    const modelToUseWithoutGoogle = modelToUse.replace('google/', '')
+async function generateGoogle({ fetchParams, userId }) {
     const providerKey = process.env.GOOGLE_GEMINI_API_KEY
-    const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUseWithoutGoogle}:generateContent?key=${providerKey}`
+    const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`
 
     // Get webshare proxy credentials from environment variables
     const proxyUrl = process.env.PROXY_URL
@@ -298,7 +298,7 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
     }
 }
 
-async function generateTest({ fetchParams, modelToUse, userId }) {
+async function generateTest({ fetchParams, userId }) {
     // Read the image file
     const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
     const imageBuffer = await fs.readFile(imagePath)

@@ -12,6 +12,7 @@ class JuggernautLightningFlux {
         }
       }],
       arena_score: null,
+      release_date: '2025-03-05',
       examples: [
         {
           image: '/model-examples/Juggernaut-Lightning-Flux-2025-04-03T14-15-05-487Z.webp'
