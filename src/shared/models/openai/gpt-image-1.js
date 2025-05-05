@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile } from '../../../services/imageHelpers.js'
 
