@@ -31,7 +31,7 @@ export async function generateImage(params, userId) {
         if (typeof modelConfig.providers[0]?.applyImage === 'function') {
             fetchParams = await modelConfig.providers[0]?.applyImage(fetchParams)
         } else {
-            throw new Error('Image processing not supported for this model')
+            throw new Error('Image editing is not supported for this model')
         }
     }
 
@@ -39,7 +39,7 @@ export async function generateImage(params, userId) {
         if (typeof modelConfig.providers[0]?.applyMask === 'function') {
             fetchParams = await modelConfig.providers[0]?.applyMask(fetchParams)
         } else {
-            throw new Error('Mask processing not supported for this model')
+            throw new Error('Mask editing is not supported for this model')
         }
     }
     delete fetchParams.files
