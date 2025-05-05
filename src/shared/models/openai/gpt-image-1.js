@@ -57,14 +57,14 @@ class GptImage1 {
     return params
   }
 
-  applyImage(params) {
-    params.image = processSingleOrMultipleFiles(params.files.image)
+  async applyImage(params) {
+    params.image = await processSingleOrMultipleFiles(params.files.image)
     delete params.files.image
     return params
   }
 
-  applyMask(params) {
-    params.mask = processSingleFile(params.files.mask)
+  async applyMask(params) {
+    params.mask = await processSingleFile(params.files.mask)
     delete params.files.mask
     return params
   }

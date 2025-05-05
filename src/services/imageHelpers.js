@@ -1,3 +1,5 @@
+import { readFile } from 'fs/promises';
+
 // Helper function to convert an object to FormData
 export function objectToFormData(obj) {
     const formData = new FormData()
@@ -32,13 +34,8 @@ export function objectToFormData(obj) {
     return formData
 }
 
-// Helper function to convert file to Blob
-function bufferToBlob(buffer, mimetype) {
-    return new Blob([buffer], { type: mimetype })
-}
-
 // Utility function to process image files
-export function processSingleOrMultipleFiles(imageFiles) {
+export async function processSingleOrMultipleFiles(imageFiles) {
     if (Array.isArray(imageFiles)) {
         return processMultipleFiles(imageFiles)
     } else {
@@ -46,13 +43,14 @@ export function processSingleOrMultipleFiles(imageFiles) {
     }
 }
 
-export function processSingleFile(file) {
+export async function processSingleFile(file) {
+    const buffer = await readFile(file.path);
     return {
-        blob: bufferToBlob(file.buffer, file.mimetype),
+        blob: new Blob([buffer], { type: file.mimetype }),
         filename: file.originalname
     }
 }
 
-export function processMultipleFiles(files) {
-    return files.map(file => processSingleFile(file))
+export async function processMultipleFiles(files) {
+    return await Promise.all(files.map(file => processSingleFile(file)))
 }

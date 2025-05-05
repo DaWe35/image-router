@@ -26,7 +26,7 @@ export async function generateImage(params, userId) {
 
     if (fetchParams.files.image) {
         if (typeof modelConfig.providers[0]?.applyImage === 'function') {
-            fetchParams = modelConfig.providers[0]?.applyImage(fetchParams)
+            fetchParams = await modelConfig.providers[0]?.applyImage(fetchParams)
         } else {
             throw new Error('Image processing not supported for this model')
         }
@@ -34,7 +34,7 @@ export async function generateImage(params, userId) {
 
     if (fetchParams.files.mask) {
         if (typeof modelConfig.providers[0]?.applyMask === 'function') {
-            fetchParams = modelConfig.providers[0]?.applyMask(fetchParams)
+            fetchParams = await modelConfig.providers[0]?.applyMask(fetchParams)
         } else {
             throw new Error('Mask processing not supported for this model')
         }
