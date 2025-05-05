@@ -4,17 +4,11 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
-import {FormData, File} from "formdata-node"
+import { FormData, File } from "formdata-node"
 
 function multerToFormData(multerFile) {
-    const file = new File(
-        [multerFile.buffer], // content
-        multerFile.originalname, // name
-        {
-          type: multerFile.mimetype,
-        }
-    )
-    return file
+    const imageFile = new File([multerFile.buffer], multerFile.originalname, { type: multerFile.mimetype })
+    return imageFile
 }
 
 // Helper function to convert an object to FormData
@@ -66,7 +60,7 @@ export async function generateImage(params, userId) {
         fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
     }
 
-    if (fetchParams.files.image) {
+    if (fetchParams?.files?.image) {
         if (typeof modelConfig.providers[0]?.applyImage === 'function') {
             fetchParams = modelConfig.providers[0]?.applyImage(fetchParams)
         } else {
@@ -74,7 +68,7 @@ export async function generateImage(params, userId) {
         }
     }
 
-    if (fetchParams.files.mask) {
+    if (fetchParams?.files?.mask) {
         if (typeof modelConfig.providers[0]?.applyMask === 'function') {
             fetchParams = modelConfig.providers[0]?.applyMask(fetchParams)
         } else {
@@ -321,22 +315,29 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
 }
 
 async function generateTest({ fetchParams, modelToUse, userId }) {
-    // Read the image file
-    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
-    const imageBuffer = await fs.readFile(imagePath)
-    const b64_json = imageBuffer.toString('base64')
+    if (modelToUse === 'test/echo') {
+        throw new Error(JSON.stringify(fetchParams))
+    } else if (modelToUse === 'test/test') {
 
-    // Return a random placeholder image
-    return {
-        created: Date.now(),
-        data: [{
-            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/models/test/${fetchParams.quality}.png`,
-            b64_json,
-            revised_prompt: null,
-            original_response_from_provider: {
-                "yeah": "this is m.t.",
-                "whats up": "btw?"
-            }
-        }]
+        // Read the image file
+        const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+        const imageBuffer = await fs.readFile(imagePath)
+        const b64_json = imageBuffer.toString('base64')
+
+        // Return a random placeholder image
+        return {
+            created: Date.now(),
+            data: [{
+                url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/models/test/${fetchParams.quality}.png`,
+                b64_json,
+                revised_prompt: null,
+                original_response_from_provider: {
+                    "yeah": "this is m.t.",
+                    "whats up": "btw?"
+                }
+            }]
+        }
+    } else {
+        throw new Error(`Model ${modelToUse} not found, use test/echo or test/test for testing`)
     }
 }
