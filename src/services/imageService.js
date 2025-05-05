@@ -301,28 +301,22 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
 }
 
 async function generateTest({ fetchParams, modelToUse, userId }) {
-    if (modelToUse === 'test/echo') {
-        throw new Error(JSON.stringify(fetchParams))
-    } else if (modelToUse === 'test/test') {
-        // Read the image file
-        const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
-        const imageBuffer = await fs.readFile(imagePath)
-        const b64_json = imageBuffer.toString('base64')
+    // Read the image file
+    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+    const imageBuffer = await fs.readFile(imagePath)
+    const b64_json = imageBuffer.toString('base64')
 
-        // Return a random placeholder image
-        return {
-            created: Date.now(),
-            data: [{
-                url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/models/test/${fetchParams.quality}.png`,
-                b64_json,
-                revised_prompt: null,
-                original_response_from_provider: {
-                    "yeah": "this is m.t.",
-                    "whats up": "btw?"
-                }
-            }]
-        }
-    } else {
-        throw new Error(`Model ${modelToUse} not found, use test/echo or test/test for testing`)
+    // Return a random placeholder image
+    return {
+        created: Date.now(),
+        data: [{
+            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/models/test/${fetchParams.quality}.png`,
+            b64_json,
+            revised_prompt: null,
+            original_response_from_provider: {
+                "yeah": "this is m.t.",
+                "whats up": "btw?"
+            }
+        }]
     }
 }

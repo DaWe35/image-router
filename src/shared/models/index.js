@@ -35,7 +35,6 @@ import PhotonFlash from './luma/photon-flash.js'
 import Image01 from './minimax/image-01.js'
 
 import TestImage from './test/test-image.js'
-import TestEcho from './test/test-echo.js'
 // Initialize all models
 const modelInstances = [
   new Flux11Pro(),
@@ -74,7 +73,6 @@ const modelInstances = [
   new Image01(),
 
   new TestImage(),
-  new TestEcho()
 ]
 
 // Create an object with model IDs as keys
