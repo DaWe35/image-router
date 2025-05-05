@@ -58,10 +58,12 @@ router.post('/edits',
     ]), 
     handleMulterError,
     (req, res, next) => {
+        // If the user uploaded multiple images, merge them into a single array
         if (req.files['image[]'] && !req.files.image) {
             req.files.image = req.files['image[]']
             delete req.files['image[]']
         }
+        // If the user uploaded multiple masks, merge them into a single array
         if (req.files['mask[]'] && !req.files.mask) {
             req.files.mask = req.files['mask[]']
             delete req.files['mask[]']

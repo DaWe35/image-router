@@ -39,20 +39,18 @@ class DallE2 {
         throw new Error('DALL-E 2 does not support multiple images. Please provide only one image for editing.')
       }
       // Exactly one image provided in array
-      params.image = fs.createReadStream(params.files.image[0].path)
-    } else {
+      params.image = params.files.image[0]
       // For a single image provided as an object
-      params.image = fs.createReadStream(params.files.image.path)
+    } else {
+      params.image = params.files.image
     }
-
-    console.log('params.image', params.image)
 
     delete params.files.image
     return params
   }
 
   applyMask(params) {
-    params.mask = fs.createReadStream(params.files.mask.path)
+    params.mask = params.files.mask
     delete params.files.mask
     return params
   }

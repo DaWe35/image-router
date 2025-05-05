@@ -4,27 +4,47 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
-import { FormData } from 'formdata-node'
+import {FormData, File} from "formdata-node"
+
+function multerToFormData(multerFile) {
+    const file = new File(
+        [multerFile.buffer], // content
+        multerFile.originalname, // name
+        {
+          type: multerFile.mimetype,
+        }
+    )
+    return file
+}
 
 // Helper function to convert an object to FormData
 function objectToFormData(obj) {
     const formData = new FormData()
-    
-    Object.entries(obj).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
+    for (const [key, value] of Object.entries(obj)) {
+        if (value === undefined || value === null) continue
+
+        if (key === 'image') {
+            // Image can be a single file or an array of files
+            console.log('image', value)
             if (Array.isArray(value)) {
-                if (key === 'image') {
-                    // For OpenAI image arrays, use the array syntax (image[]=value)
-                    value.forEach(item => formData.append(`${key}[]`, item))
-                } else {
-                    value.forEach(item => formData.append(key, item))
-                }
+                value.forEach(file => {
+                    formData.append(`${key}[]`, multerToFormData(file))
+                    console.log('append more image')
+                })
             } else {
-                formData.append(key, value)
+                formData.append(key, multerToFormData(value))
+                console.log('append 1 image')
             }
+        } else if (key === 'mask') {
+            // Mask is a single file
+            formData.append(key, multerToFormData(value))
+            console.log('append 1 mask')
+        } else {
+            // Everything else
+            formData.append(key, value)
         }
-    })
-    
+    }
+    console.log(formData.getAll('image'))
     return formData
 }
 

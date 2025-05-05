@@ -60,12 +60,10 @@ class GptImage1 {
     if (Array.isArray(params.files.image)) {
       // For multiple images, add each image stream to an array
       // The objectToFormData function will handle appending each image with the same key
-      params.image = params.files.image.map(image => {
-        return fs.createReadStream(image.path)
-      })
+      params.image = params.files.image
     } else {
       // For a single image, return the path to the image file
-      params.image = fs.createReadStream(params.files.image.path)
+      params.image = params.files.image
     }
 
     delete params.files.image
@@ -73,7 +71,7 @@ class GptImage1 {
   }
 
   applyMask(params) {
-    params.mask = fs.createReadStream(params.files.mask.path)
+    params.mask = params.files.mask
     delete params.files.mask
     return params
   }
