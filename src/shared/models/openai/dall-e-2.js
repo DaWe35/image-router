@@ -32,28 +32,6 @@ class DallE2 {
     delete params.quality // Dall-E 2 does not support quality, even if their docs say it does. Default quality is standard, no other options available..
     return params
   }
-
-  applyImage(params) {
-    if (Array.isArray(params.files.image)) {
-      if (params.files.image.length !== 1) {
-        throw new Error('DALL-E 2 does not support multiple images. Please provide only one image for editing.')
-      }
-      // Exactly one image provided in array
-      params.image = params.files.image[0]
-      // For a single image provided as an object
-    } else {
-      params.image = params.files.image
-    }
-
-    delete params.files.image
-    return params
-  }
-
-  applyMask(params) {
-    params.mask = params.files.mask
-    delete params.files.mask
-    return params
-  }
 }
 
 export default DallE2
