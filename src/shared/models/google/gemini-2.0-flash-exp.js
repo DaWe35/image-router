@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
 
 class Gemini20FlashExp {
   constructor() {
@@ -10,7 +11,8 @@ class Gemini20FlashExp {
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,
-        }
+        },
+        applyImage: this.applyImage
       }],
       arena_score: 966,
       examples: [
@@ -23,6 +25,16 @@ class Gemini20FlashExp {
 
   getData() {
     return this.data
+  }
+
+  async applyImage(params) {
+    // Process single or multiple image files
+    const processedImages = await processSingleOrMultipleFiles(params.files.image)
+    
+    // Store the images for use in the API call
+    params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
+    
+    return params
   }
 }
 

@@ -202,6 +202,22 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
         agent = new HttpsProxyAgent(proxyUrl)
     }
 
+    const parts = [{"text": fetchParams.prompt}]
+    
+    // Image Edits
+    if (fetchParams.imagesData && fetchParams.imagesData.length > 0) {
+        for (const imageData of fetchParams.imagesData) {
+            const arrayBuffer = await imageData.blob.arrayBuffer()
+            const base64Data = Buffer.from(arrayBuffer).toString('base64')
+            parts.push({
+                "inline_data": {
+                    "mime_type": imageData.blob.type,
+                    "data": base64Data
+                }
+            })
+        }
+    }
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -209,11 +225,9 @@ async function generateGoogle({ fetchParams, modelToUse, userId }) {
         },
         body: JSON.stringify({
             "contents": [{
-                "parts": [
-                    {"text": fetchParams.prompt}
-                ]
+                "parts": parts
             }],
-            "generationConfig":{"responseModalities":["Text","Image"]}
+            "generationConfig": {"responseModalities": ["Text", "Image"]}
         }),
         agent
     })
