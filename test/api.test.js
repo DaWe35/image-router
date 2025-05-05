@@ -286,7 +286,7 @@ describe('Image Router API Tests', () => {
             const data = await response.json()
             expect(response.status).toBe(400)
             expect(data.error).toHaveProperty('type')
-            expect(data.error.message).toBe("'quality' must be 'auto', 'low', 'medium', or 'high'")
+            expect(data.error.message).toBe("'quality' must be one of: auto, low, medium, high")
         })
 
         it('should accept valid quality values', async () => {

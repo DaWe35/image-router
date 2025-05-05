@@ -53,11 +53,11 @@ class GptImage1 {
   }
 
   applyQuality(params) {
-    const validQualities = ['auto', 'low', 'medium', 'high'] // future proofing
-    if (validQualities.includes(params.quality)) {
+    const allowedQualities = ['auto', 'low', 'medium', 'high']
+    if (allowedQualities.includes(params.quality)) {
       params.quality = params.quality
     } else {
-      throw new Error("'quality' must be 'auto', 'low', 'medium', or 'high'")
+      throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
     }
     return params
   }
