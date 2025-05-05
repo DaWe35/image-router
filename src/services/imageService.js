@@ -318,7 +318,6 @@ async function generateTest({ fetchParams, modelToUse, userId }) {
     if (modelToUse === 'test/echo') {
         throw new Error(JSON.stringify(fetchParams))
     } else if (modelToUse === 'test/test') {
-
         // Read the image file
         const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
         const imageBuffer = await fs.readFile(imagePath)
