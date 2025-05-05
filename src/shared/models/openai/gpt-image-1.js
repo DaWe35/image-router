@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile } from '../../../services/imageHelpers.js'
+import { processImageFiles, processMaskFile } from '../../../services/imageService.js'
 
 class GptImage1 {
   constructor() {
@@ -58,13 +58,13 @@ class GptImage1 {
   }
 
   applyImage(params) {
-    params.image = processSingleOrMultipleFiles(params.files.image)
+    params.image = processImageFiles(params.files.image)
     delete params.files.image
     return params
   }
 
   applyMask(params) {
-    params.mask = processSingleFile(params.files.mask)
+    params.mask = processMaskFile(params.files.mask)
     delete params.files.mask
     return params
   }

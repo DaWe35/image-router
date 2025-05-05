@@ -4,7 +4,48 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
-import { objectToFormData } from './imageHelpers.js'
+import FormData from 'form-data'
+import fsSync from 'fs'
+
+// Helper function to convert an object to FormData
+function objectToFormData(obj) {
+    const formData = new FormData()
+    
+    Object.entries(obj).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            if (Array.isArray(value)) {
+                if (key === 'image' && value.length > 1) {
+                    // For OpenAI image arrays, use the array syntax (image[]=value)
+                    value.forEach(item => formData.append(`${key}[]`, item))
+                } else {
+                    value.forEach(item => formData.append(key, item))
+                }
+            } else {
+                formData.append(key, value)
+            }
+        }
+    })
+    
+    return formData
+}
+
+// Utility function to process image files
+export function processImageFiles(imageFiles) {
+    if (Array.isArray(imageFiles)) {
+        // For multiple images, use file paths to create read streams
+        return imageFiles.map(image => {
+            return fsSync.createReadStream(image.path)
+        })
+    } else {
+        // For a single image, return a read stream
+        return fsSync.createReadStream(imageFiles.path)
+    }
+}
+
+// Utility function to process mask files
+export function processMaskFile(maskFile) {
+    return fsSync.createReadStream(maskFile.path)
+}
 
 export async function generateImage(params, userId) {
     let fetchParams = structuredClone(params) // prevent side effects
@@ -75,12 +116,6 @@ async function generateOpenAI({ fetchParams, modelToUse, userId }) {
     const headers = {
         'Authorization': `Bearer ${providerKey}`
     }
-    
-    // Don't set Content-Type for multipart form data when using fetch with FormData
-    // The browser/runtime will set it automatically with the correct boundary
-
-    const body = isEdit ? objectToFormData(fetchParams) : JSON.stringify(fetchParams)
-    
     if (!isEdit) {
         headers['Content-Type'] = 'application/json'
     }
@@ -88,7 +123,7 @@ async function generateOpenAI({ fetchParams, modelToUse, userId }) {
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers,
-        body
+        body: isEdit ? objectToFormData(fetchParams) : JSON.stringify(fetchParams)
     })
 
     if (!response.ok) {
