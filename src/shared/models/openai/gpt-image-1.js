@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { processImageFiles, processMaskFile } from '../../../services/imageService.js'
 
 class GptImage1 {
   constructor() {
@@ -57,23 +58,13 @@ class GptImage1 {
   }
 
   applyImage(params) {
-    if (Array.isArray(params.files.image)) {
-      // For multiple images, add each image stream to an array
-      // The objectToFormData function will handle appending each image with the same key
-      params.image = params.files.image.map(image => {
-        return fs.createReadStream(image.path)
-      })
-    } else {
-      // For a single image, return the path to the image file
-      params.image = fs.createReadStream(params.files.image.path)
-    }
-
+    params.image = processImageFiles(params.files.image)
     delete params.files.image
     return params
   }
 
   applyMask(params) {
-    params.mask = fs.createReadStream(params.files.mask.path)
+    params.mask = processMaskFile(params.files.mask)
     delete params.files.mask
     return params
   }
