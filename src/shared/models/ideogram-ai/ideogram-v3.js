@@ -14,7 +14,8 @@ class IdeogramV3 {
             average: this.calculatePrice('medium'),
             max: this.calculatePrice('high')
           },
-        }
+        },
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 1088,
       release_date: '2025-03-26',

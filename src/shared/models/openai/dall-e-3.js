@@ -15,7 +15,8 @@ class DallE3 {
             max: this.calculatePrice('high')
           },
         },
-        applyQuality: this.applyQuality
+        applyQuality: this.applyQuality,
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 927,
       release_date: '2023-10-20',

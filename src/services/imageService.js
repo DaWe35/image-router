@@ -19,6 +19,7 @@ export async function generateImage(params, userId) {
     // Use the alias model if available
     if (typeof modelConfig.providers[0]?.getModelToUse === 'function') {
         fetchParams.model = modelConfig.providers[0]?.getModelToUse(fetchParams.quality)
+        console.log(`Fixing model to ${fetchParams.model}`)
     }
 
     // Apply quality if available and a function is defined
@@ -232,16 +233,17 @@ async function generateGoogle({ fetchParams, userId }) {
         agent
     })
 
+    const data = await response.json()
+
     if (!response.ok) {
-        const errorResponse = await response.json()
         const formattedError = {
-            status: errorResponse?.error?.code,
-            statusText: errorResponse?.error?.status,
+            status: data?.error?.code,
+            statusText: data?.error?.status,
             error: {
-                message: errorResponse?.error?.message,
-                type: errorResponse?.error?.status
+                message: data?.error?.message,
+                type: data?.error?.status
             },
-            original_response_from_provider: errorResponse
+            original_response_from_provider: data
           }
         throw {
             status: response.status,
@@ -249,8 +251,6 @@ async function generateGoogle({ fetchParams, userId }) {
         }
     }
     
-    const data = await response.json()
-
     // Find image data in any part of the response
     let imageData = null
     if (data?.candidates?.[0]?.content?.parts) {

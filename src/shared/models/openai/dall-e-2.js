@@ -12,6 +12,7 @@ class DallE2 {
           value: 0.02,
         },
         applyQuality: this.applyQuality,
+        getModelToUse: this.getModelToUse,
         /* applyImage: this.applyImage,
         applyMask: this.applyMask */
       }],

@@ -13,8 +13,9 @@ class IdeogramV2a {
             min: this.calculatePrice('low'),
             average: this.calculatePrice('medium'),
             max: this.calculatePrice('high')
-          },
-        }
+          }
+        },
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 997,
       release_date: '2025-02-27',

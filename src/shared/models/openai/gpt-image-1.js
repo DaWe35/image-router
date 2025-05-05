@@ -18,7 +18,8 @@ class GptImage1 {
         },
         applyQuality: this.applyQuality,
         applyImage: this.applyImage,
-        applyMask: this.applyMask
+        applyMask: this.applyMask,
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 1156,
       release_date: '2025-04-23',

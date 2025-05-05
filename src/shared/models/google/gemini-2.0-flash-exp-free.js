@@ -11,7 +11,8 @@ class Gemini20FlashExpFree {
           type: PRICING_TYPES.FIXED,
           value: 0,
         },
-        applyImage: this.applyImage
+        applyImage: this.applyImage,
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 966,
       examples: [

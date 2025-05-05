@@ -9,7 +9,8 @@ class SdxlTurboFree {
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,
-        }
+        },
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 1030,
       release_date: '2024-10-22',

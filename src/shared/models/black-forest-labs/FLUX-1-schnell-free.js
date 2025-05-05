@@ -9,7 +9,8 @@ class Flux1SchnellFree {
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,
-        }
+        },
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 1000,
       release_date: '2024-08-01',

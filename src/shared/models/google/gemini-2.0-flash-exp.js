@@ -11,7 +11,8 @@ class Gemini20FlashExp {
           type: PRICING_TYPES.FIXED,
           value: 0.01,
         },
-        applyImage: this.applyImage
+        applyImage: this.applyImage,
+        getModelToUse: this.getModelToUse
       }],
       arena_score: 966,
       examples: [
