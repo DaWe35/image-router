@@ -147,6 +147,15 @@ app.get('/ip', (request, response) => {
 // Routes
 app.use('/v1/openai/images', imageRoutes)
 
+// Timeout test endpoint
+app.get('/timeout-test',
+    async (req, res) => {
+        const delay = Number(req.query.delay) || 1000
+        await new Promise(resolve => setTimeout(resolve, delay))
+        res.json({ message: `Response delayed by ${delay} ms` })
+    }
+)
+
 // Health check
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' })
