@@ -155,7 +155,7 @@ app.get('/timeout-test',
         res.flushHeaders()
         const heartbeatInterval = 1000
         const intervalId = setInterval(() => {
-            res.write('heartbeat\n')
+            res.write(' ')
         }, heartbeatInterval)
 
         setTimeout(() => {
