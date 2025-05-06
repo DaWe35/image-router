@@ -82,7 +82,7 @@ async function generateImageWrapper(req, res) {
 
             let imageResult
             try {
-                imageResult = await generateImage(params, apiKey.user.id)
+                imageResult = await generateImage(params, apiKey.user.id, res)
             } catch (error) {
                 const errorToLog = error?.errorResponse?.message || error?.message || 'unknown error'
                 await refundUsage(apiKey, usageLogEntry, errorToLog)
@@ -91,30 +91,37 @@ async function generateImageWrapper(req, res) {
             
             const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, imageResult)
             imageResult.cost = postPriceInt/10000
-            res.json(imageResult)
+
+            res.write(JSON.stringify(imageResult))
+            res.end()
         } catch (error) {
             // If the error is already in the correct format, forward it as-is
             if (error?.errorResponse) {
-                return res.status(error.status || 500).json(error.errorResponse)
+                res.write(JSON.stringify(error.errorResponse))
+                res.status(error.status || 500).end()
+                return
             }
         
             console.error('Image generation error:', error)
-            // If it's a different type of error, wrap it in the standard format
-            res.status(500).json({
+            const errorResponse = {
                 error: {
                     message: error.message || 'Failed to generate image',
                     type: 'internal_error'
                 }
-            })
+            }
+            res.write(JSON.stringify(errorResponse))
+            res.status(500).end()
         }
     } catch (error) {
         console.error('Image generation error:', error)
-        return res.status(400).json({
+        res.status(400)
+        res.write(JSON.stringify({
             error: {
                 message: error.message || 'Failed to generate image',
                 type: 'invalid_request_error'
             }
-        })
+        }))
+        res.end()
     }
 }
 

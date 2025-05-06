@@ -151,7 +151,7 @@ app.use('/v1/openai/images', imageRoutes)
 app.get('/timeout-test',
     (req, res) => {
         const delay = Number(req.query.delay) || 1000
-        res.setHeader('Content-Type', 'text/plain')
+        res.setHeader('Content-Type', 'application/json')
         res.flushHeaders()
         const heartbeatInterval = 1000
         const intervalId = setInterval(() => {
@@ -160,7 +160,7 @@ app.get('/timeout-test',
 
         setTimeout(() => {
             clearInterval(intervalId)
-            res.write(`Response delayed by ${delay} ms`)
+            res.write(JSON.stringify({ message: `Response delayed by ${delay} ms` }))
             res.end()
         }, delay)
     }

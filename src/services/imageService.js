@@ -6,7 +6,7 @@ const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
 import { objectToFormData } from './imageHelpers.js'
 
-export async function generateImage(params, userId) {
+export async function generateImage(params, userId, res) {
     let fetchParams = structuredClone(params) // prevent side effects
     const startTime = Date.now()
     const modelConfig = models[fetchParams.model]
@@ -57,9 +57,25 @@ export async function generateImage(params, userId) {
       throw new Error(`No handler implemented for provider ${provider}`)
     }
 
-    const result = await handler({ fetchParams, userId })
-    result.latency = Date.now() - startTime
-    return result
+    let intervalId
+    if (res) {
+      res.setHeader('Content-Type', 'application/json')
+      res.flushHeaders()
+      const heartbeatInterval = 3000 // 3 seconds
+      intervalId = setInterval(() => {
+        res.write(' ')
+      }, heartbeatInterval)
+    }
+
+    try {
+      const result = await handler({ fetchParams, userId })
+      result.latency = Date.now() - startTime
+      if (intervalId) clearInterval(intervalId)
+      return result
+    } catch (error) {
+      if (intervalId) clearInterval(intervalId)
+      throw error
+    }
 }
 
 // OpenAI format API call

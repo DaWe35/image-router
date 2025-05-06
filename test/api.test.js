@@ -325,7 +325,7 @@ describe('Image Router API Tests', () => {
             })
 
             const data = await response.json()
-            expect(response.status).toBe(400)
+            expect(response.status).toBe(200) // 200 because of the heartbeat header
             expect(data.error).toHaveProperty('type')
             expect(data.error.type).toBe('user_error')
             expect(data.error.code).toBe('moderation_blocked')
