@@ -29,6 +29,17 @@ docker compose up
 
 The service will be available at `http://localhost:3000`
 
+## Deploy in production
+
+If you're behind a proxy, don't forget to set timeout to 10 minutes!
+Nginx example:
+```
+proxy_connect_timeout 600s;
+proxy_send_timeout 600s;
+proxy_read_timeout 600s;
+send_timeout 600s;
+```
+
 ## Running Tests
 
 To run tests inside the Docker container:
