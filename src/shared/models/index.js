@@ -22,6 +22,7 @@ import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
 
 import IdeogramV2a from './ideogram-ai/ideogram-v2a.js'
+import IdeogramV3 from './ideogram-ai/ideogram-v3.js'
 
 import Imagen3 from './google/imagen-3.js'
 import Imagen3Fast from './google/imagen-3-fast.js'
@@ -59,7 +60,7 @@ const modelInstances = [
   new RecraftV3Svg(),
   
   new IdeogramV2a(),
-  
+  new IdeogramV3(),
   new Imagen3(),
   new Imagen3Fast(),
   new Gemini20FlashExp(),
