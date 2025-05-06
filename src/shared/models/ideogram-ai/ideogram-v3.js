@@ -21,7 +21,7 @@ class IdeogramV3 {
       release_date: '2025-03-26',
       examples: [
         {
-          image: ''
+          image: '/model-examples/ideogram-v3-2025-05-06T13-16-26-069Z.webp'
         }
       ]
     }
