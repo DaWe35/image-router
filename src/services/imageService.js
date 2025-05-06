@@ -145,11 +145,11 @@ async function generateDeepInfra({ fetchParams, userId }) {
     if (!response.ok) {
         const errorResponse = await response.json()
         const formattedError = {
-            status: errorResponse?.status,
-            statusText: errorResponse?.statusText,
+            status: errorResponse?.status || 500,
+            statusText: errorResponse?.statusText || 'Unknown Error',
             error: {
-                message: errorResponse?.error?.message,
-                type: errorResponse?.error?.type || errorResponse?.statusText
+                message: errorResponse?.error?.message || 'An unknown error occurred (152)',
+                type: errorResponse?.error?.type || errorResponse?.statusText || 'Unknown Error'
             },
             original_response_from_provider: errorResponse
           }
