@@ -19,7 +19,6 @@ export async function generateImage(params, userId, res) {
     // Use the alias model if available
     if (typeof modelConfig.providers[0]?.getModelToUse === 'function') {
         fetchParams.model = modelConfig.providers[0]?.getModelToUse(fetchParams.quality)
-        console.log(`Fixing model to ${fetchParams.model}`)
     }
 
     // Apply quality if available and a function is defined

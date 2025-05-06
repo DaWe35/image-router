@@ -50,7 +50,7 @@ export async function preLogUsage(params, apiKey) {
             }
         })
     })
-    console.log('pre-charged', prePriceUsd)
+    console.log('pre-charged', prePriceUsd, 'for', params.model)
     return usageLogEntry
 }
 
@@ -112,7 +112,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
                 }
             })
         })
-        console.log('post-charged', postPriceUsd)
+        console.log('post-charged', postPriceUsd, 'for', params.model)
         return postPriceInt
     } catch (error) {
         console.error('Error in postLogUsage for image generation:', JSON.stringify(params), error)
