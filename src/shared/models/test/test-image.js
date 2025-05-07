@@ -11,7 +11,8 @@ class TestImage {
           value: 0.00,
         },
         applyQuality: this.applyQuality,
-        generate: this.generateRandomImage
+        applyImage: this.applyImage,
+        applyMask: this.applyMask,
       }],
       arena_score: 0,
       release_date: '2025-05-04',
@@ -32,7 +33,15 @@ class TestImage {
     return params
   }
 
+  applyImage(params) {
+    // Change nothing, values are already valited in validateParams.js
+    return params
+  }
 
+  applyMask(params) {
+    // Change nothing, values are already valited in validateParams.js
+    return params
+  }
 }
 
 export default TestImage 
