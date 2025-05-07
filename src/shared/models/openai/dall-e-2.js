@@ -5,6 +5,7 @@ class DallE2 {
   constructor() {
     this.data = {
       id: 'openai/dall-e-2',
+      aliasOf: 'dall-e-2',
       providers: [{
         id: 'openai',
         pricing: {
@@ -12,7 +13,6 @@ class DallE2 {
           value: 0.02,
         },
         applyQuality: this.applyQuality,
-        getModelToUse: this.getModelToUse,
         /* applyImage: this.applyImage,
         applyMask: this.applyMask */
       }],
@@ -33,10 +33,6 @@ class DallE2 {
   applyQuality(params) {
     delete params.quality // Dall-E 2 does not support quality, even if their docs say it does. Default quality is standard, no other options available..
     return params
-  }
-
-  getModelToUse(quality) {
-    return 'dall-e-2'
   }
 
 /*   async applyImage(params) {

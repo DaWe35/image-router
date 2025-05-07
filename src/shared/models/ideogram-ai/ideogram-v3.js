@@ -15,7 +15,7 @@ class IdeogramV3 {
             max: this.calculatePrice('high')
           },
         },
-        getModelToUse: this.getModelToUse
+        applyQuality: this.applyQuality
       }],
       arena_score: 1088,
       release_date: '2025-03-26',
@@ -31,11 +31,13 @@ class IdeogramV3 {
     return this.data
   }
 
-  getModelToUse(quality) {
-    if (quality === 'low') return 'ideogram-ai/ideogram-v3-turbo'
-    if (quality === 'medium') return 'ideogram-ai/ideogram-v3-balanced'
-    if (quality === 'high') return 'ideogram-ai/ideogram-v3-quality'
-    return 'ideogram-ai/ideogram-v3-balanced'
+  applyQuality(params) {
+    if (params.quality === 'low') params.model = 'ideogram-ai/ideogram-v3-turbo'
+    if (params.quality === 'medium') params.model = 'ideogram-ai/ideogram-v3-balanced'
+    if (params.quality === 'high') params.model = 'ideogram-ai/ideogram-v3-quality'
+    params.model = 'ideogram-ai/ideogram-v3-balanced'
+    delete params.quality
+    return params
   }
 
   calculatePrice(quality) {

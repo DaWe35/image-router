@@ -57,8 +57,9 @@ describe('Image Router API Tests', () => {
                         expect(typeof example.image).toBe('string')
                     })
                 }
-                if (model.getModelToUse) {
-                    expect(typeof model.getModelToUse).toBe('function')
+                expect(model.getModelToUse).toBeUndefined()
+                if (model.aliasOf) {
+                    expect(typeof model.aliasOf).toBe('string')
                 }
             })
         })

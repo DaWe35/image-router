@@ -5,6 +5,7 @@ class GptImage1 {
   constructor() {
     this.data = {
       id: 'openai/gpt-image-1',
+      aliasOf: 'gpt-image-1',
       providers: [{
         id: 'openai',
         pricing: {
@@ -19,7 +20,6 @@ class GptImage1 {
         applyQuality: this.applyQuality,
         applyImage: this.applyImage,
         applyMask: this.applyMask,
-        getModelToUse: this.getModelToUse
       }],
       arena_score: 1156,
       release_date: '2025-04-23',
@@ -33,10 +33,6 @@ class GptImage1 {
 
   getData() {
     return this.data
-  }
-
-  getModelToUse(quality) {
-    return 'gpt-image-1'
   }
 
   postCalcPrice(imageResult) {

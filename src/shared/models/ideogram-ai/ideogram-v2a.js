@@ -15,7 +15,7 @@ class IdeogramV2a {
             max: this.calculatePrice('high')
           }
         },
-        getModelToUse: this.getModelToUse
+        applyQuality: this.applyQuality
       }],
       arena_score: 997,
       release_date: '2025-02-27',
@@ -31,9 +31,11 @@ class IdeogramV2a {
     return this.data
   }
   
-  getModelToUse(quality) {
-    if (quality === 'low') return 'ideogram-ai/ideogram-v2a-turbo'
-    return 'ideogram-ai/ideogram-v2a'
+  applyQuality(params) {
+    if (params.quality === 'low') params.model = 'ideogram-ai/ideogram-v2a-turbo'
+    params.model = 'ideogram-ai/ideogram-v2a'
+    delete params.quality
+    return params
   }
 
   calculatePrice(quality) {

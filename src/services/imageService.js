@@ -6,8 +6,7 @@ const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
 import { objectToFormData } from './imageHelpers.js'
 
-export async function generateImage(params, userId, res) {
-    let fetchParams = structuredClone(params) // prevent side effects
+export async function generateImage(fetchParams, userId, res) {
     const startTime = Date.now()
     const modelConfig = models[fetchParams.model]
     const provider = modelConfig?.providers[0]?.id
@@ -16,16 +15,7 @@ export async function generateImage(params, userId, res) {
         throw new Error('Invalid model specified')
     }
 
-    // Use the alias model if available
-    if (typeof modelConfig.providers[0]?.getModelToUse === 'function') {
-        fetchParams.model = modelConfig.providers[0]?.getModelToUse(fetchParams.quality)
-    }
-
-    // Apply quality if available and a function is defined
-    if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
-        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
-    }
-
+    // Apply image editing if available
     if (fetchParams.files.image) {
         if (typeof modelConfig.providers[0]?.applyImage === 'function') {
             fetchParams = await modelConfig.providers[0]?.applyImage(fetchParams)
@@ -34,6 +24,7 @@ export async function generateImage(params, userId, res) {
         }
     }
 
+    // Apply mask editing if available
     if (fetchParams.files.mask) {
         if (typeof modelConfig.providers[0]?.applyMask === 'function') {
             fetchParams = await modelConfig.providers[0]?.applyMask(fetchParams)
@@ -42,6 +33,15 @@ export async function generateImage(params, userId, res) {
         }
     }
     delete fetchParams.files
+
+    // Get alias model if available
+    fetchParams.model = modelConfig.aliasOf || fetchParams.model
+
+    // Apply quality if available and a function is defined. This can change the model to use, or any other variables!
+    if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
+        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
+    }
+
 
     const providerHandlers = {
       openai: generateOpenAI,

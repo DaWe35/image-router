@@ -4,6 +4,7 @@ class DallE3 {
   constructor() {
     this.data = {
       id: 'openai/dall-e-3',
+      aliasOf: 'dall-e-3',
       providers: [{
         id: 'openai',
         pricing: {
@@ -16,7 +17,6 @@ class DallE3 {
           },
         },
         applyQuality: this.applyQuality,
-        getModelToUse: this.getModelToUse
       }],
       arena_score: 927,
       release_date: '2023-10-20',
@@ -30,10 +30,6 @@ class DallE3 {
 
   getData() {
     return this.data
-  }
-
-  getModelToUse(quality) {
-    return 'dall-e-3'
   }
 
   calculatePrice(quality) {
