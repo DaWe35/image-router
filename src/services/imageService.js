@@ -259,7 +259,10 @@ async function generateGoogle({ fetchParams, userId }) {
                 type: data?.error?.status
             },
             original_response_from_provider: data
-          }
+        }
+        if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
+            formattedError.error.message = 'This model hit a global rate limit. Please try again later or switch to the "google/gemini-2.0-flash-prev" model for increased limits.'
+        }
         throw {
             status: response.status,
             errorResponse: formattedError
