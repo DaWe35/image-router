@@ -32,6 +32,7 @@ The service will be available at `http://localhost:3000`
 ## Deploy in production
 
 If you're behind a proxy, don't forget to set timeout to 10 minutes!
+Update: after the empty character streaming that I added to bypass Cloudflare timeouts, I'm not sure if this is still needed.
 Nginx example:
 ```
 proxy_connect_timeout 600s;
