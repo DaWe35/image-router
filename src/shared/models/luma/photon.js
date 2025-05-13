@@ -11,7 +11,7 @@ class Photon {
           value: 0.03,
         }
       }],
-      arena_score: 1031,
+      arena_score: 1035,
       release_date: '2024-12-03',
       examples: [
         {

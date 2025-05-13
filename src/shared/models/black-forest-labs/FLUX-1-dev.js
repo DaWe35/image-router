@@ -11,7 +11,7 @@ class Flux1Dev {
           value: 0.009,
         }
       }],
-      arena_score: 1042,
+      arena_score: 1046,
       release_date: '2024-08-01',
       examples: [
         {

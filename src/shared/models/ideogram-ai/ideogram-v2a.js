@@ -17,7 +17,7 @@ class IdeogramV2a {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: 997,
+      arena_score: 1004,
       release_date: '2025-02-27',
       examples: [
         {

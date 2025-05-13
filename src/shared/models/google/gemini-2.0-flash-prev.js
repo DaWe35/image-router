@@ -1,20 +1,20 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import Gemini20FlashExp from './gemini-2.0-flash-exp.js'
 
-class Gemini20FlashExpFree {
+class Gemini20FlashPrev {
   constructor() {
     this.data = {
-      id: 'google/gemini-2.0-flash-exp:free',
-      aliasOf: 'gemini-2.0-flash-exp-image-generation',
+      id: 'google/gemini-2.0-flash-prev',
+      aliasOf: 'gemini-2.0-flash-preview-image-generation',
       providers: [{
         id: 'google',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0,
+          value: 0.039,
         },
         applyImage: Gemini20FlashExp.applyImage,
       }],
-      arena_score: 962,
+      arena_score: 980,
       examples: [
         {
           image: '/model-examples/gemini-2.0-flash-exp_free-2025-05-06T13-16-25-288Z.webp'
@@ -28,4 +28,4 @@ class Gemini20FlashExpFree {
   }
 }
 
-export default Gemini20FlashExpFree 
+export default Gemini20FlashPrev 

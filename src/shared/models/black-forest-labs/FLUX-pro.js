@@ -11,7 +11,7 @@ class FluxPro {
           value: 0.05,
         }
       }],
-      arena_score: 1064,
+      arena_score: 1069,
       release_date: '2024-08-01',
       examples: [
         {

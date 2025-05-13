@@ -21,7 +21,7 @@ class GptImage1 {
         applyImage: this.applyImage,
         applyMask: this.applyMask,
       }],
-      arena_score: 1156,
+      arena_score: 1151,
       release_date: '2025-04-23',
       examples: [
         {

@@ -11,7 +11,7 @@ class Image01 {
           value: 0.01,
         }
       }],
-      arena_score: 1044,
+      arena_score: 1049,
       release_date: '2025-05-05',
       examples: [
         {

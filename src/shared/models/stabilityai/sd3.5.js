@@ -21,7 +21,7 @@ class Sd35 {
           }
         } */
     ],
-      arena_score: 1027,
+      arena_score: 1028,
       release_date: '2024-10-22',
       examples: [
         {

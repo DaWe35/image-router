@@ -11,7 +11,7 @@ class Sd35Medium {
           value: 0.03,
         }
       }],
-      arena_score: 935,
+      arena_score: 928,
       release_date: '2024-10-22',
       examples: [
         {

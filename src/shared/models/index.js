@@ -28,6 +28,7 @@ import Imagen3 from './google/imagen-3.js'
 import Imagen3Fast from './google/imagen-3-fast.js'
 import Gemini20FlashExp from './google/gemini-2.0-flash-exp.js'
 import Gemini20FlashExpFree from './google/gemini-2.0-flash-exp-free.js'
+import Gemini20FlashPrev from './google/gemini-2.0-flash-prev.js'
 
 import Photon from './luma/photon.js'
 import PhotonFlash from './luma/photon-flash.js'
@@ -61,10 +62,12 @@ const modelInstances = [
   
   new IdeogramV2a(),
   new IdeogramV3(),
+
   new Imagen3(),
   new Imagen3Fast(),
   new Gemini20FlashExp(),
   new Gemini20FlashExpFree(),
+  new Gemini20FlashPrev(),
   
   new Photon(),
   new PhotonFlash(),
