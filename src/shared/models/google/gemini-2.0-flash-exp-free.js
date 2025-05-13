@@ -1,6 +1,9 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import Gemini20FlashExp from './gemini-2.0-flash-exp.js'
 
+// Create an instance to access instance methods
+const geminiInstance = new Gemini20FlashExp()
+
 class Gemini20FlashExpFree {
   constructor() {
     this.data = {
@@ -12,7 +15,7 @@ class Gemini20FlashExpFree {
           type: PRICING_TYPES.FIXED,
           value: 0,
         },
-        applyImage: Gemini20FlashExp.applyImage,
+        applyImage: geminiInstance.applyImage,
       }],
       arena_score: 962,
       examples: [
