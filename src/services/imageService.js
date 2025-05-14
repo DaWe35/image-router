@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { models } from '../shared/models/index.js'
-import { objectToFormData } from './imageHelpers.js'
+import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
 
 export async function generateImage(fetchParams, userId, res) {
     const startTime = Date.now()
@@ -206,7 +206,8 @@ async function generateReplicate({ fetchParams }) {
 
 // OpenAI format API call
 async function generateGoogle({ fetchParams, userId }) {
-    const providerKey = process.env.GOOGLE_GEMINI_API_KEY
+    const providerKey = getGeminiApiKey(fetchParams.model)
+    
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`
 
     // Get webshare proxy credentials from environment variables

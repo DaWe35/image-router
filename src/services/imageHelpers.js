@@ -49,3 +49,25 @@ export async function processSingleFile(file) {
 export async function processMultipleFiles(files) {
     return await Promise.all(files.map(file => processSingleFile(file)))
 }
+
+// Function to get Google Gemini API key based on model and environment variables
+export function getGeminiApiKey(model) {
+    const geminiKeyString = process.env.GOOGLE_GEMINI_API_KEY
+    let geminiKeyArray = []
+    
+    if (geminiKeyString) {
+      geminiKeyArray = geminiKeyString.split(',').filter(key => key.trim() !== '')
+    }
+    
+    // Make sure we have at least one key
+    if (!geminiKeyArray.length) {
+      throw new Error('No Google Gemini API key found')
+    }
+    
+    // Use random API key for free models; use the first key for paid models
+    if (model === 'gemini-2.0-flash-exp-image-generation' && geminiKeyArray.length > 1) {
+        return geminiKeyArray[Math.floor(Math.random() * geminiKeyArray.length)]
+    } else {
+        return geminiKeyArray[0]
+    }
+}
