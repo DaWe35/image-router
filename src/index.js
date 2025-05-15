@@ -107,7 +107,7 @@ const freeTierLimiter = async (req, res, next) => {
             if (todayUsage >= dailyFreeLimit) {
                 return res.status(429).json({
                     error: {
-                        message: `Daily limit of ${dailyFreeLimit} free requests reached for your account`,
+                        message: `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`,
                         type: "rate_limit_error"
                     }
                 })
