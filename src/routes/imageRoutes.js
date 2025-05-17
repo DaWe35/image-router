@@ -78,7 +78,7 @@ async function generateImageWrapper(req, res) {
         const apiKey = res.locals.key
         const params = validateParams(req)
         try {
-            const usageLogEntry = await preLogUsage(params, apiKey)
+            const usageLogEntry = await preLogUsage(params, apiKey, req)
 
             let imageResult
             try {
