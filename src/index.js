@@ -140,7 +140,7 @@ app.use('/v1/openai/images/edits', ...protectedChain)
 
 // Modified IP endpoint to show headers for debugging
 app.get('/ip', (request, response) => {
-    const clientIp = request.headers['cf-connecting-ip'] || request.ip
+    const clientIp = process.env.PROXY_COUNT > 0 ? req.headers['cf-connecting-ip'] : req.ip
     response.json({ ip: clientIp })
 })
 

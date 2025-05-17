@@ -48,6 +48,7 @@ model APIUsage {
   error                     String?
   metadata                  Json?
   apiKeyTempJwt             Boolean         @default(false)
+  ip                        String?
 
   apiKey                    APIKey?          @relation(fields: [apiKeyId], references: [id])
   apiKeyId                  String?
