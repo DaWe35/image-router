@@ -81,3 +81,31 @@ curl http://localhost:3000/health
 - Security headers are implemented using Helmet
 - CORS is enabled for cross-origin requests
 - API key is required for image generation
+
+# Google Vertex AI Imagen Setup
+
+To use Google Vertex AI Imagen models, you need:
+
+## 1. Environment Variables
+Add these to your `.env` file:
+
+```bash
+# Google Cloud Project ID (required)
+GOOGLE_CLOUD_PROJECT_ID=your-project-id
+
+# Google Cloud Region (optional, defaults to us-central1)
+GOOGLE_CLOUD_LOCATION=us-central1
+
+# Service Account Key (required) - base64 encoded JSON
+GOOGLE_SERVICE_ACCOUNT_KEY=ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsC...
+```
+
+## 2. Get Service Account Key
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create or select a project
+3. Enable the "Vertex AI API"
+4. Go to "IAM & Admin" > "Service Accounts"
+5. Create a new service account with "Vertex AI User" role
+6. Create a JSON key for this service account
+7. Convert the JSON to base64: `cat service-account.json | base64 -w 0`
+8. Put the base64 string in `GOOGLE_SERVICE_ACCOUNT_KEY`

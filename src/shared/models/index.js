@@ -26,6 +26,8 @@ import IdeogramV3 from './ideogram-ai/ideogram-v3.js'
 
 import Imagen3 from './google/imagen-3.js'
 import Imagen3Fast from './google/imagen-3-fast.js'
+import Imagen4 from './google/imagen-4.js'
+import Imagen4Ultra from './google/imagen-4-ultra.js'
 import Gemini20FlashExp from './google/gemini-2.0-flash-exp.js'
 import Gemini20FlashExpFree from './google/gemini-2.0-flash-exp-free.js'
 import Gemini20FlashPrev from './google/gemini-2.0-flash-prev.js'
@@ -65,6 +67,8 @@ const modelInstances = [
 
   new Imagen3(),
   new Imagen3Fast(),
+  new Imagen4(),
+  new Imagen4Ultra(),
   new Gemini20FlashExp(),
   new Gemini20FlashExpFree(),
   new Gemini20FlashPrev(),

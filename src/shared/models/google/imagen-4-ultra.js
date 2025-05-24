@@ -1,21 +1,21 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class Imagen3Fast {
+class Imagen4Ultra {
   constructor() {
     this.data = {
-      id: 'google/imagen-3-fast',
-      aliasOf: 'imagen-3.0-fast-generate-001',
+      id: 'google/imagen-4-ultra',
+      aliasOf: 'imagen-4.0-ultra-generate-exp-05-20',
       providers: [{
         id: 'vertex',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.02,
+          value: 0.12,
         }
       }],
-      arena_score: null,
+      arena_score: 1105,
       examples: [
         {
-          image: '/model-examples/imagen-3-fast-2025-04-03T15-11-16-597Z.webp'
+          image: '/model-examples/imagen-4-ultra-2025-05-24T20-51-35-162Z'
         }
       ]
     }
@@ -26,4 +26,4 @@ class Imagen3Fast {
   }
 }
 
-export default Imagen3Fast 
+export default Imagen4Ultra 

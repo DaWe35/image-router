@@ -48,6 +48,7 @@ export async function generateImage(fetchParams, userId, res) {
       deepinfra: generateDeepInfra,
       replicate: generateReplicate,
       google: generateGoogle,
+      vertex: generateVertex,
       test: generateTest
     }
 
@@ -315,6 +316,88 @@ async function generateGoogle({ fetchParams, userId }) {
               }
         }
     }
+}
+
+async function generateVertex({ fetchParams, userId }) {
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
+    const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
+    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+    
+    if (!projectId) {
+        throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required for Vertex AI')
+    }
+
+    if (!serviceAccountKey) {
+        throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required for Vertex AI (base64 encoded service account JSON)')
+    }
+
+    // Parse the service account key
+    let serviceAccount
+    try {
+        const keyJson = Buffer.from(serviceAccountKey, 'base64').toString('utf-8')
+        serviceAccount = JSON.parse(keyJson)
+    } catch (error) {
+        throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_KEY format. Must be base64 encoded JSON.')
+    }
+
+    // Get access token using service account
+    const { GoogleAuth } = await import('google-auth-library')
+    const auth = new GoogleAuth({
+        credentials: serviceAccount,
+        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    })
+    const authClient = await auth.getClient()
+    const accessToken = await authClient.getAccessToken()
+
+    if (!accessToken?.token) {
+        throw new Error('Failed to get Google Cloud access token')
+    }
+
+    const providerUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${fetchParams.model}:predict`
+
+    const requestBody = {
+        instances: [{
+            prompt: fetchParams.prompt
+        }],
+        parameters: {
+            sampleCount: 1,
+            safetySetting: 'block_only_high',
+        }
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        throw {
+            status: response.status,
+            errorResponse: errorResponse
+        }
+    }
+
+    const data = await response.json()
+    
+    // Convert Vertex AI response to our standard format
+    const convertedData = {
+        created: Math.floor(new Date().getTime() / 1000),
+        data: []
+    }
+
+    if (data.predictions && data.predictions.length > 0) {
+        convertedData.data = data.predictions.map(prediction => ({
+            revised_prompt: null,
+            b64_json: prediction.bytesBase64Encoded
+        }))
+    }
+
+    return convertedData
 }
 
 async function generateTest({ fetchParams, userId }) {
