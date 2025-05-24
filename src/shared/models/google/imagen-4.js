@@ -15,7 +15,7 @@ class Imagen4 {
       arena_score: 1092,
       examples: [
         {
-          image: '/model-examples/imagen-4-2025-05-24T20-46-43-888Z'
+          image: '/model-examples/imagen-4-2025-05-24T20-46-43-888Z.webp'
         }
       ]
     }
