@@ -2,7 +2,7 @@ import { models } from '../shared/models/index.js'
 import { prisma } from '../config/database.js'
 import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
-export async function preLogUsage(params, apiKey) {
+export async function preLogUsage(params, apiKey, req) {
     const modelConfig = models[params.model]
 
     const prePriceUsd = preCalcPrice(params.model, params.size, params.quality)
@@ -25,6 +25,9 @@ export async function preLogUsage(params, apiKey) {
         throw new Error('API key is not found, please contact support')
     }
 
+    // Get client IP
+    const clientIp = process.env.PROXY_COUNT > 0 ? req?.headers['cf-connecting-ip'] : req?.ip
+
     // Use a transaction to ensure both operations succeed or fail together
     const usageLogEntry = await prisma.$transaction(async (tx) => {
         // Deduct maximum estimated credits initially
@@ -46,7 +49,8 @@ export async function preLogUsage(params, apiKey) {
                 speedMs: 0,
                 imageSize: params.size || 'unknown',
                 quality: params.quality ? params.quality : 'auto',
-                status: 'processing'
+                status: 'processing',
+                ip: clientIp
             }
         })
     })
