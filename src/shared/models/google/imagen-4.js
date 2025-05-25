@@ -9,7 +9,7 @@ class Imagen4 {
         id: 'vertex',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.05,
+          value: 0.04,
         }
       }],
       arena_score: 1092,
