@@ -1,10 +1,10 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class Imagen4 {
+class Imagen3 {
   constructor() {
     this.data = {
-      id: 'google/imagen-4',
-      aliasOf: 'imagen-4.0-generate-preview-05-20',
+      id: 'google/imagen-3',
+      aliasOf: 'imagen-3.0-generate-002', // Use the latest version as default
       providers: [{
         id: 'vertex',
         pricing: {
@@ -13,9 +13,10 @@ class Imagen4 {
         }
       }],
       arena_score: 1092,
+      release_date: '2024-12-16',
       examples: [
         {
-          image: '/model-examples/imagen-4-2025-05-24T20-46-43-888Z.webp'
+          image: '/model-examples/imagen-3-2025-04-03T15-11-15-706Z.webp'
         }
       ]
     }
@@ -26,4 +27,4 @@ class Imagen4 {
   }
 }
 
-export default Imagen4 
+export default Imagen3 

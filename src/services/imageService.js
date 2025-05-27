@@ -3,12 +3,12 @@ import path from 'path'
 import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
-import { models } from '../shared/models/index.js'
+import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
 
 export async function generateImage(fetchParams, userId, res) {
     const startTime = Date.now()
-    const modelConfig = models[fetchParams.model]
+    const modelConfig = imageModels[fetchParams.model]
     const provider = modelConfig?.providers[0]?.id
     
     if (!provider) {
@@ -47,7 +47,7 @@ export async function generateImage(fetchParams, userId, res) {
       openai: generateOpenAI,
       deepinfra: generateDeepInfra,
       replicate: generateReplicate,
-      google: generateGoogle,
+      gemini: generateGemini,
       vertex: generateVertex,
       test: generateTest
     }
@@ -206,7 +206,7 @@ async function generateReplicate({ fetchParams }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ fetchParams, userId }) {
+async function generateGemini({ fetchParams, userId }) {
     const providerKey = getGeminiApiKey(fetchParams.model)
     
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`

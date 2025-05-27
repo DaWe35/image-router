@@ -3,9 +3,14 @@ import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
+import fetch from 'node-fetch'
 import { imageRoutes } from './routes/imageRoutes.js'
+import { videoRoutes } from './routes/videoRoutes.js'
+import { imageModels } from './shared/imageModels/index.js'
+import { videoModels } from './shared/videoModels/index.js'
 import { validateApiKey } from './middleware/apiKeyMiddleware.js'
 import { prisma } from './config/database.js'
+import { getGeminiApiKey } from './services/imageHelpers.js'
 
 dotenv.config()
 
@@ -138,6 +143,9 @@ const protectedChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, us
 app.use('/v1/openai/images/generations', ...protectedChain)
 app.use('/v1/openai/images/edits', ...protectedChain)
 
+// Apply the protected middleware chain to video generations route
+app.use('/v1/openai/videos/generations', ...protectedChain)
+
 // Modified IP endpoint to show headers for debugging
 app.get('/ip', (request, response) => {
     const clientIp = process.env.PROXY_COUNT > 0 ? req.headers['cf-connecting-ip'] : req.ip
@@ -146,6 +154,61 @@ app.get('/ip', (request, response) => {
 
 // Routes
 app.use('/v1/openai/images', imageRoutes)
+app.use('/v1/openai/videos', videoRoutes)
+
+app.get('/v1/models', (req, res) => {
+    res.json({
+        ...imageModels,
+        ...videoModels
+    })
+})
+
+// Video proxy endpoint to serve videos without exposing API keys
+app.get('/proxy/video', async (req, res) => {
+    try {
+        const { url, model } = req.query
+        
+        if (!url || !model) {
+            return res.status(400).json({
+                error: {
+                    message: 'Missing required parameters: url and model',
+                    type: 'invalid_request'
+                }
+            })
+        }
+
+        // Get the appropriate API key for the model
+        const providerKey = getGeminiApiKey(model)
+        
+        // Fetch the video with the API key
+        const videoResponse = await fetch(`${url}&key=${providerKey}`)
+        
+        if (!videoResponse.ok) {
+            return res.status(videoResponse.status).json({
+                error: {
+                    message: 'Failed to fetch video',
+                    type: 'video_fetch_error'
+                }
+            })
+        }
+
+        // Set appropriate headers
+        res.setHeader('Content-Type', videoResponse.headers.get('content-type') || 'video/mp4')
+        res.setHeader('Content-Length', videoResponse.headers.get('content-length'))
+        
+        // Stream the video content
+        videoResponse.body.pipe(res)
+        
+    } catch (error) {
+        console.error('Video proxy error:', error)
+        res.status(500).json({
+            error: {
+                message: 'Internal server error while fetching video',
+                type: 'internal_error'
+            }
+        })
+    }
+})
 
 // Timeout test endpoint
 app.get('/timeout-test',

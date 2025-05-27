@@ -10,7 +10,7 @@ class Gemini20FlashPrev {
       id: 'google/gemini-2.0-flash-prev',
       aliasOf: 'gemini-2.0-flash-preview-image-generation',
       providers: [{
-        id: 'google',
+        id: 'gemini',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.039,
@@ -18,6 +18,7 @@ class Gemini20FlashPrev {
         applyImage: geminiInstance.applyImage,
       }],
       arena_score: 980,
+      release_date: '2025-05-07',
       examples: [
         {
           image: '/model-examples/gemini-2.0-flash-prev-2025-05-13T11-25-55-222Z.webp'

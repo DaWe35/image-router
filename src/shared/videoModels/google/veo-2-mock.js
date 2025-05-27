@@ -1,21 +1,21 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class Image01 {
+class Veo2 {
   constructor() {
     this.data = {
-      id: 'minimax/image-01',
+      id: 'google/veo-2-mock',
       providers: [{
-        id: 'replicate',
+        id: 'geminiMock',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.01,
-        }
+          value: 0.00,
+        },
       }],
-      arena_score: 1049,
-      release_date: '2025-05-05',
+      arena_score: 1127,
+      release_date: '2024-12-16',
       examples: [
         {
-          image: '/model-examples/image-01.webp'
+          video: '/model-examples/veo-2-2025-05-27T22-57-10-794Z.webm'
         }
       ]
     }
@@ -26,4 +26,4 @@ class Image01 {
   }
 }
 
-export default Image01 
+export default Veo2 

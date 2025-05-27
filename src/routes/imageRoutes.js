@@ -2,8 +2,8 @@ import express from 'express'
 import multer from 'multer'
 import path from 'path'
 import { generateImage } from '../services/imageService.js'
-import { models } from '../shared/models/index.js'
-import { validateParams } from '../services/validateParams.js'
+import { imageModels } from '../shared/imageModels/index.js'
+import { validateImageParams } from '../services/validateImageParams.js'
 import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
 const router = express.Router()
 
@@ -40,7 +40,7 @@ const handleMulterError = (err, req, res, next) => {
 
 // GET /v1/images/models
 router.get('/models', (req, res) => {
-    res.json(models)
+    res.json(imageModels)
 })
 
 // POST /v1/images/generations
@@ -76,7 +76,7 @@ router.post('/edits',
 async function generateImageWrapper(req, res) {
     try {
         const apiKey = res.locals.key
-        const params = validateParams(req)
+        const params = validateImageParams(req)
         try {
             const usageLogEntry = await preLogUsage(params, apiKey, req)
 
@@ -126,4 +126,4 @@ async function generateImageWrapper(req, res) {
     }
 }
 
-export const imageRoutes = router 
+export const imageRoutes = router

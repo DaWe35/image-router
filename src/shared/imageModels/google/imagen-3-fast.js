@@ -13,6 +13,7 @@ class Imagen3Fast {
         }
       }],
       arena_score: null,
+      release_date: '2024-12-16',
       examples: [
         {
           image: '/model-examples/imagen-3-fast-2025-04-03T15-11-16-597Z.webp'
