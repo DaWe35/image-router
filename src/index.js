@@ -177,6 +177,17 @@ app.get('/proxy/video', async (req, res) => {
             })
         }
 
+        // Validate that the url matches the allowed endpoint pattern
+        const allowedPattern = /^https:\/\/generativelanguage\.googleapis\.com\/v1beta\/files\/[^:]+:download\?alt=media$/
+        if (!allowedPattern.test(url)) {
+            return res.status(400).json({
+                error: {
+                    message: 'Invalid URL provided. Only URLs matching the allowed endpoint are permitted.',
+                    type: 'invalid_url'
+                }
+            })
+        }
+
         // Get the appropriate API key for the model
         const providerKey = getGeminiApiKey(model)
         
