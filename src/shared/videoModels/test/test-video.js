@@ -18,7 +18,7 @@ class TestVideo {
       release_date: '2025-05-04',
       examples: [
         {
-          video: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4'
+          video: 'https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/videoModels/test/big_buck_bunny_720p_1mb.mp4'
         }
       ]
     }
