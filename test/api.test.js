@@ -328,9 +328,9 @@ describe('Image Router API Tests', () => {
             const data = await response.json()
             expect(response.status).toBe(200) // 200 because of the heartbeat header
             expect(data.error).toHaveProperty('type')
-            expect(data.error.type).toBe('user_error')
+            expect(data.error.type).toBe('image_generation_user_error')
             expect(data.error.code).toBe('moderation_blocked')
-            expect(data.error.message).toBe('Your request was rejected as a result of our safety system. Your request may contain content that is not allowed by our safety system.')
+            expect(data.error.message).toBe('Request was rejected as a result of the safety system. Request may contain content that is not allowed by the safety system.')
             expect(data.error.param).toBe(null)
         })
     })
