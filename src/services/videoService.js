@@ -366,7 +366,7 @@ async function generateTestVideo({ fetchParams, userId }) {
     return {
         created: Math.floor(Date.now() / 1000),
         data: [{
-            url: `https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4`,
+            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/videoModels/test/big_buck_bunny_720p_1mb.mp4`,
             revised_prompt: null
         }]
     }
