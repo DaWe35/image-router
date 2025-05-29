@@ -82,9 +82,9 @@ curl http://localhost:3000/health
 - CORS is enabled for cross-origin requests
 - API key is required for image generation
 
-# Google Vertex AI Imagen Setup
+# Google Vertex AI Setup
 
-To use Google Vertex AI Imagen models, you need:
+To use Google Vertex AI models (Imagen for images and Veo for videos), you need:
 
 ## 1. Environment Variables
 Add these to your `.env` file:

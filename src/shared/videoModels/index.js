@@ -1,10 +1,12 @@
 import Veo2 from './google/veo-2.js'
 import Veo2Mock from './google/veo-2-mock.js'
+import Veo3 from './google/veo-3.js'
 import TestVideo from './test/test-video.js'
 
 // Initialize all models
 const modelInstances = [
   new Veo2(),
+  //new Veo3(),
   //new Veo2Mock(),
   new TestVideo(),
 ]
