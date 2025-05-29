@@ -7,7 +7,7 @@ class Gemini20FlashExp {
       id: 'google/gemini-2.0-flash-exp',
       aliasOf: 'gemini-2.0-flash-exp-image-generation',
       providers: [{
-        id: 'google',
+        id: 'gemini',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,
@@ -15,6 +15,7 @@ class Gemini20FlashExp {
         applyImage: this.applyImage,
       }],
       arena_score: 962,
+      release_date: '2025-03-12',
       examples: [
         {
           image: '/model-examples/gemini-2.0-flash-exp_free-2025-05-13T11-23-59-032Z.webp'

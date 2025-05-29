@@ -1,7 +1,7 @@
-import { models } from '../shared/models/index.js'
+import { imageModels } from '../shared/imageModels/index.js'
 
 // Validate the parameters for the image generation request and return only the valid parameters
-export function validateParams(req) {
+export function validateImageParams(req) {
     const { prompt, model, response_format, size, quality } = req.body
     const files = req.files || {}
 
@@ -9,7 +9,7 @@ export function validateParams(req) {
     if (!model) throw new Error("'model' is a required parameter")
 
     // Validate model parameter and config
-    const modelConfig = models[model]
+    const modelConfig = imageModels[model]
     if (!modelConfig) throw new Error("model '" + model + "' is not available")
     if (!modelConfig?.providers[0].id) throw new Error("model provider for '" + model + "' is not available")
 

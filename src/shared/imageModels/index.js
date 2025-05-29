@@ -82,20 +82,21 @@ const modelInstances = [
 ]
 
 // Create an object with model IDs as keys
-const models = {}
+const imageModels = {}
 modelInstances.forEach(instance => {
   const modelData = instance.getData()
   const modelId = modelData.id
   delete modelData.id
   
-  // Add feature support flags
+  // Add output type and feature support flags
+  modelData.output = ["image"]
   modelData.supported_params = {
     quality: typeof modelData.providers[0]?.applyQuality === 'function',
     edit: typeof modelData.providers[0]?.applyImage === 'function',
     mask: typeof modelData.providers[0]?.applyMask === 'function'
   }
   
-  models[modelId] = modelData
+  imageModels[modelId] = modelData
 })
 
-export { models } 
+export { imageModels } 

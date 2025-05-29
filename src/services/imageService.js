@@ -3,12 +3,12 @@ import path from 'path'
 import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
-import { models } from '../shared/models/index.js'
+import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
 
 export async function generateImage(fetchParams, userId, res) {
     const startTime = Date.now()
-    const modelConfig = models[fetchParams.model]
+    const modelConfig = imageModels[fetchParams.model]
     const provider = modelConfig?.providers[0]?.id
     
     if (!provider) {
@@ -47,7 +47,7 @@ export async function generateImage(fetchParams, userId, res) {
       openai: generateOpenAI,
       deepinfra: generateDeepInfra,
       replicate: generateReplicate,
-      google: generateGoogle,
+      gemini: generateGemini,
       vertex: generateVertex,
       test: generateTest
     }
@@ -206,7 +206,7 @@ async function generateReplicate({ fetchParams }) {
 
 
 // OpenAI format API call
-async function generateGoogle({ fetchParams, userId }) {
+async function generateGemini({ fetchParams, userId }) {
     const providerKey = getGeminiApiKey(fetchParams.model)
     
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`
@@ -402,7 +402,7 @@ async function generateVertex({ fetchParams, userId }) {
 
 async function generateTest({ fetchParams, userId }) {
     // Read the image file
-    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+    const imagePath = path.resolve(`src/shared/imageModels/test/${fetchParams.quality}.png`)
     const imageBuffer = await fs.readFile(imagePath)
     const b64_json = imageBuffer.toString('base64')
 
@@ -410,7 +410,7 @@ async function generateTest({ fetchParams, userId }) {
     return {
         created: Date.now(),
         data: [{
-            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/models/test/${fetchParams.quality}.png`,
+            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/imageModels/test/${fetchParams.quality}.png`,
             b64_json,
             revised_prompt: null,
             original_response_from_provider: {

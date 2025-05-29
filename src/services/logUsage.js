@@ -1,4 +1,9 @@
-import { models } from '../shared/models/index.js'
+import { imageModels } from '../shared/imageModels/index.js'
+import { videoModels } from '../shared/videoModels/index.js'
+const models = {
+    ...imageModels,
+    ...videoModels
+}
 import { prisma } from '../config/database.js'
 import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
