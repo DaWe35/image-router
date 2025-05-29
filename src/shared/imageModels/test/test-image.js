@@ -14,7 +14,7 @@ class TestImage {
         applyImage: this.applyImage,
         applyMask: this.applyMask,
       }],
-      arena_score: 0,
+      arena_score: null,
       release_date: '2025-05-04',
       examples: [
         {
