@@ -402,7 +402,7 @@ async function generateVertex({ fetchParams, userId }) {
 
 async function generateTest({ fetchParams, userId }) {
     // Read the image file
-    const imagePath = path.resolve(`src/shared/models/test/${fetchParams.quality}.png`)
+    const imagePath = path.resolve(`src/shared/imageModels/test/${fetchParams.quality}.png`)
     const imageBuffer = await fs.readFile(imagePath)
     const b64_json = imageBuffer.toString('base64')
 
@@ -410,7 +410,7 @@ async function generateTest({ fetchParams, userId }) {
     return {
         created: Date.now(),
         data: [{
-            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/models/test/${fetchParams.quality}.png`,
+            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/imageModels/test/${fetchParams.quality}.png`,
             b64_json,
             revised_prompt: null,
             original_response_from_provider: {
