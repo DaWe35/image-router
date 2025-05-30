@@ -51,6 +51,39 @@ docker compose down && docker compose up -d
 docker compose exec api npm test -- --verbose
 ```
 
+## Testing Webhooks (DeepInfra)
+
+For testing webhook functionality with DeepInfra video generation on localhost, you need to expose your local API to the internet so DeepInfra can call your webhook endpoint.
+
+### Using ngrok (Recommended)
+
+1. **Install ngrok**:
+   ```bash
+   npm install -g ngrok
+   # or yay -S ngrok
+   # or download from https://ngrok.com/
+   ```
+
+2. **In a new terminal, expose your local API**:
+   ```bash
+   ngrok http 4000
+   ```
+   (Replace 4000 with your actual API port)
+
+3. **Add the ngrok URL to your `.env` file**:
+   ```bash
+   API_URL=https://your-ngrok-subdomain.ngrok.io
+   DEEPINFRA_API_KEY=your_deepinfra_api_key
+   ```
+
+4. **Restart your API** to pick up the new environment variable:
+   ```bash
+   docker compose down && docker compose up -d
+   ```
+
+5. **Test webhook with a real request**:
+   Create a video with Wan2.1
+   
 ## After database migrations
 
 ```bash

@@ -4,6 +4,8 @@ import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
 import { getGeminiApiKey } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
+import { createPendingRequest } from '../routes/videoRoutes.js'
+import { randomUUID } from 'crypto'
 
 export async function generateVideo(fetchParams, userId, res) {
     const startTime = Date.now()
@@ -26,7 +28,8 @@ export async function generateVideo(fetchParams, userId, res) {
         gemini: generateGeminiVideo,
         vertex: generateVertexVideo,
         test: generateTestVideo,
-        geminiMock: generateGeminiMockVideo
+        geminiMock: generateGeminiMockVideo,
+        deepinfra: generateDeepInfraVideo
     }
 
     const handler = providerHandlers[provider]
@@ -434,4 +437,105 @@ async function generateGeminiMockVideo({ fetchParams, userId }) {
 
     // If we reach here, the operation timed out
     console.log('ERROR: video generation timed out after 10 minutes. Url:', checkUrl)
+}
+
+async function generateDeepInfraVideo({ fetchParams, userId }) {
+    const providerKey = process.env.DEEPINFRA_API_KEY
+    
+    if (!providerKey) {
+        throw new Error('This is an internal error in Image Router. DEEPINFRA_API_KEY environment variable is not set for video generation')
+    }
+
+    // Generate a unique request ID for tracking
+    const requestId = randomUUID()
+    
+    // Create the webhook URL - use API_URL if available, otherwise construct from request
+    const webhookUrl = `${process.env.API_URL}/v1/openai/videos/webhook/deepinfra/video/${requestId}`
+    
+    console.log(`Starting DeepInfra video generation with webhook: ${webhookUrl}`)
+
+    const apiUrl = `https://api.deepinfra.com/v1/inference/${fetchParams.model}`
+
+    const requestBody = {
+        prompt: fetchParams.prompt,
+        webhook: webhookUrl
+    }
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `bearer ${providerKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    })
+
+    if (!response.ok) {
+        const errorData = await response.json()
+        const formattedError = {
+            status: errorData?.error?.code || response.status,
+            statusText: errorData?.error?.status || response.statusText,
+            error: {
+                message: errorData?.error?.message || 'Video generation failed',
+                type: errorData?.error?.status || 'Unknown Error'
+            },
+            original_response_from_provider: errorData
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    const initialResponse = await response.json()
+    console.log(`DeepInfra initial response for request ${requestId}:`, initialResponse)
+
+    // Create a pending request promise and wait for the webhook
+    try {
+        const webhookData = await createPendingRequest(requestId)
+        
+        console.log(`DeepInfra webhook received for request ${requestId}:`, webhookData)
+
+        // Process the webhook response
+        if (webhookData.error) {
+            console.log('ERROR: DeepInfra webhook reported error:', webhookData.error)
+            return {
+                error: {
+                    message: 'Video generation failed: ' + JSON.stringify(webhookData.error),
+                    type: 'generation_error',
+                    original_response_from_provider: webhookData
+                }
+            }
+        }
+
+        if (!webhookData.video_url) {
+            console.log('ERROR: no video_url found in webhook response:', webhookData)
+            return {
+                error: {
+                    message: 'no video_url found in webhook response: ' + JSON.stringify(webhookData),
+                    type: 'internal_error',
+                    original_response_from_provider: webhookData
+                }
+            }
+        }
+
+        // Return in OpenAI-compatible format
+        return {
+            created: Math.floor(new Date().getTime() / 1000),
+            data: [{
+                b64_json: webhookData.video_url.replace('data:video/mp4;base64,', ''),
+                revised_prompt: null
+            }],
+            original_response_from_provider: webhookData
+        }
+        
+    } catch (error) {
+        console.log('ERROR: DeepInfra webhook timeout or error:', error.message)
+        return {
+            error: {
+                message: 'Video generation timeout or webhook error: ' + error.message,
+                type: 'timeout_error'
+            }
+        }
+    }
 }

@@ -26,7 +26,12 @@ app.set('trust proxy', process.env.PROXY_COUNT)
 // Middleware
 app.use(helmet())
 app.use(cors())
-app.use(express.json())
+
+// Special webhook route with larger body limit (must be before general express.json)
+app.use('/v1/openai/videos/webhook', express.json({ limit: '100mb' }))
+
+// General JSON parsing with smaller limit for regular requests
+app.use(express.json({ limit: '10mb' }))
 
 // Custom key generator for rate limiting, preferring Cloudflare header
 const ipKeyGenerator = (req) => {
