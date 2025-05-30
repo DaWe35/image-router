@@ -2,6 +2,8 @@ import Veo2 from './google/veo-2.js'
 import Veo2Mock from './google/veo-2-mock.js'
 import Veo3 from './google/veo-3.js'
 import TestVideo from './test/test-video.js'
+import Wan21T2V14B from './wan-ai/Wan2.1-T2V-14B.js'
+import Wan21T2V1B from './wan-ai/Wan2.1-T2V-1.3B.js'
 
 // Initialize all models
 const modelInstances = [
@@ -9,6 +11,8 @@ const modelInstances = [
   //new Veo3(),
   //new Veo2Mock(),
   new TestVideo(),
+  new Wan21T2V14B(),
+  new Wan21T2V1B(),
 ]
 
 // Create an object with model IDs as keys
