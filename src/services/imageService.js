@@ -169,6 +169,19 @@ async function generateReplicate({ fetchParams }) {
     const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
+    // Build the input object starting with the prompt
+    const input = {
+        prompt: fetchParams.prompt
+    }
+
+    // Add input_image if available (for image editing models like flux-kontext-max)
+    if (fetchParams.image) {
+        const arrayBuffer = await fetchParams.image.blob.arrayBuffer()
+        const base64Data = Buffer.from(arrayBuffer).toString('base64')
+        input.input_image = "data:application/octet-stream;base64," + base64Data
+        input.aspect_ratio = 'match_input_image'
+    }
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
@@ -177,21 +190,27 @@ async function generateReplicate({ fetchParams }) {
             'Authorization': `Bearer ${providerKey}`
         },
         body: JSON.stringify({
-            input: {
-                prompt: fetchParams.prompt
-            }
+            input: input
         })
     })
     
+    const data = await response.json()
     if (!response.ok) {
-        const errorResponse = await response.json()
+        const formattedError = {
+            status: data?.status,
+            statusText: data?.detail,
+            error: {
+                message: data?.detail,
+                type: data?.status
+            },
+            original_response_from_provider: data
+        }
         throw {
             status: response.status,
-            errorResponse: errorResponse
+            errorResponse: formattedError
         }
     }
 
-    const data = await response.json()
     
     const convertedData = {
         created: Math.floor(new Date(data.created_at).getTime() / 1000),

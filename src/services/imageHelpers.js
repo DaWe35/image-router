@@ -39,10 +39,15 @@ export async function processSingleOrMultipleFiles(imageFiles) {
 }
 
 export async function processSingleFile(file) {
-    const buffer = await readFile(file.path);
+    if (Array.isArray(file) && file.length > 1) {
+        throw new Error('This model supports only one image input')
+    }
+    const actualFile = Array.isArray(file) ? file[0] : file
+    const buffer = await readFile(actualFile.path);
+
     return {
-        blob: new Blob([buffer], { type: file.mimetype }),
-        filename: file.originalname
+        blob: new Blob([buffer], { type: actualFile.mimetype }),
+        filename: actualFile.originalname
     }
 }
 
