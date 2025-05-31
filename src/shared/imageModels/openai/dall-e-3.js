@@ -4,9 +4,9 @@ class DallE3 {
   constructor() {
     this.data = {
       id: 'openai/dall-e-3',
-      aliasOf: 'dall-e-3',
       providers: [{
         id: 'openai',
+        model_name: 'dall-e-3',
         pricing: {
           type: PRICING_TYPES.CALCULATED,
           calcFunction: this.calculatePrice,

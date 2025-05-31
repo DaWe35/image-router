@@ -35,7 +35,7 @@ export async function generateImage(fetchParams, userId, res) {
     delete fetchParams.files
 
     // Get alias model if available
-    fetchParams.model = modelConfig.aliasOf || fetchParams.model
+    fetchParams.model = modelConfig.providers[0].model_name
 
     // Apply quality if available and a function is defined. This can change the model to use, or any other variables!
     if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {

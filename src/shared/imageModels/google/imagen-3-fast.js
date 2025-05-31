@@ -4,9 +4,9 @@ class Imagen3Fast {
   constructor() {
     this.data = {
       id: 'google/imagen-3-fast',
-      aliasOf: 'imagen-3.0-fast-generate-001',
       providers: [{
         id: 'vertex',
+        model_name: 'imagen-3.0-fast-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.02,

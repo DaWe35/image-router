@@ -4,9 +4,9 @@ class SdxlTurboFree {
   constructor() {
     this.data = {
       id: 'stabilityai/sdxl-turbo:free',
-      aliasOf: 'stabilityai/sdxl-turbo',
       providers: [{
         id: 'deepinfra',
+        model_name: 'stabilityai/sdxl-turbo',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,

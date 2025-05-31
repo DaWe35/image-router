@@ -8,9 +8,9 @@ class Gemini20FlashExpFree {
   constructor() {
     this.data = {
       id: 'google/gemini-2.0-flash-exp:free',
-      aliasOf: 'gemini-2.0-flash-exp-image-generation',
       providers: [{
         id: 'gemini',
+        model_name: 'gemini-2.0-flash-exp-image-generation',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,

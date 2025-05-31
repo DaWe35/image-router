@@ -6,6 +6,7 @@ class RecraftV3Svg {
       id: 'recraft-ai/recraft-v3-svg',
       providers: [{
         id: 'replicate',
+        model_name: 'recraft-ai/recraft-v3-svg',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.08,

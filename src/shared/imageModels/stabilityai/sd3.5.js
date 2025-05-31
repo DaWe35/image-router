@@ -7,6 +7,7 @@ class Sd35 {
       providers: [
         {
           id: 'deepinfra',
+          model_name: 'stabilityai/sd3.5',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0.06,

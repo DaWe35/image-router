@@ -6,6 +6,7 @@ class Veo2 {
       id: 'google/veo-2-mock',
       providers: [{
         id: 'geminiMock',
+        model_name: 'google/veo-2-mock',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.00,

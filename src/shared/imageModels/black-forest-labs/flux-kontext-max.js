@@ -8,6 +8,7 @@ class FluxKontextMax {
       id: 'black-forest-labs/flux-kontext-max',
       providers: [{
         id: 'replicate',
+        model_name: 'black-forest-labs/flux-kontext-max',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.08,

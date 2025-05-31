@@ -39,6 +39,7 @@ const handleMulterError = (err, req, res, next) => {
 }
 
 // GET /v1/images/models
+// Deprecated; I left it here for compatibility
 router.get('/models', (req, res) => {
     res.json(imageModels)
 })

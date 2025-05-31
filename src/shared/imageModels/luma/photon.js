@@ -6,6 +6,7 @@ class Photon {
       id: 'luma/photon',
       providers: [{
         id: 'replicate',
+        model_name: 'luma/photon',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.03,

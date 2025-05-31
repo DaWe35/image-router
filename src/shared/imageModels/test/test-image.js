@@ -6,6 +6,7 @@ class TestImage {
       id: 'test/test',
       providers: [{
         id: 'test',
+        model_name: 'test/test',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.00,

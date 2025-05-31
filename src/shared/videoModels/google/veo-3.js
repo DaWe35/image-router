@@ -4,9 +4,9 @@ class Veo3 {
   constructor() {
     this.data = {
       id: 'google/veo-3',
-      aliasOf: 'veo-3.0-generate-preview',
       providers: [{
         id: 'vertex',
+        model_name: 'veo-3.0-generate-preview',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 4, // price with no audio generated

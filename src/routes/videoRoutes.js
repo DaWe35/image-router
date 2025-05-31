@@ -5,11 +5,6 @@ import { validateVideoParams } from '../services/validateVideoParams.js'
 import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
 const router = express.Router()
 
-// GET /v1/videos/models
-router.get('/models', (req, res) => {
-    res.json(videoModels)
-})
-
 // POST /v1/videos/generations
 router.post('/generations', async (req, res) => {
     await generateVideoWrapper(req, res)

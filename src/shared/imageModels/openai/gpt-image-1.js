@@ -5,9 +5,9 @@ class GptImage1 {
   constructor() {
     this.data = {
       id: 'openai/gpt-image-1',
-      aliasOf: 'gpt-image-1',
       providers: [{
         id: 'openai',
+        model_name: 'gpt-image-1',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,

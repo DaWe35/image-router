@@ -4,9 +4,9 @@ class Imagen3 {
   constructor() {
     this.data = {
       id: 'google/imagen-3',
-      aliasOf: 'imagen-3.0-generate-002', // Use the latest version as default
       providers: [{
         id: 'vertex',
+        model_name: 'imagen-3.0-generate-002',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.04,

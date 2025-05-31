@@ -4,9 +4,9 @@ class Flux1SchnellFree {
   constructor() {
     this.data = {
       id: 'black-forest-labs/FLUX-1-schnell:free',
-      aliasOf: 'black-forest-labs/FLUX-1-schnell',
       providers: [{
         id: 'deepinfra',
+        model_name: 'black-forest-labs/FLUX-1-schnell',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,

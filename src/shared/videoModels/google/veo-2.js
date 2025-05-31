@@ -4,9 +4,9 @@ class Veo2 {
   constructor() {
     this.data = {
       id: 'google/veo-2',
-      aliasOf: 'veo-2.0-generate-001',
       providers: [{
         id: 'gemini',
+        model_name: 'veo-2.0-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 1.75,

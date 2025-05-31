@@ -8,9 +8,9 @@ class Gemini20FlashPrev {
   constructor() {
     this.data = {
       id: 'google/gemini-2.0-flash-prev',
-      aliasOf: 'gemini-2.0-flash-preview-image-generation',
       providers: [{
         id: 'gemini',
+        model_name: 'gemini-2.0-flash-preview-image-generation',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.039,

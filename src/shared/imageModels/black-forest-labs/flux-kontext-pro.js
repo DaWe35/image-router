@@ -7,6 +7,7 @@ class FluxKontextPro {
       id: 'black-forest-labs/flux-kontext-pro',
       providers: [{
         id: 'replicate',
+        model_name: 'black-forest-labs/flux-kontext-pro',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.04,

@@ -6,6 +6,7 @@ class JuggernautLightningFlux {
       id: 'run-diffusion/Juggernaut-Lightning-Flux',
       providers: [{
         id: 'deepinfra',
+        model_name: 'run-diffusion/Juggernaut-Lightning-Flux',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.009,

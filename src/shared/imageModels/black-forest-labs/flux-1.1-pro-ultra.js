@@ -6,6 +6,7 @@ class Flux11ProUltra {
       id: 'black-forest-labs/flux-1.1-pro-ultra',
       providers: [{
         id: 'replicate',
+        model_name: 'black-forest-labs/flux-1.1-pro-ultra',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.06,

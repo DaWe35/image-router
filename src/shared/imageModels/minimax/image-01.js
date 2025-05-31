@@ -6,6 +6,7 @@ class Image01 {
       id: 'minimax/image-01',
       providers: [{
         id: 'replicate',
+        model_name: 'minimax/image-01',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,

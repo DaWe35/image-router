@@ -6,6 +6,7 @@ class IdeogramV2a {
       id: 'ideogram-ai/ideogram-v2a',
       providers: [{
         id: 'replicate',
+        model_name: 'ideogram-ai/ideogram-v2a',
         pricing: {
           type: PRICING_TYPES.CALCULATED,
           calcFunction: this.calculatePrice,
@@ -33,7 +34,7 @@ class IdeogramV2a {
   
   applyQuality(params) {
     if (params.quality === 'low') params.model = 'ideogram-ai/ideogram-v2a-turbo'
-    params.model = 'ideogram-ai/ideogram-v2a'
+    else params.model = 'ideogram-ai/ideogram-v2a'
     delete params.quality
     return params
   }

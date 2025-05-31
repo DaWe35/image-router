@@ -4,9 +4,9 @@ class Imagen4Ultra {
   constructor() {
     this.data = {
       id: 'google/imagen-4-ultra',
-      aliasOf: 'imagen-4.0-ultra-generate-exp-05-20',
       providers: [{
         id: 'vertex',
+        model_name: 'imagen-4.0-ultra-generate-exp-05-20',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.08,

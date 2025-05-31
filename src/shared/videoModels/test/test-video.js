@@ -6,6 +6,7 @@ class TestVideo {
       id: 'ir/test-video',
       providers: [{
         id: 'test',
+        model_name: 'ir/test-video',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.00,

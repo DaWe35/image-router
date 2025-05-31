@@ -6,6 +6,7 @@ class FluxPro {
       id: 'black-forest-labs/FLUX-pro',
       providers: [{
         id: 'deepinfra',
+        model_name: 'black-forest-labs/FLUX-pro',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.05,

@@ -15,7 +15,7 @@ export async function generateVideo(fetchParams, userId, res) {
     }
 
     // Get alias model if available
-    fetchParams.model = modelConfig.aliasOf || fetchParams.model
+    fetchParams.model = modelConfig.providers[0].model_name
 
     // Apply quality if available and a function is defined
     if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {

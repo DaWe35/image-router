@@ -30,7 +30,8 @@ describe('Image Router API Tests', () => {
                     expect(provider).toHaveProperty('pricing')
                     expect(provider.pricing).toHaveProperty('type')
                     expect(['fixed', 'calculated', 'post_generation']).toContain(provider.pricing.type)
-
+                    expect(provider).toHaveProperty('model_name')
+                    expect(typeof provider.model_name).toBe('string')
                     if (provider.pricing.type === 'fixed') {
                         expect(provider.pricing).toHaveProperty('value')
                         expect(typeof provider.pricing.value).toBe('number')
@@ -58,9 +59,6 @@ describe('Image Router API Tests', () => {
                     })
                 }
                 expect(model.getModelToUse).toBeUndefined()
-                if (model.aliasOf) {
-                    expect(typeof model.aliasOf).toBe('string')
-                }
             })
         })
     })

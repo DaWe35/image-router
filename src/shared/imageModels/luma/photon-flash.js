@@ -6,6 +6,7 @@ class PhotonFlash {
       id: 'luma/photon-flash',
       providers: [{
         id: 'replicate',
+        model_name: 'luma/photon-flash',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.01,

@@ -6,6 +6,7 @@ class RecraftV3 {
       id: 'recraft-ai/recraft-v3',
       providers: [{
         id: 'replicate',
+        model_name: 'recraft-ai/recraft-v3',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.04,

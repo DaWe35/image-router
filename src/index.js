@@ -157,9 +157,16 @@ app.use('/v1/openai/images', imageRoutes)
 app.use('/v1/openai/videos', videoRoutes)
 
 app.get('/v1/models', (req, res) => {
+    const removeProvider = obj => {
+        return Object.entries(obj).reduce((acc, [key, value]) => {
+            acc[key] = { ...value }
+            delete acc[key].providers
+            return acc
+        }, {})
+    }
     res.json({
-        ...imageModels,
-        ...videoModels
+        ...removeProvider(imageModels),
+        ...removeProvider(videoModels)
     })
 })
 
