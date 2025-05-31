@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile } from '../../../services/imageHelpers.js'
+import { processSingleFile, mergeImages } from '../../../services/imageHelpers.js'
 
 class FluxKontextPro {
   constructor() {
@@ -29,7 +29,11 @@ class FluxKontextPro {
   }
 
   async applyImage(params) {
-    params.image = await processSingleFile(params.files.image)
+    // Since Flux only accepts 1 input image, merge multiple images if provided
+    if (params.files.image.length > 1) {
+      params.prompt = 'system: merge all images into a single picture seamlessly\n\nuser: ' + params.prompt
+    }
+    params.image = await mergeImages(params.files.image)
     delete params.files.image
     return params
   }

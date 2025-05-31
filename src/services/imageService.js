@@ -69,6 +69,21 @@ export async function generateImage(fetchParams, userId, res) {
 
     try {
       const result = await handler({ fetchParams, userId })
+
+      // TESTING TODO REMOVE
+/*       const arrayBuffer = await fetchParams.image.blob.arrayBuffer()
+      const base64Data = Buffer.from(arrayBuffer).toString('base64')
+      const result = {
+        created: Math.floor(Date.now() / 1000),
+        data: [{
+          b64_json: base64Data,
+          revised_prompt: 'test',
+        }]
+      } */
+
+
+
+      
       result.latency = Date.now() - startTime
       if (intervalId) clearInterval(intervalId)
       return result
