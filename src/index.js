@@ -160,7 +160,6 @@ app.get('/v1/models', (req, res) => {
     const removeProvider = obj => {
         return Object.entries(obj).reduce((acc, [key, value]) => {
             acc[key] = { ...value }
-            delete acc[key].providers
             return acc
         }, {})
     }
