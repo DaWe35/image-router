@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class SdxlTurboFree {
   constructor() {
@@ -12,6 +13,12 @@ class SdxlTurboFree {
           value: 0,
         },
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "128x128",
+        max: "1024x1024",
+        default: "1024x1024"
+      },
       arena_score: 1031,
       release_date: '2024-10-22',
       examples: [

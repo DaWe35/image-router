@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile } from '../../../services/imageHelpers.js'
 
 class GptImage1 {
@@ -21,6 +22,12 @@ class GptImage1 {
         applyImage: this.applyImage,
         applyMask: this.applyMask,
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "2048x2048",
+        default: "1024x1024"
+      },
       arena_score: 1151,
       release_date: '2025-04-23',
       examples: [

@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class DallE2 {
@@ -16,6 +17,11 @@ class DallE2 {
         /* applyImage: this.applyImage,
         applyMask: this.applyMask */
       }],
+      size: {
+        type: SIZE_TYPES.FIXED,
+        options: ["256x256", "512x512", "1024x1024"],
+        default: "1024x1024"
+      },
       arena_score: 695,
       release_date: '2022-04-6',
       examples: [

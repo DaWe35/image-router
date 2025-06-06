@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class IdeogramV2a {
   constructor() {
@@ -18,6 +19,12 @@ class IdeogramV2a {
         },
         applyQuality: this.applyQuality
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "1536x1536",
+        default: "1024x1024"
+      },
       arena_score: 1004,
       release_date: '2025-02-27',
       examples: [
@@ -39,7 +46,7 @@ class IdeogramV2a {
     return params
   }
 
-  calculatePrice(quality) {
+  calculatePrice(quality, size) {
     if (quality === 'low') return 0.025
     return 0.04
   }

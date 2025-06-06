@@ -13,6 +13,7 @@ export function convertPriceToDbFormat(usdPrice) {
 
 // Pre-calculate the price for the model. This is used to deduct credits before the image is generated.
 // If the price cannot be calculated before image generation, return the max price.
+// Returns the price in USD
 export function preCalcPrice(modelName, size, quality) {
     const modelConfig = models[modelName]
 
@@ -20,7 +21,7 @@ export function preCalcPrice(modelName, size, quality) {
         case PRICING_TYPES.FIXED:
             return modelConfig.providers[0].pricing.value
         case PRICING_TYPES.CALCULATED:
-            return modelConfig.providers[0].pricing.calcFunction(quality)
+            return modelConfig.providers[0].pricing.calcFunction(quality, size)
         case PRICING_TYPES.POST_GENERATION:
             return modelConfig.providers[0].pricing.range.max
         default:

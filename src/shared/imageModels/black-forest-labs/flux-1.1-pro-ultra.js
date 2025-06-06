@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class Flux11ProUltra {
   constructor() {
@@ -12,6 +13,12 @@ class Flux11ProUltra {
           value: 0.06,
         }
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "2048x2048",
+        default: "1024x1024"
+      },
       arena_score: null,
       release_date: '2024-11-06',
       examples: [

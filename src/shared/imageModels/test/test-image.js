@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class TestImage {
   constructor() {
@@ -15,6 +16,12 @@ class TestImage {
         applyImage: this.applyImage,
         applyMask: this.applyMask,
       }],
+      /* size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "2048x2048",
+        default: "1024x1024"
+      }, */
       arena_score: 0,
       release_date: '2025-05-04',
       examples: [
