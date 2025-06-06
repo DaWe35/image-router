@@ -2,7 +2,7 @@
 
 A simple API router for image generation models. This service acts as a proxy between your application and other image generation APIs, simplifying the process of using different models.
 
-## [Documentation](https://ir-docs.myqa.cc/) - [ImageRouter](https://ir.myqa.cc/)
+## [Documentation](https://docs.imagerouter.io) - [ImageRouter](https://imagerouter.io)
 
 ## Features
 
@@ -59,11 +59,11 @@ docker compose -f docker-compose.generate.yml up
 
 ## API Endpoints
 
-See [API Reference](https://ir-docs.myqa.cc/)
+See [API Reference](https://docs.imagerouter.io)
 
 ## Upcoming Features and Limitations
 
-See [Upcoming Features](https://ir-docs.myqa.cc/upcoming-features/)
+See [Upcoming Features](https://docs.imagerouter.io/upcoming-features/)
 
 ### Health Check
 ```

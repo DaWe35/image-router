@@ -8,7 +8,7 @@ import { imageModels } from '../src/shared/imageModels/index.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const API_URL = 'https://ir-api.myqa.cc/v1/openai/images/generations'
+const API_URL = 'https://api.imagerouter.io/v1/openai/images/generations'
 const DEEPINFRA_API_KEY = process.env.DEEPINFRA_API_KEY
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 

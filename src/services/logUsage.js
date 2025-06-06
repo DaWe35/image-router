@@ -15,7 +15,7 @@ export async function preLogUsage(params, apiKey, req) {
     
     // Check if the user has enough credits
     if (apiKey.user.credits < prePriceInt) {
-        throw new Error(`Insufficient credits (this model needs minimum $${prePriceUsd} credits), please topup your ImageRouter account: https://ir.myqa.cc/pricing`)
+        throw new Error(`Insufficient credits (this model needs minimum $${prePriceUsd} credits), please topup your ImageRouter account: https://imagerouter.io/pricing`)
     }
 
     if (apiKey.user.isActive === false) {
