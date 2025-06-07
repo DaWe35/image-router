@@ -20,7 +20,10 @@ export async function generateImage(fetchParams, userId, res) {
         if (typeof modelConfig.providers[0]?.applyImage === 'function') {
             fetchParams = await modelConfig.providers[0]?.applyImage(fetchParams)
         } else {
-            throw new Error('Image editing is not supported for this model')
+            const supportedModels = Object.keys(imageModels).filter(modelId => 
+                imageModels[modelId].supported_params?.edit === true
+            )
+            throw new Error(`Image editing is not supported for this model. Supported models: ${supportedModels.join(', ')}`)
         }
     }
 
