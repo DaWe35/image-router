@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class Imagen3Fast {
   constructor() {
@@ -12,6 +13,12 @@ class Imagen3Fast {
           value: 0.02,
         }
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "1536x1536",
+        default: "1024x1024"
+      },
       arena_score: null,
       release_date: '2024-12-16',
       examples: [

@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class FluxKontextPro {
@@ -14,6 +15,12 @@ class FluxKontextPro {
         },
         applyImage: this.applyImage,
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "1440x1440",
+        default: "1024x1024"
+      },
       arena_score: 1083,
       release_date: '2025-05-29',
       examples: [

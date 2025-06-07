@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class Imagen4Ultra {
   constructor() {
@@ -12,6 +13,12 @@ class Imagen4Ultra {
           value: 0.08,
         }
       }],
+      size: {
+        type: SIZE_TYPES.RANGE,
+        min: "256x256",
+        max: "1536x1536",
+        default: "1024x1024"
+      },
       arena_score: 1105,
       release_date: '2025-05-20',
       examples: [
