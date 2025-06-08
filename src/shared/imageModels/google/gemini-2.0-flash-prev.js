@@ -1,3 +1,14 @@
+/*
+
+!!!
+
+Be careful! This model can generate multiple images.
+
+!!!
+
+*/
+
+
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import Gemini20FlashExp from './gemini-2.0-flash-exp.js'
 
@@ -32,4 +43,4 @@ class Gemini20FlashPrev {
   }
 }
 
-export default Gemini20FlashPrev 
+export default Gemini20FlashPrev

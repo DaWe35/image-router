@@ -8,6 +8,10 @@ export function validateImageParams(req) {
     if (!prompt) throw new Error("'prompt' is a required parameter")
     if (!model) throw new Error("'model' is a required parameter")
 
+    if (model === 'google/gemini-2.0-flash-prev') {
+        throw new Error("'google/gemini-2.0-flash-prev' is temporary disabled. Please use 'google/gemini-2.0-flash-exp' instead.")
+    }
+
     // Validate model parameter and config
     const modelConfig = imageModels[model]
     if (!modelConfig) throw new Error("model '" + model + "' is not available")

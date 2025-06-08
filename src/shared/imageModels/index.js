@@ -32,7 +32,8 @@ import Imagen4 from './google/imagen-4.js'
 import Imagen4Ultra from './google/imagen-4-ultra.js'
 import Gemini20FlashExp from './google/gemini-2.0-flash-exp.js'
 import Gemini20FlashExpFree from './google/gemini-2.0-flash-exp-free.js'
-import Gemini20FlashPrev from './google/gemini-2.0-flash-prev.js'
+// Temporary disabled because of postCalcPrice function. Be careful! This model can generate multiple images.
+// import Gemini20FlashPrev from './google/gemini-2.0-flash-prev.js'
 
 import Photon from './luma/photon.js'
 import PhotonFlash from './luma/photon-flash.js'
@@ -75,7 +76,7 @@ const modelInstances = [
   new Imagen4Ultra(),
   new Gemini20FlashExp(),
   new Gemini20FlashExpFree(),
-  new Gemini20FlashPrev(),
+  // new Gemini20FlashPrev(),
   
   new Photon(),
   new PhotonFlash(),
