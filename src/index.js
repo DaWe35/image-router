@@ -11,6 +11,7 @@ import { videoModels } from './shared/videoModels/index.js'
 import { validateApiKey } from './middleware/apiKeyMiddleware.js'
 import { prisma } from './config/database.js'
 import { getGeminiApiKey } from './services/imageHelpers.js'
+import { storageService } from './services/storageService.js'
 
 dotenv.config()
 

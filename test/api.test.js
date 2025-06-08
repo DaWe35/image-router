@@ -230,7 +230,7 @@ describe('Image Router API Tests', () => {
             expect(data.error.message).toBe("model 'non-existent-model' is not available")
         })
 
-        it('should return error for unsupported response_format', async () => {
+        it('should return error for invalid response_format', async () => {
             const response = await fetch(`${API_URL}/generations`, {
                 method: 'POST',
                 headers: {
@@ -240,13 +240,34 @@ describe('Image Router API Tests', () => {
                 body: JSON.stringify({
                     model: 'test/test',
                     prompt: 'A photo of a cat',
-                    response_format: 'url'
+                    response_format: 'invalid_format'
                 })
             })
 
             const data = await response.json()
             expect(response.status).toBe(400)
-            expect(data.error.message).toBe("'response_format' is not yet supported. Depending on the model, you'll get a base64 encoded image or a url to the image, but it cannot be changed now.")
+            expect(data.error.message).toBe("'response_format' must be either 'url' or 'b64_json'")
+        })
+
+        it('should accept valid response_format values', async () => {
+            const validFormats = ['url', 'b64_json']
+            
+            for (const format of validFormats) {
+                const response = await fetch(`${API_URL}/generations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'test/test',
+                        prompt: 'A photo of a cat',
+                        response_format: format
+                    })
+                })
+
+                expect(response.status).not.toBe(400)
+            }
         })
 
         it('should return error for unsupported size', async () => {
@@ -347,6 +368,7 @@ describe('POST /edits', () => {
         form.append('model', 'test/test')
         form.append('prompt', 'Add a hat to the person')
         form.append('quality', 'low')
+        form.append('response_format', 'b64_json')
 
         const response = await fetch(`${API_URL}/edits`, {
             method: 'POST',

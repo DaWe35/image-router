@@ -4,8 +4,9 @@ import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
 import { getGeminiApiKey } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
+import { storageService } from './storageService.js'
 
-export async function generateVideo(fetchParams, userId, res) {
+export async function generateVideo(fetchParams, userId, res, usageLogId) {
     const startTime = Date.now()
     const modelConfig = videoModels[fetchParams.model]
     const provider = modelConfig?.providers[0]?.id
@@ -48,7 +49,15 @@ export async function generateVideo(fetchParams, userId, res) {
       const result = await handler({ fetchParams, userId })
       result.latency = Date.now() - startTime
       if (intervalId) clearInterval(intervalId)
-      return result
+      
+      // Skip storage processing for test models
+      if (fetchParams.model.includes('test')) {
+        return result
+      }
+      
+      // Process result through storage service
+      const processedResult = await storageService.processVideoResult(result, userId, fetchParams.response_format, usageLogId)
+      return processedResult
     } catch (error) {
       if (intervalId) clearInterval(intervalId)
       throw error

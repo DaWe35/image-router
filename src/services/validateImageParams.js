@@ -13,9 +13,10 @@ export function validateImageParams(req) {
     if (!modelConfig) throw new Error("model '" + model + "' is not available")
     if (!modelConfig?.providers[0].id) throw new Error("model provider for '" + model + "' is not available")
 
-    // Validate response_format parameter
-    if (response_format) {
-        throw new Error("'response_format' is not yet supported. Depending on the model, you'll get a base64 encoded image or a url to the image, but it cannot be changed now.")
+    // Set default response_format and validate
+    const validResponseFormat = response_format || 'url'
+    if (!['url', 'b64_json'].includes(validResponseFormat)) {
+        throw new Error("'response_format' must be either 'url' or 'b64_json'")
     }
     if (size) {
         throw new Error("'size' is not yet supported.")
@@ -47,5 +48,5 @@ export function validateImageParams(req) {
         validFiles.mask = files.mask
     }
 
-    return { prompt, model, quality: qualityLower, files: validFiles }
+    return { prompt, model, response_format: validResponseFormat, quality: qualityLower, files: validFiles }
 }
