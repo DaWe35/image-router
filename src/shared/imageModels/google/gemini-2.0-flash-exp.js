@@ -9,8 +9,13 @@ class Gemini20FlashExp {
         id: 'gemini',
         model_name: 'gemini-2.0-flash-exp-image-generation',
         pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.01,
+          type: PRICING_TYPES.POST_GENERATION,
+          postCalcFunction: this.postCalcPrice,
+          range: {
+            min: 0.01,
+            average: 0.01,
+            max: 0.20
+          },
         },
         applyImage: this.applyImage,
       }],
@@ -36,6 +41,13 @@ class Gemini20FlashExp {
     params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
     
     return params
+  }
+
+  postCalcPrice(imageResult) {
+    // Calculate price based on number of images generated
+    const pricePerImage = 0.01
+    const numberOfImages = imageResult.data ? imageResult.data.length : 1
+    return pricePerImage * numberOfImages
   }
 }
 

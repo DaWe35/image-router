@@ -294,7 +294,7 @@ async function generateGemini({ fetchParams, userId }) {
             original_response_from_provider: data
         }
         if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
-            formattedError.error.message = 'This model hit a global rate limit. Please try again later or switch to the "google/gemini-2.0-flash-prev" model for increased limits.'
+            formattedError.error.message = 'This model hit a global rate limit. Please try again.'
         }
         throw {
             status: response.status,
@@ -302,24 +302,23 @@ async function generateGemini({ fetchParams, userId }) {
         }
     }
     
-    // Find image data in any part of the response
-    let imageData = null
+    // Find all image data in the response parts
+    const imageDataArray = []
     if (data?.candidates?.[0]?.content?.parts) {
         for (const part of data.candidates[0].content.parts) {
             if (part?.inlineData?.data) {
-                imageData = part.inlineData.data
-                break
+                imageDataArray.push(part.inlineData.data)
             }
         }
     }
 
-    if (imageData) {
+    if (imageDataArray.length > 0) {
         return {
             created: Math.floor(new Date().getTime() / 1000),
-            data: [{
+            data: imageDataArray.map(imageData => ({
                 b64_json: imageData,
                 revised_prompt: null,
-            }]
+            }))
         }
     } else {
         // Try to find text response in the parts
