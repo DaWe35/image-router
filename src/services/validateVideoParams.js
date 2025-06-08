@@ -12,9 +12,10 @@ export function validateVideoParams(req) {
     if (!modelConfig) throw new Error("model '" + model + "' is not available")
     if (!modelConfig?.providers[0].id) throw new Error("model provider for '" + model + "' is not available")
 
-    // Validate response_format parameter
-    if (response_format) {
-        throw new Error("'response_format' is not yet supported. You'll get a url to the video.")
+    // Set default response_format and validate
+    const validResponseFormat = response_format || 'url'
+    if (!['url', 'b64_json'].includes(validResponseFormat)) {
+        throw new Error("'response_format' must be either 'url' or 'b64_json'")
     }
     if (size) {
         throw new Error("'size' is not yet supported.")
@@ -25,5 +26,5 @@ export function validateVideoParams(req) {
         throw new Error("'quality' is not yet supported.")
     }
 
-    return { prompt, model }
+    return { prompt, model, response_format: validResponseFormat }
 } 

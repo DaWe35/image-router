@@ -5,8 +5,9 @@ import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
+import { storageService } from './storageService.js'
 
-export async function generateImage(fetchParams, userId, res) {
+export async function generateImage(fetchParams, userId, res, usageLogId) {
     const startTime = Date.now()
     const modelConfig = imageModels[fetchParams.model]
     const provider = modelConfig?.providers[0]?.id
@@ -74,7 +75,15 @@ export async function generateImage(fetchParams, userId, res) {
       const result = await handler({ fetchParams, userId })
       result.latency = Date.now() - startTime
       if (intervalId) clearInterval(intervalId)
-      return result
+      
+      // Skip storage processing for test models
+      if (fetchParams.model.includes('test')) {
+        return result
+      }
+      
+      // Process result through storage service
+      const processedResult = await storageService.processImageResult(result, userId, fetchParams.response_format, usageLogId)
+      return processedResult
     } catch (error) {
       if (intervalId) clearInterval(intervalId)
       throw error
@@ -310,7 +319,6 @@ async function generateGemini({ fetchParams, userId }) {
             data: [{
                 b64_json: imageData,
                 revised_prompt: null,
-                original_response_from_provider: data
             }]
         }
     } else {
@@ -428,17 +436,19 @@ async function generateTest({ fetchParams, userId }) {
     const imageBuffer = await fs.readFile(imagePath)
     const b64_json = imageBuffer.toString('base64')
 
-    // Return a random placeholder image
+    // Return response based on response_format
+    const responseData = {
+        revised_prompt: null
+    }
+
+    if (fetchParams.response_format === 'b64_json') {
+        responseData.b64_json = b64_json
+    } else {
+        responseData.url = `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/imageModels/test/${fetchParams.quality}.png`
+    }
+
     return {
         created: Date.now(),
-        data: [{
-            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/imageModels/test/${fetchParams.quality}.png`,
-            b64_json,
-            revised_prompt: null,
-            original_response_from_provider: {
-                "yeah": "this is m.t.",
-                "whats up": "btw?"
-            }
-        }]
+        data: [responseData]
     }
 }
