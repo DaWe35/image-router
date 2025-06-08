@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { SIZE_TYPES } from '../../SizeScheme.js'
 
 class DallE3 {
   constructor() {
@@ -18,6 +19,11 @@ class DallE3 {
         },
         applyQuality: this.applyQuality,
       }],
+      size: {
+        type: SIZE_TYPES.FIXED,
+        options: ["1024x1024", "1024x1792", "1792x1024"],
+        default: "1024x1024"
+      },
       arena_score: 937,
       release_date: '2023-10-20',
       examples: [
@@ -32,7 +38,7 @@ class DallE3 {
     return this.data
   }
 
-  calculatePrice(quality) {
+  calculatePrice(quality, size) {
     // 1024x1024
     switch (quality) {
       case 'high':
