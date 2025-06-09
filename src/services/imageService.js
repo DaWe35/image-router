@@ -98,9 +98,14 @@ async function generateOpenAI({ fetchParams, userId }) {
     const providerKey = process.env.OPENAI_API_KEY
     
     // Set up basic parameters
-    fetchParams.user = userId
-    fetchParams.n = 1
-    if (fetchParams.model === 'gpt-image-1') fetchParams.moderation = 'low'
+    let fetchBody = {
+        prompt: fetchParams.prompt,
+        model: fetchParams.model,
+        quality: fetchParams.quality,
+        user: userId,
+        n: 1,
+    }
+    if (fetchParams.model === 'gpt-image-1') fetchBody.moderation = 'low'
 
     const headers = {
         'Authorization': `Bearer ${providerKey}`
@@ -109,7 +114,7 @@ async function generateOpenAI({ fetchParams, userId }) {
     // Don't set Content-Type for multipart form data when using fetch with FormData
     // The browser/runtime will set it automatically with the correct boundary
 
-    const body = isEdit ? objectToFormData(fetchParams) : JSON.stringify(fetchParams)
+    const body = isEdit ? objectToFormData(fetchBody) : JSON.stringify(fetchBody)
     
     if (!isEdit) {
         headers['Content-Type'] = 'application/json'

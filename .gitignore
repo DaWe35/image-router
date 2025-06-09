@@ -3,3 +3,4 @@
 node_modules/body-parser/lib/types/raw.js
 package-lock.json
 test/manualTestOutput/
+.env.prod
