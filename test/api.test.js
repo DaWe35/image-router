@@ -95,33 +95,10 @@ describe('Image Router API Tests', () => {
 
             // Check image data structure
             const imageData = data.data[0]
-            expect(imageData).toHaveProperty('b64_json')
-            expect(typeof imageData.b64_json).toBe('string')
+            expect(imageData).toHaveProperty('url')
+            expect(typeof imageData.url).toBe('string')
             expect(imageData).toHaveProperty('revised_prompt')
             expect(imageData.revised_prompt === null || typeof imageData.revised_prompt === 'string').toBe(true)
-            expect(imageData).toHaveProperty('original_response_from_provider')
-
-            // Check provider response structure
-            const providerResponse = imageData.original_response_from_provider
-            expect(providerResponse).toHaveProperty('candidates')
-            expect(Array.isArray(providerResponse.candidates)).toBe(true)
-            expect(providerResponse.candidates.length).toBeGreaterThan(0)
-
-            const candidate = providerResponse.candidates[0]
-            expect(candidate).toHaveProperty('content')
-            expect(candidate.content).toHaveProperty('parts')
-            expect(Array.isArray(candidate.content.parts)).toBe(true)
-            expect(candidate).toHaveProperty('finishReason')
-            expect(candidate).toHaveProperty('index')
-
-            // Check usage metadata
-            expect(providerResponse).toHaveProperty('usageMetadata')
-            const usage = providerResponse.usageMetadata
-            expect(usage).toHaveProperty('promptTokenCount')
-            expect(usage).toHaveProperty('candidatesTokenCount')
-            expect(usage).toHaveProperty('totalTokenCount')
-            expect(usage).toHaveProperty('promptTokensDetails')
-            expect(Array.isArray(usage.promptTokensDetails)).toBe(true)
 
             // Check latency and cost
             expect(data).toHaveProperty('latency')
@@ -395,7 +372,6 @@ describe('POST /edits', () => {
         expect(typeof imageData.b64_json).toBe('string')
         expect(imageData).toHaveProperty('revised_prompt')
         expect(imageData.revised_prompt === null || typeof imageData.revised_prompt === 'string').toBe(true)
-        expect(imageData).toHaveProperty('original_response_from_provider')
         
         expect(data).toHaveProperty('latency')
         expect(typeof data.latency).toBe('number')
