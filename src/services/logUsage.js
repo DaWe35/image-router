@@ -5,7 +5,6 @@ const models = {
     ...videoModels
 }
 import { prisma } from '../config/database.js'
-import { Status } from '@prisma/client'
 import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
 export async function preLogUsage(params, apiKey, req) {
@@ -55,7 +54,7 @@ export async function preLogUsage(params, apiKey, req) {
                 speedMs: 0,
                 imageSize: params.size || 'unknown',
                 quality: params.quality ? params.quality : 'auto',
-                status: Status.processing,
+                status: 'processing',
                 ip: clientIp
             }
         })
@@ -78,7 +77,7 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
             await tx.APIUsage.update({
                 where: { id: usageLogEntry.id },
                 data: {
-                    status: Status.error,
+                    status: 'error',
                     error: errorToLog,
                     cost: 0 // Request failed, no cost
                 }
@@ -101,7 +100,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
     const postPriceInt = convertPriceToDbFormat(postPriceUsd)
 
     // Extract URLs from the result
-    const outputUrls = extractOutputUrls(imageResult)
+    const outputUrls = extractOutputUrls(imageResult, usageLogEntry.id)
 
     try {
         // Use a transaction to update both user balance and API usage together
@@ -120,7 +119,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
                 where: { id: usageLogEntry.id },
                 data: {
                     speedMs: imageResult.latency,
-                    status: Status.success,
+                    status: 'success',
                     cost: postPriceInt, // Update to actual cost
                     outputUrls: outputUrls
                 }
@@ -136,7 +135,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
 }
 
 // Helper function to extract URLs from image/video generation result
-function extractOutputUrls(result) {
+function extractOutputUrls(result, usageLogId) {
     const urls = []
     
     if (!result || !result.data || !Array.isArray(result.data)) {
@@ -144,15 +143,40 @@ function extractOutputUrls(result) {
     }
     
     for (const item of result.data) {
+        let url = null
+        
         // Check for URL (for url response format)
         if (item.url) {
-            urls.push(item.url)
+            url = item.url
         }
         // Check for uploaded URL (for b64_json response format, preserved by storage service)
         else if (item._uploadedUrl) {
-            urls.push(item._uploadedUrl)
+            url = item._uploadedUrl
+        }
+        
+        if (url) {
+            // Shorten URL by removing S3_CUSTOM_PUBLIC_URL and APIUsage row id
+            const shortenedUrl = shortenUrl(url, usageLogId)
+            urls.push(shortenedUrl)
         }
     }
     
     return urls
+}
+
+// Helper function to shorten URLs by removing S3_CUSTOM_PUBLIC_URL and APIUsage row id
+function shortenUrl(url, usageLogId) { 
+    const s3CustomPublicUrl = process.env.S3_CUSTOM_PUBLIC_URL
+    if (!s3CustomPublicUrl) {
+        return url
+    }
+    
+    // Replace S3 URL + usage log ID with @ wildcard
+    const expectedPrefix = `${s3CustomPublicUrl}/${usageLogId}`
+    if (url.startsWith(expectedPrefix)) {
+        return url.replace(expectedPrefix, '@')
+    }
+    
+    // If URL doesn't match our pattern, return as-is
+    return url
 }
