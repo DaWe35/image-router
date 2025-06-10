@@ -152,7 +152,9 @@ class StorageService {
                 const base64Data = uploadResult.buffer ? uploadResult.buffer.toString('base64') : content.b64_json
                 const result = {
                     ...content,
-                    b64_json: base64Data
+                    b64_json: base64Data,
+                    // Always preserve the uploaded URL for logging purposes
+                    _uploadedUrl: uploadResult.url
                 }
                 delete result.url
                 return result

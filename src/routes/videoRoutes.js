@@ -30,6 +30,9 @@ async function generateVideoWrapper(req, res) {
             const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, videoResult)
             videoResult.cost = postPriceInt/10000
 
+            // Clean up internal fields before sending response
+            cleanupInternalFields(videoResult)
+
             res.write(JSON.stringify(videoResult))
             res.end()
         } catch (error) {
@@ -60,6 +63,15 @@ async function generateVideoWrapper(req, res) {
             }
         }))
         res.end()
+    }
+}
+
+// Helper function to clean up internal fields from the response
+function cleanupInternalFields(result) {
+    if (result && result.data && Array.isArray(result.data)) {
+        result.data.forEach(item => {
+            delete item._uploadedUrl
+        })
     }
 }
 

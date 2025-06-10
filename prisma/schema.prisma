@@ -34,6 +34,12 @@ enum Quality {
   high
 }
 
+enum Status {
+  error
+  success
+  processing
+}
+
 model APIUsage {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
@@ -44,11 +50,12 @@ model APIUsage {
   speedMs                   Int
   imageSize                 String
   quality                   Quality?
-  status                    String
+  status                    Status
   error                     String?
   metadata                  Json?
   apiKeyTempJwt             Boolean         @default(false)
   ip                        String?
+  outputUrls                String[]        @default([])
 
   apiKey                    APIKey?          @relation(fields: [apiKeyId], references: [id])
   apiKeyId                  String?

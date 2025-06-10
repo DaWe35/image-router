@@ -94,6 +94,9 @@ async function generateImageWrapper(req, res) {
             const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, imageResult)
             imageResult.cost = postPriceInt/10000
 
+            // Clean up internal fields before sending response
+            cleanupInternalFields(imageResult)
+
             res.write(JSON.stringify(imageResult))
             res.end()
         } catch (error) {
@@ -124,6 +127,15 @@ async function generateImageWrapper(req, res) {
             }
         }))
         res.end()
+    }
+}
+
+// Helper function to clean up internal fields from the response
+function cleanupInternalFields(result) {
+    if (result && result.data && Array.isArray(result.data)) {
+        result.data.forEach(item => {
+            delete item._uploadedUrl
+        })
     }
 }
 
