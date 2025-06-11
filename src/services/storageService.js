@@ -66,27 +66,34 @@ class StorageService {
         return typeMap[contentType] || ''
     }
 
-    async _uploadBuffer(buffer, contentType, usageLogId) {
+    // Internal helper that handles the actual PutObject request. Accepts Buffer or stream.
+    async _uploadBody(body, contentType, usageLogId) {
         const fileName = this.generateFileName(contentType, usageLogId)
+
         const uploadParams = {
             Bucket: this.bucketName,
             Key: fileName,
-            Body: buffer,
-            ContentType: contentType,
-            ACL: 'public-read'
+            Body: body,
+            ContentType: contentType
         }
+
         const upload = new Upload({
             client: this.s3Client,
             params: uploadParams
         })
         await upload.done()
+
+        // If we were passed a Buffer we want to preserve it for b64_json fallback
+        const maybeBuffer = Buffer.isBuffer(body) ? body : null
+
         const publicUrl = this.publicUrl
             ? `${this.publicUrl}/${fileName}`
             : `${this.endpoint}/${this.bucketName}/${fileName}`
+
         return {
             success: true,
             url: publicUrl,
-            buffer: buffer
+            buffer: maybeBuffer
         }
     }
 
@@ -101,8 +108,14 @@ class StorageService {
                 throw new Error(`Failed to download content: ${response.statusText}`)
             }
 
+            // Directly stream response body to S3 to save memory
+            if (response.body) {
+                return await this._uploadBody(response.body, contentType, usageLogId)
+            }
+
+            // Fallback to buffering if body stream not available (older node-fetch versions)
             const buffer = await response.buffer()
-            return await this._uploadBuffer(buffer, contentType, usageLogId)
+            return await this._uploadBody(buffer, contentType, usageLogId)
         } catch (error) {
             console.error('Storage upload error:', error)
             throw new Error(`Failed to upload to storage: ${error.message}`)
@@ -120,7 +133,7 @@ class StorageService {
                 throw new Error('Invalid base64 data: empty content')
             }
             const buffer = Buffer.from(base64Content, 'base64')
-            return await this._uploadBuffer(buffer, contentType, usageLogId)
+            return await this._uploadBody(buffer, contentType, usageLogId)
         } catch (error) {
             console.error('Storage upload error:', error)
             throw new Error(`Failed to upload base64 to storage: ${error.message}`)
