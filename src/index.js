@@ -93,13 +93,18 @@ const freeTierLimiter = async (req, res, next) => {
     const { model } = req.body
     const userId = res.locals.key.user.id
 
+    // Determine client IP, accounting for proxies
+    const proxyCount = Number(process.env.PROXY_COUNT || 0)
+    const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
+
     // Check if it's a free model request
     if (model && model.endsWith(':free')) {
         try {
             const today = new Date()
             today.setHours(0, 0, 0, 0)
 
-            const todayUsage = await prisma.APIUsage.count({
+            // Count today's free requests by this user
+            const userUsage = await prisma.APIUsage.count({
                 where: {
                     userId: userId,
                     model: {
@@ -111,9 +116,22 @@ const freeTierLimiter = async (req, res, next) => {
                 }
             })
 
+            // Count today's free requests coming from this IP
+            const ipUsage = await prisma.APIUsage.count({
+                where: {
+                    ip: clientIp,
+                    model: {
+                        endsWith: ':free'
+                    },
+                    createdAt: {
+                        gte: today
+                    }
+                }
+            })
+
             const dailyFreeLimit = 50
 
-            if (todayUsage >= dailyFreeLimit) {
+            if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
                 return res.status(429).json({
                     error: {
                         message: `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`,
