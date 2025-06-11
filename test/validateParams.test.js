@@ -1,5 +1,4 @@
-import { validateImageParams } from '../src/services/validateImageParams.js'
-import { validateVideoParams } from '../src/services/validateVideoParams.js'
+import { jest } from '@jest/globals'
 
 // Mock minimal image/video models so validators succeed
 jest.unstable_mockModule('../src/shared/imageModels/index.js', () => ({
@@ -7,13 +6,14 @@ jest.unstable_mockModule('../src/shared/imageModels/index.js', () => ({
     'provider/model1': { providers: [{ id: 'mock', model_name: 'provider/model1' }] }
   }
 }))
+
 jest.unstable_mockModule('../src/shared/videoModels/index.js', () => ({
   videoModels: {
     'provider/video-model': { providers: [{ id: 'mock', model_name: 'provider/video-model' }] }
   }
 }))
 
-// Re-import after mocks
+// Dynamic import after mocks are set up
 const { validateImageParams: validateImage } = await import('../src/services/validateImageParams.js')
 const { validateVideoParams: validateVideo } = await import('../src/services/validateVideoParams.js')
 

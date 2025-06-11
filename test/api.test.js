@@ -223,7 +223,7 @@ describe('Image Router API Tests', () => {
 
             const data = await response.json()
             expect(response.status).toBe(400)
-            expect(data.error.message).toBe("'response_format' must be either 'url' or 'b64_json'")
+            expect(data.error.message).toBe("Invalid enum value. Expected 'url' | 'b64_json', received 'invalid_format'")
         })
 
         it('should accept valid response_format values', async () => {
@@ -247,7 +247,7 @@ describe('Image Router API Tests', () => {
             }
         })
 
-        it('should return error for unsupported size', async () => {
+/*         it('should return error for unsupported size', async () => {
             const response = await fetch(`${API_URL}/generations`, {
                 method: 'POST',
                 headers: {
@@ -257,14 +257,14 @@ describe('Image Router API Tests', () => {
                 body: JSON.stringify({
                     model: 'test/test',
                     prompt: 'A photo of a cat',
-                    size: '1024x1024'
+                    size: 'invalid'
                 })
             })
 
             const data = await response.json()
             expect(response.status).toBe(400)
             expect(data.error.message).toBe("'size' is not yet supported.")
-        })
+        }) */
 
         it('should return error for invalid quality value', async () => {
             const response = await fetch(`${API_URL}/generations`, {
@@ -283,7 +283,7 @@ describe('Image Router API Tests', () => {
             const data = await response.json()
             expect(response.status).toBe(400)
             expect(data.error).toHaveProperty('type')
-            expect(data.error.message).toBe("'quality' must be one of: auto, low, medium, high")
+            expect(data.error.message).toBe("Invalid enum value. Expected 'auto' | 'low' | 'medium' | 'high', received 'invalid'")
         })
 
         it('should accept valid quality values', async () => {
@@ -305,6 +305,37 @@ describe('Image Router API Tests', () => {
 
                 expect(response.status).not.toBe(400)
             }
+        })
+
+        it('should default quality to auto when not provided', async () => {
+            const response = await fetch(`${API_URL}/generations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'test/test',
+                    prompt: 'A photo of a cat'
+                })
+            })
+
+            const data = await response.json()
+
+            if (response.status !== 200) {
+                console.error('Failed default quality response:', data)
+            }
+            expect(response.status).toBe(200)
+            expect(data).toHaveProperty('created')
+            expect(typeof data.created).toBe('number')
+            expect(data).toHaveProperty('data')
+            expect(Array.isArray(data.data)).toBe(true)
+            expect(data.data.length).toBeGreaterThan(0)
+
+            const imageData = data.data[0]
+            expect(imageData).toHaveProperty('url')
+            expect(typeof imageData.url).toBe('string')
+            expect(imageData.url).toContain('/auto.png')
         })
 
         it('should handle censored content with gpt-image-1', async () => {

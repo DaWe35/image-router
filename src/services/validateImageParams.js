@@ -2,10 +2,16 @@ import { z } from 'zod'
 import { imageModels } from '../shared/imageModels/index.js'
 
 const bodySchema = z.object({
-  prompt: z.string().min(1, { message: "'prompt' is a required parameter" }),
-  model: z.string().min(1, { message: "'model' is a required parameter" }),
+  prompt: z.string({
+    required_error: "'prompt' is a required parameter",
+    invalid_type_error: "'prompt' must be a string"
+  }).min(1, { message: "'prompt' is a required parameter" }),
+  model: z.string({
+    required_error: "'model' is a required parameter",
+    invalid_type_error: "'model' must be a string"
+  }).min(1, { message: "'model' is a required parameter" }),
   response_format: z.enum(['url', 'b64_json']).default('url'),
-  quality: z.enum(['auto', 'low', 'medium', 'high']).optional()
+  quality: z.enum(['auto', 'low', 'medium', 'high']).default('auto')
 })
 
 export function validateImageParams(req) {
