@@ -69,6 +69,11 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       intervalId = setInterval(() => {
         res.write(' ')
       }, heartbeatInterval)
+
+      // Clean up the heartbeat timer if the client disconnects early
+      res.on('close', () => {
+        if (intervalId) clearInterval(intervalId)
+      })
     }
 
     try {

@@ -9,7 +9,10 @@
     "dev": "nodemon src/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -29,7 +32,11 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.3",
-    "prisma": "^5.10.0"
+    "prisma": "^5.10.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-config-prettier": "^9.0.0"
   },
   "jest": {
     "transform": {},

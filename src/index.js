@@ -31,7 +31,8 @@ app.use(express.json())
 
 // Custom key generator for rate limiting, preferring Cloudflare header
 const ipKeyGenerator = (req) => {
-    return process.env.PROXY_COUNT > 0 ? req.headers['cf-connecting-ip'] : req.ip
+    const proxyCount = Number(process.env.PROXY_COUNT || 0)
+    return proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
 }
 
 // Rate limiting configurations
@@ -147,10 +148,11 @@ app.use('/v1/openai/images/edits', ...protectedChain)
 // Apply the protected middleware chain to video generations route
 app.use('/v1/openai/videos/generations', ...protectedChain)
 
-// Modified IP endpoint to show headers for debugging
-app.get('/ip', (request, response) => {
-    const clientIp = process.env.PROXY_COUNT > 0 ? req.headers['cf-connecting-ip'] : req.ip
-    response.json({ ip: clientIp })
+// Debug endpoint that returns the detected client IP
+app.get('/ip', (req, res) => {
+    const proxyCount = Number(process.env.PROXY_COUNT || 0)
+    const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
+    res.json({ ip: clientIp })
 })
 
 // Routes
