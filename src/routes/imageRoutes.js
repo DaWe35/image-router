@@ -4,7 +4,7 @@ import path from 'path'
 import { generateImage } from '../services/imageService.js'
 import { imageModels } from '../shared/imageModels/index.js'
 import { validateImageParams } from '../services/validateImageParams.js'
-import { preLogUsage, refundUsage, postLogUsage } from '../services/logUsage.js'
+import { createGenerationHandler } from '../services/generationWrapper.js'
 const router = express.Router()
 
 // Configure multer for file uploads
@@ -45,9 +45,9 @@ router.get('/models', (req, res) => {
 })
 
 // POST /v1/images/generations
-router.post('/generations', async (req, res) => {
-    await generateImageWrapper(req, res)
-})
+const imageGenerationHandler = createGenerationHandler({ validateParams: validateImageParams, generateFn: generateImage })
+
+router.post('/generations', imageGenerationHandler)
 
 // POST /v1/images/edits
 router.post('/edits', 
@@ -69,74 +69,7 @@ router.post('/edits',
         }
         next()
     },
-    async (req, res) => {
-        await generateImageWrapper(req, res)
-    }
+    imageGenerationHandler
 )
-
-async function generateImageWrapper(req, res) {
-    try {
-        const apiKey = res.locals.key
-        const params = validateImageParams(req)
-        try {
-            const usageLogEntry = await preLogUsage(params, apiKey, req)
-
-            let imageResult
-            try {
-                let fetchParams = structuredClone(params) // prevent side effects
-                imageResult = await generateImage(fetchParams, apiKey.user.id, res, usageLogEntry.id)
-            } catch (error) {
-                const errorToLog = error?.errorResponse?.error?.message || error?.message || 'unknown error'
-                await refundUsage(apiKey, usageLogEntry, errorToLog)
-                throw error
-            }
-            
-            const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, imageResult)
-            imageResult.cost = postPriceInt/10000
-
-            // Clean up internal fields before sending response
-            cleanupInternalFields(imageResult)
-
-            res.write(JSON.stringify(imageResult))
-            res.end()
-        } catch (error) {
-            // If the error is already in the correct format, forward it as-is
-            if (error?.errorResponse) {
-                res.write(JSON.stringify(error.errorResponse))
-                res.status(error.status || 500).end()
-                return
-            }
-        
-            console.error('Image generation error:', error)
-            const errorResponse = {
-                error: {
-                    message: error.message || 'Failed to generate image',
-                    type: 'internal_error'
-                }
-            }
-            res.write(JSON.stringify(errorResponse))
-            res.status(500).end()
-        }
-    } catch (error) {
-        console.error('Image generation error:', error)
-        res.status(400)
-        res.write(JSON.stringify({
-            error: {
-                message: error.message || 'Failed to generate image',
-                type: 'invalid_request_error'
-            }
-        }))
-        res.end()
-    }
-}
-
-// Helper function to clean up internal fields from the response
-function cleanupInternalFields(result) {
-    if (result && result.data && Array.isArray(result.data)) {
-        result.data.forEach(item => {
-            delete item._uploadedUrl
-        })
-    }
-}
 
 export const imageRoutes = router
