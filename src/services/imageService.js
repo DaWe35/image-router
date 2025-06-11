@@ -106,6 +106,10 @@ async function generateOpenAI({ fetchParams, userId }) {
         n: 1,
     }
     if (fetchParams.model === 'gpt-image-1') fetchBody.moderation = 'low'
+    if (isEdit) {
+        fetchBody.image = fetchParams.image
+        fetchBody.mask = fetchParams.mask
+    }
 
     const headers = {
         'Authorization': `Bearer ${providerKey}`

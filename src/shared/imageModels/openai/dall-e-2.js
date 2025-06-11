@@ -31,7 +31,7 @@ class DallE2 {
   }
 
   applyQuality(params) {
-    delete params.quality // Dall-E 2 does not support quality, even if their docs say it does. Default quality is standard, no other options available..
+    delete params.quality // Dall-E 2 does not support quality, even if their docs say it does. Default quality is standard, no other options available.
     return params
   }
 
