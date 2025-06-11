@@ -29,7 +29,9 @@
     "google-auth-library": "^9.0.0",
     "@aws-sdk/client-s3": "^3.450.0",
     "@aws-sdk/lib-storage": "^3.450.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "yaml": "^2.2.2",
+    "@asteasolutions/zod-to-openapi": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.3",

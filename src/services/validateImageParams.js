@@ -38,3 +38,5 @@ export function validateImageParams(req) {
 
   return { prompt, model, response_format, quality, files: validFiles }
 }
+
+export const imageRequestSchema = bodySchema

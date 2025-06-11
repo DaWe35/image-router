@@ -12,6 +12,8 @@ import { validateApiKey } from './middleware/apiKeyMiddleware.js'
 import { prisma } from './config/database.js'
 import { getGeminiApiKey } from './services/imageHelpers.js'
 import { storageService } from './services/storageService.js'
+import YAML from 'yaml'
+import { openApiDocument } from './openapiDoc.js'
 
 dotenv.config()
 
@@ -252,6 +254,11 @@ app.get('/timeout-test',
 // Health check
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' })
+})
+
+// Serve generated OpenAPI spec
+app.get('/.well-known/openapi.yaml', (req, res) => {
+    res.type('yaml').send(YAML.stringify(openApiDocument))
 })
 
 // Error handling middleware

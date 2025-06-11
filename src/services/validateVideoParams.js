@@ -22,4 +22,6 @@ export function validateVideoParams(req) {
     if (!modelConfig?.providers[0]?.id) throw new Error(`model provider for '${model}' is not available`)
 
     return { prompt, model, response_format }
-} 
+}
+
+export const videoRequestSchema = bodySchema 
