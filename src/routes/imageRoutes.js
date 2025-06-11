@@ -86,7 +86,7 @@ async function generateImageWrapper(req, res) {
                 let fetchParams = structuredClone(params) // prevent side effects
                 imageResult = await generateImage(fetchParams, apiKey.user.id, res, usageLogEntry.id)
             } catch (error) {
-                const errorToLog = error?.errorResponse?.message || error?.message || 'unknown error'
+                const errorToLog = error?.errorResponse?.error?.message || error?.message || 'unknown error'
                 await refundUsage(apiKey, usageLogEntry, errorToLog)
                 throw error
             }

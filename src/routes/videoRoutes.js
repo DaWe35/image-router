@@ -22,7 +22,7 @@ async function generateVideoWrapper(req, res) {
                 let fetchParams = structuredClone(params) // prevent side effects
                 videoResult = await generateVideo(fetchParams, apiKey.user.id, res, usageLogEntry.id)
             } catch (error) {
-                const errorToLog = error?.errorResponse?.message || error?.message || 'unknown error'
+                const errorToLog = error?.errorResponse?.error?.message || error?.message || 'unknown error'
                 await refundUsage(apiKey, usageLogEntry, errorToLog)
                 throw error
             }
