@@ -78,6 +78,16 @@ registry.registerPath({
   }
 })
 
+registry.registerPath({
+  method: 'get',
+  path: '/v1/models',
+  responses: {
+    200: {
+      description: 'Success'
+    }
+  }
+})
+
 const generator = new OpenApiGeneratorV31(registry.definitions)
 
 export const openApiDocument = generator.generateDocument({
