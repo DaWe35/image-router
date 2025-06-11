@@ -31,7 +31,7 @@
     "@aws-sdk/lib-storage": "^3.450.0",
     "zod": "^3.23.8",
     "yaml": "^2.2.2",
-    "@asteasolutions/zod-to-openapi": "^3.2.0"
+    "@asteasolutions/zod-to-openapi": "^7.3.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.3",

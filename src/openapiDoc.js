@@ -1,20 +1,21 @@
 import { z } from 'zod'
-import { extendZodWithOpenApi, OpenAPIRegistry, generateOpenApiDocument } from '@asteasolutions/zod-to-openapi'
+import { extendZodWithOpenApi, OpenAPIRegistry, OpenApiGeneratorV31 } from '@asteasolutions/zod-to-openapi'
 import { imageRequestSchema } from './services/validateImageParams.js'
 import { videoRequestSchema } from './services/validateVideoParams.js'
 
+// Attach the .openapi() helper to Zod
 extendZodWithOpenApi(z)
 
 const registry = new OpenAPIRegistry()
 
 // Schemas
 const imageEditSchema = imageRequestSchema.extend({
-  image: z.any().required(),
+  image: z.any(),
   mask: z.any().optional()
 })
+.openapi('ImageEditRequest')
 registry.register('ImageGenerationRequest', imageRequestSchema)
 registry.register('VideoGenerationRequest', videoRequestSchema)
-registry.register('ImageEditRequest', imageEditSchema)
 
 // Paths
 registry.registerPath({
@@ -65,7 +66,7 @@ registry.registerPath({
       required: true,
       content: {
         'multipart/form-data': {
-          schema: imageEditSchema.openapi({ componentId: 'ImageEditRequest' })
+          schema: imageEditSchema
         }
       }
     }
@@ -77,7 +78,9 @@ registry.registerPath({
   }
 })
 
-export const openApiDocument = generateOpenApiDocument(registry, {
+const generator = new OpenApiGeneratorV31(registry.definitions)
+
+export const openApiDocument = generator.generateDocument({
   openapi: '3.1.0',
   info: {
     title: 'Image Router API',
