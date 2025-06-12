@@ -83,83 +83,10 @@ const userLimiter = rateLimit({
     legacyHeaders: false
 })
 
-// New middleware for daily free tier limit
-const freeTierLimiter = async (req, res, next) => {
-    // This limiter only applies if an API key is present and validated
-    if (!res.locals.key) {
-        return next() // Should have been caught by validateApiKey if key was required but missing/invalid
-    }
-
-    const { model } = req.body
-    const userId = res.locals.key.user.id
-
-    // Determine client IP, accounting for proxies
-    const proxyCount = Number(process.env.PROXY_COUNT || 0)
-    const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
-
-    // Check if it's a free model request
-    if (model && model.endsWith(':free')) {
-        try {
-            const today = new Date()
-            today.setHours(0, 0, 0, 0)
-
-            // Count today's free requests by this user
-            const userUsage = await prisma.APIUsage.count({
-                where: {
-                    userId: userId,
-                    model: {
-                        endsWith: ':free'
-                    },
-                    createdAt: {
-                        gte: today
-                    }
-                }
-            })
-
-            // Count today's free requests coming from this IP
-            const ipUsage = await prisma.APIUsage.count({
-                where: {
-                    ip: clientIp,
-                    model: {
-                        endsWith: ':free'
-                    },
-                    createdAt: {
-                        gte: today
-                    }
-                }
-            })
-
-            const dailyFreeLimit = 50
-
-            if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
-                return res.status(429).json({
-                    error: {
-                        message: `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`,
-                        type: "rate_limit_error"
-                    }
-                })
-            }
-        } catch (error) {
-            console.error("Error checking free tier limit:", error)
-            // Decide if we should block the request or allow it if the check fails
-            // For now, let's block it to be safe
-            return res.status(500).json({
-                error: {
-                    message: 'Failed to verify free tier usage limit',
-                    type: 'internal_error'
-                }
-            })
-        }
-    }
-
-    // If not a free model or limit not reached, proceed
-    next()
-}
-
 app.use(generalLimiter) // Apply general limiter to all other routes
 
 // Define a protected middleware chain based on DATABASE_URL availability
-const protectedChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userLimiter, freeTierLimiter] : [ipLimiter]
+const protectedChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userLimiter] : [ipLimiter]
 
 // Apply the protected middleware chain to both image generations and edits routes
 app.use('/v1/openai/images/generations', ...protectedChain)

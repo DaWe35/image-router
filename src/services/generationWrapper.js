@@ -1,4 +1,5 @@
 import { preLogUsage, refundUsage, postLogUsage } from './logUsage.js'
+import { freeTierLimiter } from '../middleware/freeTierLimiter.js'
 
 function cleanupInternalFields(result) {
   if (result && result.data && Array.isArray(result.data)) {
@@ -15,6 +16,13 @@ export function createGenerationHandler({ validateParams, generateFn }) {
       const params = validateParams(req)
 
       try {
+        // Run daily free-tier check
+        await freeTierLimiter(req, res, () => {})
+        if (res.headersSent) {
+          // freeTierLimiter already responded (limit exceeded or error)
+          return
+        }
+
         const usageLogEntry = await preLogUsage(params, apiKey, req)
 
         let generationResult
