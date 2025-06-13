@@ -12,7 +12,7 @@ class Imagen4Fast0606 {
           value: 0.02,
         }
       }],
-      arena_score: 1092,
+      arena_score: null,
       release_date: '2025-06-06',
       examples: [
         {
