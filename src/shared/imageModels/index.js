@@ -12,6 +12,8 @@ import Sd35Medium from './stabilityai/sd3.5-medium.js'
 import Sd35 from './stabilityai/sd3.5.js'
 import SdxlTurbo from './stabilityai/sdxl-turbo.js'
 import SdxlTurboFree from './stabilityai/sdxl-turbo-free.js'
+import Sd3 from './stabilityai/sd3.js'
+
 
 import JuggernautFlux from './run-diffusion/Juggernaut-Flux.js'
 import JuggernautLightningFlux from './run-diffusion/Juggernaut-Lightning-Flux.js'
@@ -56,6 +58,7 @@ const modelInstances = [
   new Sd35(),
   new SdxlTurbo(),
   new SdxlTurboFree(),
+  new Sd3(),
   
   new JuggernautFlux(),
   new JuggernautLightningFlux(),
