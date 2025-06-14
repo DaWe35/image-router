@@ -473,7 +473,6 @@ async function generateReplicateVideo({ fetchParams }) {
     })
 
     const data = await response.json()
-
     if (!response.ok) {
         const formattedError = {
             status: data?.status,
@@ -490,15 +489,12 @@ async function generateReplicateVideo({ fetchParams }) {
         }
     }
 
-    // Replicate may return a single URL string or an array of URLs
-    const outputs = Array.isArray(data.output) ? data.output : [data.output]
-
     return {
         created: Math.floor(new Date(data.created_at).getTime() / 1000),
-        data: outputs.map(url => ({
-            url: url || null,
+        data: [{
+            url: data?.output || null,
             revised_prompt: null,
             original_response_from_provider: data
-        }))
+        }]
     }
 }
