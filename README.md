@@ -10,15 +10,29 @@ A simple API router for image generation models. This service acts as a proxy be
 - Rate limiting
 - Free and paid model usage tracking
 
-## Prerequisites
+## API Endpoints
+
+See [API Reference](https://docs.imagerouter.io)
+
+## Upcoming Features and Limitations
+
+See [Upcoming Features](https://docs.imagerouter.io/upcoming-features/)
+
+
+
+## Setup
+
+#### Prerequisites
 
 - Docker and Docker Compose
 - API keys for the models you want to use
 
-## Setup
+#### Setup
 
 1. Clone the repository
 2. Create a `.env` file and add your API keys
+3. Follow instructions below to get Vertex API key
+4. Enable CORS for S3 image storage
 
 ## Running the Service
 
@@ -27,19 +41,7 @@ Using Docker Compose:
 docker compose up
 ```
 
-The service will be available at `http://localhost:3000`
-
-## Deploy in production
-
-If you're behind a proxy, don't forget to set timeout to 10 minutes!
-Update: after the empty character streaming that I added to bypass Cloudflare timeouts, I'm not sure if this is still needed.
-Nginx example:
-```
-proxy_connect_timeout 600s;
-proxy_send_timeout 600s;
-proxy_read_timeout 600s;
-send_timeout 600s;
-```
+The API will be available at `http://localhost:4000`
 
 ## Running Tests
 
@@ -56,14 +58,6 @@ docker compose exec api npm test -- --verbose
 ```bash
 docker compose -f docker-compose.generate.yml up
 ```
-
-## API Endpoints
-
-See [API Reference](https://docs.imagerouter.io)
-
-## Upcoming Features and Limitations
-
-See [Upcoming Features](https://docs.imagerouter.io/upcoming-features/)
 
 ### Health Check
 ```
@@ -82,11 +76,52 @@ curl http://localhost:3000/health
 - CORS is enabled for cross-origin requests
 - API key is required for image generation
 
-# Google Vertex AI Setup
+
+# Deploy in production
+
+## ~~Nginx example:~~
+
+Update: after the empty character streaming that I added to bypass Cloudflare timeouts, I'm not sure if this is still needed.
+```
+proxy_connect_timeout 600s;
+proxy_send_timeout 600s;
+proxy_read_timeout 600s;
+send_timeout 600s;
+```
+
+## S3 setup
+
+Create a public s3 bucket and update the .env.
+1. Add a new CNAME DNS record:
+```
+CNAME   storage  s3.provider.com
+```
+2. Add CLoudflare transform rule:
+
+Filter: 
+```
+Hostname   equals  storage.imagerouter.io
+# (http.host eq "storage.imagerouter.io")
+Rewrite to  Dynamic Redirectconcat("/file/BUCKET_NAME", http.request.uri.path)
+```
+
+3. Allow CORS for storage:
+
+Create a new HTTP Response Header Transform Rule:
+
+Filter:
+```
+Hostname   equals  storage.imagerouter.io
+# (http.host eq "storage.imagerouter.io")
+Set static      Access-Control-Allow-Origin     *
+```
+
+
+## Google Vertex AI Setup
 
 To use Google Vertex AI models (Imagen for images and Veo for videos), you need:
 
-## 1. Environment Variables
+### 1. Environment Variables
 Add these to your `.env` file:
 
 ```bash
@@ -100,7 +135,7 @@ GOOGLE_CLOUD_LOCATION=us-central1
 GOOGLE_SERVICE_ACCOUNT_KEY=ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsC...
 ```
 
-## 2. Get Service Account Key
+#### 2. Get Service Account Key
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create or select a project
 3. Enable the "Vertex AI API"
