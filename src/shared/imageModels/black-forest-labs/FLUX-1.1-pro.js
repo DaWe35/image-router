@@ -12,7 +12,7 @@ class Flux11Pro {
           value: 0.04,
         }
       }],
-      arena_score: 1082,
+      arena_score: 1085,
       release_date: '2024-11-02',
       examples: [
         {

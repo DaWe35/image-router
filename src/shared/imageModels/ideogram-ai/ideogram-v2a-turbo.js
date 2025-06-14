@@ -1,19 +1,19 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class Imagen40606 {
+class IdeogramV2aTurbo {
   constructor() {
     this.data = {
-      id: 'google/imagen-4-06-06',
+      id: 'ideogram-ai/ideogram-v2a-turbo',
       providers: [{
-        id: 'vertex',
-        model_name: 'imagen-4.0-generate-preview-06-06',
+        id: 'replicate',
+        model_name: 'ideogram-ai/ideogram-v2a-turbo',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.04,
-        }
+          value: 0.025
+        },
       }],
       arena_score: null,
-      release_date: '2025-06-06',
+      release_date: '2025-02-27',
       examples: []
     }
   }
@@ -23,4 +23,4 @@ class Imagen40606 {
   }
 }
 
-export default Imagen40606 
+export default IdeogramV2aTurbo

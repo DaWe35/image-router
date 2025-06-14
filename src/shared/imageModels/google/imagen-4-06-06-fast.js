@@ -14,11 +14,7 @@ class Imagen4Fast0606 {
       }],
       arena_score: null,
       release_date: '2025-06-06',
-      examples: [
-        {
-          image: '/model-examples/imagen-4-2025-05-24T20-46-43-888Z.webp'
-        }
-      ]
+      examples: []
     }
   }
 
@@ -27,4 +23,4 @@ class Imagen4Fast0606 {
   }
 }
 
-export default Imagen4Fast0606 
+export default Imagen4Fast0606

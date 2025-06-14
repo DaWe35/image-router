@@ -24,6 +24,10 @@ import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
 
 import IdeogramV2a from './ideogram-ai/ideogram-v2a.js'
+import IdeogramV2aTurbo from './ideogram-ai/ideogram-v2a-turbo.js'
+import IdeogramV3Balanced from './ideogram-ai/ideogram-v3-balanced.js'
+import IdeogramV3Turbo from './ideogram-ai/ideogram-v3-turbo.js'
+import IdeogramV3Quality from './ideogram-ai/ideogram-v3-quality.js'
 import IdeogramV3 from './ideogram-ai/ideogram-v3.js'
 
 import Imagen3 from './google/imagen-3.js'
@@ -74,11 +78,14 @@ const modelInstances = [
   new RecraftV3Svg(),
   
   new IdeogramV2a(),
+  new IdeogramV2aTurbo(),
+  new IdeogramV3Balanced(),
+  new IdeogramV3Turbo(),
+  new IdeogramV3Quality(),
   new IdeogramV3(),
 
   new Imagen3(),
   new Imagen3Fast(),
-
   new Imagen40520(),
   new Imagen4Ultra0520(),
   new Imagen40606(),
@@ -87,6 +94,7 @@ const modelInstances = [
   new Imagen4(),
   new Imagen4Ultra(),
   new imagen4Fast(),
+
   new Gemini20FlashExp(),
   new Gemini20FlashExpFree(),
   // new Gemini20FlashPrev(),

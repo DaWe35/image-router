@@ -12,13 +12,9 @@ class Imagen4Ultra0606 {
           value: 0.06,
         }
       }],
-      arena_score: 1106,
-      release_date: '2025-05-20',
-      examples: [
-        {
-          image: '/model-examples/imagen-4-ultra-2025-05-24T20-51-35-162Z.webp'
-        }
-      ]
+      arena_score: null,
+      release_date: '2025-06-06',
+      examples: []
     }
   }
 
@@ -27,4 +23,4 @@ class Imagen4Ultra0606 {
   }
 }
 
-export default Imagen4Ultra0606 
+export default Imagen4Ultra0606

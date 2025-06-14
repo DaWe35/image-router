@@ -12,7 +12,7 @@ class Imagen40520 {
           value: 0.04,
         }
       }],
-      arena_score: 1092,
+      arena_score: null,
       release_date: '2025-05-20',
       examples: [
         {
