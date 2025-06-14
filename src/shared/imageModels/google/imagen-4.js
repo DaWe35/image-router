@@ -5,6 +5,11 @@ class Imagen4 extends Imagen40606 {
     super(...args)
     this.data.id = 'google/imagen-4'
     this.data.arena_score = 1106
+    this.data.examples = [
+      {
+        image: '/model-examples/imagen-4.webp'
+      }
+    ]
   }
 }
 
