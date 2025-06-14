@@ -5,20 +5,16 @@ class Veo3 {
     this.data = {
       id: 'google/veo-3',
       providers: [{
-        id: 'vertex',
-        model_name: 'veo-3.0-generate-preview',
+        id: 'replicate',
+        model_name: 'google/veo-3',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 4, // price with no audio generated
+          value: 6, // price per video on Replicate
         },
       }],
       arena_score: 1246,
       release_date: '2025-05-20',
-      examples: [
-        {
-          video: '/model-examples/veo-3-2025-01-01T00-00-00-000Z.webm'
-        }
-      ]
+      examples: []
     }
   }
 

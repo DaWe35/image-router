@@ -6,7 +6,7 @@ import TestVideo from './test/test-video.js'
 // Initialize all models
 const modelInstances = [
   new Veo2(),
-  //new Veo3(),
+  new Veo3(),
   //new Veo2Mock(),
   new TestVideo(),
 ]
