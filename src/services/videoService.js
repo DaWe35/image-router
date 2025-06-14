@@ -5,6 +5,7 @@ import { videoModels } from '../shared/videoModels/index.js'
 import { getGeminiApiKey } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
+import { pollReplicatePrediction } from './replicateUtils.js'
 
 export async function generateVideo(fetchParams, userId, res, usageLogId) {
     const startTime = Date.now()
@@ -462,7 +463,7 @@ async function generateReplicateVideo({ fetchParams }) {
         enhance_prompt: true
     }
 
-    const response = await fetch(providerUrl, {
+    const createRes = await fetch(providerUrl, {
         method: 'POST',
         headers: {
             'Prefer': 'wait',
@@ -472,8 +473,9 @@ async function generateReplicateVideo({ fetchParams }) {
         body: JSON.stringify({ input })
     })
 
-    const data = await response.json()
-    if (!response.ok) {
+    let data = await createRes.json()
+
+    if (!createRes.ok) {
         const formattedError = {
             status: data?.status,
             statusText: data?.detail,
@@ -484,17 +486,35 @@ async function generateReplicateVideo({ fetchParams }) {
             original_response_from_provider: data
         }
         throw {
-            status: response.status,
+            status: createRes.status,
             errorResponse: formattedError
         }
     }
 
+    // If the prediction is still running, poll until it finishes
+    if (data.status !== 'succeeded' || !data.output) {
+        data = await pollReplicatePrediction(data.urls.get, providerKey)
+    }
+
+    // Handle timeout without throwing so credits are not fully refunded
+    if (data.status === 'timeout' || !data.output) {
+        return {
+            error: {
+                message: 'Prediction timed out on Replicate – please try again later',
+                type: 'timeout_error',
+                original_response_from_provider: data
+            }
+        }
+    }
+
+    const outputArray = Array.isArray(data.output) ? data.output : [data.output]
+
     return {
         created: Math.floor(new Date(data.created_at).getTime() / 1000),
-        data: [{
-            url: data?.output || null,
+        data: outputArray.map(url => ({
+            url,
             revised_prompt: null,
             original_response_from_provider: data
-        }]
+        }))
     }
 }
