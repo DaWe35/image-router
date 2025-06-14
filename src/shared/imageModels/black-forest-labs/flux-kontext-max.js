@@ -15,7 +15,7 @@ class FluxKontextMax {
         },
         applyImage: fluxKontextProInstance.applyImage,
       }],
-      arena_score: 1087,
+      arena_score: 1103,
       release_date: '2025-05-29',
       examples: [
         {

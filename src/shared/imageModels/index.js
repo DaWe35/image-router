@@ -24,12 +24,22 @@ import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
 
 import IdeogramV2a from './ideogram-ai/ideogram-v2a.js'
+import IdeogramV2aTurbo from './ideogram-ai/ideogram-v2a-turbo.js'
+import IdeogramV3Balanced from './ideogram-ai/ideogram-v3-balanced.js'
+import IdeogramV3Turbo from './ideogram-ai/ideogram-v3-turbo.js'
+import IdeogramV3Quality from './ideogram-ai/ideogram-v3-quality.js'
 import IdeogramV3 from './ideogram-ai/ideogram-v3.js'
 
 import Imagen3 from './google/imagen-3.js'
 import Imagen3Fast from './google/imagen-3-fast.js'
+import Imagen40520 from './google/imagen-4-05-20.js'
+import Imagen4Ultra0520 from './google/imagen-4-05-20-ultra.js'
+import Imagen40606 from './google/imagen-4-06-06.js'
+import Imagen4Fast0606 from './google/imagen-4-06-06-fast.js'
+import Imagen4Ultra0606 from './google/imagen-4-06-06-ultra.js'
 import Imagen4 from './google/imagen-4.js'
 import Imagen4Ultra from './google/imagen-4-ultra.js'
+import imagen4Fast from './google/imagen-4-fast.js'
 import Gemini20FlashExp from './google/gemini-2.0-flash-exp.js'
 import Gemini20FlashExpFree from './google/gemini-2.0-flash-exp-free.js'
 // Temporary disabled because of postCalcPrice function. Be careful! This model can generate multiple images.
@@ -68,12 +78,23 @@ const modelInstances = [
   new RecraftV3Svg(),
   
   new IdeogramV2a(),
+  new IdeogramV2aTurbo(),
+  new IdeogramV3Balanced(),
+  new IdeogramV3Turbo(),
+  new IdeogramV3Quality(),
   new IdeogramV3(),
 
   new Imagen3(),
   new Imagen3Fast(),
+  new Imagen40520(),
+  new Imagen4Ultra0520(),
+  new Imagen40606(),
+  new Imagen4Fast0606(),
+  new Imagen4Ultra0606(),
   new Imagen4(),
   new Imagen4Ultra(),
+  new imagen4Fast(),
+
   new Gemini20FlashExp(),
   new Gemini20FlashExpFree(),
   // new Gemini20FlashPrev(),

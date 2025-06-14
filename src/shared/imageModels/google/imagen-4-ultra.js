@@ -1,30 +1,11 @@
-import { PRICING_TYPES } from '../../PricingScheme.js'
+import Imagen4Ultra0606 from './imagen-4-06-06-ultra.js'
 
-class Imagen4Ultra {
-  constructor() {
-    this.data = {
-      id: 'google/imagen-4-ultra',
-      providers: [{
-        id: 'vertex',
-        model_name: 'imagen-4.0-ultra-generate-exp-05-20',
-        pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.08,
-        }
-      }],
-      arena_score: 1105,
-      release_date: '2025-05-20',
-      examples: [
-        {
-          image: '/model-examples/imagen-4-ultra-2025-05-24T20-51-35-162Z.webp'
-        }
-      ]
-    }
-  }
-
-  getData() {
-    return this.data
+class Imagen4Ultra extends Imagen4Ultra0606 {
+  constructor(...args) {
+    super(...args)
+    this.data.id = 'google/imagen-4-ultra'
+    this.data.arena_score = 1106
   }
 }
 
-export default Imagen4Ultra 
+export default Imagen4Ultra
