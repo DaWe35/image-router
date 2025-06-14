@@ -16,7 +16,7 @@ class Veo3 {
       release_date: '2025-05-20',
       examples: [
         {
-          image: '/model-examples/veo-3.webp'
+          video: '/model-examples/veo-3.webm'
         }
       ]
     }

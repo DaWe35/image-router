@@ -16,7 +16,7 @@ class Kling16Standard {
       release_date: '2024-12-19',
       examples: [
         {
-          image: '/model-examples/kling-1.6-standard.webp'
+          video: '/model-examples/kling-1.6-standard.webm'
         }
       ]
     }
