@@ -215,9 +215,7 @@ async function generateReplicate({ fetchParams }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: JSON.stringify({
-            input: input
-        })
+        body: JSON.stringify({ input })
     })
     
     const data = await response.json()
@@ -238,7 +236,7 @@ async function generateReplicate({ fetchParams }) {
     }
 
     
-    const convertedData = {
+    return {
         created: Math.floor(new Date(data.created_at).getTime() / 1000),
         data: [{
             url: data?.output || null,
@@ -246,7 +244,6 @@ async function generateReplicate({ fetchParams }) {
             original_response_from_provider: data
         }]
     }
-    return convertedData
 }
 
 
