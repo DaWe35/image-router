@@ -45,4 +45,4 @@ class IdeogramV2a {
   }
 }
 
-export default IdeogramV2a 
+export default IdeogramV2a

@@ -14,7 +14,7 @@ class FluxKontextPro {
         },
         applyImage: this.applyImage,
       }],
-      arena_score: 1083,
+      arena_score: 1076,
       release_date: '2025-05-29',
       examples: [
         {

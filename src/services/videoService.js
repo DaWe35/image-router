@@ -26,6 +26,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
     const providerHandlers = {
         gemini: generateGeminiVideo,
         vertex: generateVertexVideo,
+        replicate: generateReplicateVideo,
         test: generateTestVideo,
         geminiMock: generateGeminiMockVideo
     }
@@ -448,4 +449,56 @@ async function generateGeminiMockVideo({ fetchParams, userId }) {
 
     // If we reach here, the operation timed out
     console.log('ERROR: video generation timed out after 10 minutes. Url:', checkUrl)
+}
+
+// Add Replicate video generation handler
+async function generateReplicateVideo({ fetchParams }) {
+    const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
+    const providerKey = process.env.REPLICATE_API_KEY
+
+    // Build the input object starting with the prompt
+    const input = {
+        prompt: fetchParams.prompt,
+        enhance_prompt: true
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Prefer': 'wait',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify({ input })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        const formattedError = {
+            status: data?.status,
+            statusText: data?.detail,
+            error: {
+                message: data?.detail,
+                type: data?.status
+            },
+            original_response_from_provider: data
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    // Replicate may return a single URL string or an array of URLs
+    const outputs = Array.isArray(data.output) ? data.output : [data.output]
+
+    return {
+        created: Math.floor(new Date(data.created_at).getTime() / 1000),
+        data: outputs.map(url => ({
+            url: url || null,
+            revised_prompt: null,
+            original_response_from_provider: data
+        }))
+    }
 }

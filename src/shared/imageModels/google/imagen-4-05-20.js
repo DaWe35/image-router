@@ -1,22 +1,22 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class Flux11Pro {
+class Imagen40520 {
   constructor() {
     this.data = {
-      id: 'black-forest-labs/FLUX-1.1-pro',
+      id: 'google/imagen-4-05-20',
       providers: [{
-        id: 'deepinfra',
-        model_name: 'black-forest-labs/FLUX-1.1-pro',
+        id: 'vertex',
+        model_name: 'imagen-4.0-generate-preview-05-20',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.04,
         }
       }],
-      arena_score: 1085,
-      release_date: '2024-11-02',
+      arena_score: null,
+      release_date: '2025-05-20',
       examples: [
         {
-          image: '/model-examples/FLUX-1.1-pro.webp'
+          image: '/model-examples/imagen-4-2025-05-24T20-46-43-888Z.webp'
         }
       ]
     }
@@ -27,4 +27,4 @@ class Flux11Pro {
   }
 }
 
-export default Flux11Pro 
+export default Imagen40520 

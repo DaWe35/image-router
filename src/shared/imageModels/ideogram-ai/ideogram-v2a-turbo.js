@@ -1,19 +1,19 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-class Veo3 {
+class IdeogramV2aTurbo {
   constructor() {
     this.data = {
-      id: 'google/veo-3',
+      id: 'ideogram-ai/ideogram-v2a-turbo',
       providers: [{
         id: 'replicate',
-        model_name: 'google/veo-3',
+        model_name: 'ideogram-ai/ideogram-v2a-turbo',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 6, // price per video on Replicate
+          value: 0.025
         },
       }],
-      arena_score: 1246,
-      release_date: '2025-05-20',
+      arena_score: null,
+      release_date: '2025-02-27',
       examples: []
     }
   }
@@ -23,4 +23,4 @@ class Veo3 {
   }
 }
 
-export default Veo3 
+export default IdeogramV2aTurbo
