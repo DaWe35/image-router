@@ -14,7 +14,11 @@ class Veo3 {
       }],
       arena_score: 1246,
       release_date: '2025-05-20',
-      examples: []
+      examples: [
+        {
+          image: '/model-examples/veo-3.webp'
+        }
+      ]
     }
   }
 

@@ -14,7 +14,11 @@ class Kling16Standard {
       }],
       arena_score: 1029,
       release_date: '2024-12-19',
-      examples: []
+      examples: [
+        {
+          image: '/model-examples/kling-1.6-standard.webp'
+        }
+      ]
     }
   }
 
