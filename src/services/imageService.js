@@ -494,10 +494,6 @@ async function generateRunware({ fetchParams, userId }) {
         throw new Error('RUNWARE_API_KEY environment variable is required for Runware provider')
     }
 
-    // Parse width and height from size parameter if provided (e.g., "1024x1024")
-    let width = fetchParams.width || 1024
-    let height = fetchParams.height || 1024
-
     const taskUUID = crypto.randomUUID()
 
     // Build the Runware task payload
@@ -505,10 +501,16 @@ async function generateRunware({ fetchParams, userId }) {
         taskType: 'imageInference',
         taskUUID,
         positivePrompt: fetchParams.prompt,
-        width,
-        height,
         model: fetchParams.model,
-        numberResults: 1
+        outputFormat: "WEBP",
+        width: 1024,
+        height: 1024,
+        numberResults: 1,
+        includeCost: true
+    }
+
+    if (fetchParams.steps) {
+        taskPayload.steps = fetchParams.steps
     }
 
     // Include optional negative prompt if supplied
@@ -542,10 +544,10 @@ async function generateRunware({ fetchParams, userId }) {
     const data = await response.json()
 
     if (!response.ok || !data?.data) {
-        const errorObj = data?.error || {}
+        const errorObj = data?.errors?.[0] || {}
         const formattedError = {
             status: response.status,
-            statusText: errorObj?.message || 'Error',
+            statusText: errorObj?.code || 'Error',
             error: {
                 message: errorObj?.message || 'Runware generation failed',
                 type: errorObj?.code || 'runware_error'
@@ -569,6 +571,7 @@ async function generateRunware({ fetchParams, userId }) {
             url: imageURL,
             revised_prompt: null,
             original_response_from_provider: data
-        }]
+        }],
+        cost: taskResult.cost
     }
 }

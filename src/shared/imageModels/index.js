@@ -8,15 +8,17 @@ import Flux11ProUltra from './black-forest-labs/flux-1.1-pro-ultra.js'
 import FluxKontextPro from './black-forest-labs/flux-kontext-pro.js'
 import FluxKontextMax from './black-forest-labs/flux-kontext-max.js' 
 
+import Sd15Dpo from './stabilityai/sd1.5-dpo.js'
 import Sd35Medium from './stabilityai/sd3.5-medium.js'
 import Sd35 from './stabilityai/sd3.5.js'
+import Sdxl from './stabilityai/sdxl.js'
 import SdxlTurbo from './stabilityai/sdxl-turbo.js'
 import SdxlTurboFree from './stabilityai/sdxl-turbo-free.js'
 import Sd3 from './stabilityai/sd3.js'
 
-
 import JuggernautFlux from './run-diffusion/Juggernaut-Flux.js'
 import JuggernautLightningFlux from './run-diffusion/Juggernaut-Lightning-Flux.js'
+import JuggernautProFlux from './run-diffusion/Juggernaut-Pro-Flux.js'
 
 import DallE2 from './openai/dall-e-2.js'
 import DallE3 from './openai/dall-e-3.js'
@@ -64,14 +66,17 @@ const modelInstances = [
   new FluxKontextPro(),
   new FluxKontextMax(),
 
+  new Sd15Dpo(),
   new Sd35Medium(),
   new Sd35(),
+  new Sdxl(),
   new SdxlTurbo(),
   new SdxlTurboFree(),
   new Sd3(),
   
   new JuggernautFlux(),
   new JuggernautLightningFlux(),
+  new JuggernautProFlux(),
   
   new DallE2(),
   new DallE3(),

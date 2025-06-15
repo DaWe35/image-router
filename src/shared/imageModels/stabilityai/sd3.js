@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { postCalcRunware } from '../../../services/imageHelpers.js'
 
 class Sd3 {
   constructor() {
@@ -9,7 +10,7 @@ class Sd3 {
         model_name: 'runware:5@1',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: this.postCalcPrice,
+          postCalcFunction: postCalcRunware,
           range: {
             min: 0.0006,
             average: 0.0019,
@@ -17,13 +18,14 @@ class Sd3 {
           }
         },
         applyImage: this.applyImage,
-        applyMask: this.applyMask
+        applyMask: this.applyMask,
+        applyQuality: this.applyQuality
       }],
       arena_score: 1015,
       release_date: '2025-06-01',
       examples: [
         {
-          image: '/model-examples/runware-sd3-example.webp'
+          image: '/model-examples/sd3-2025-06-15T13-09-47-800Z.webp'
         }
       ]
     }
@@ -48,6 +50,17 @@ class Sd3 {
     const file = params.files.mask
     params.mask = await encodeFileToDataURI(file)
     delete params.files.mask
+    return params
+  }
+
+  applyQuality(params) {
+    const qualitySteps = {
+      low: 15,
+      medium: 28,
+      high: 45
+    }
+    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
     return params
   }
 }

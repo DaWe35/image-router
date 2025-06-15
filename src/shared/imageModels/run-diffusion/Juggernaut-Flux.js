@@ -1,10 +1,24 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { postCalcRunware } from '../../../services/imageHelpers.js'
 
 class JuggernautFlux {
   constructor() {
     this.data = {
       id: 'run-diffusion/Juggernaut-Flux',
       providers: [{
+        id: 'runware',
+        model_name: 'rundiffusion:120@100',
+        pricing: {
+          type: PRICING_TYPES.POST_GENERATION,
+          postCalcFunction: postCalcRunware,
+          range: {
+            min: 0.0025,
+            average: 0.005,
+            max: 0.0095
+          }
+        },
+        applyQuality: this.applyQuality
+      }, {
         id: 'deepinfra',
         model_name: 'run-diffusion/Juggernaut-Flux',
         pricing: {
@@ -20,6 +34,17 @@ class JuggernautFlux {
         }
       ]
     }
+  }
+
+  applyQuality(params) {
+    const qualitySteps = {
+      low: 10,
+      medium: 25,
+      high: 45
+    }
+    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   getData() {

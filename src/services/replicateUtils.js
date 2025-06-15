@@ -69,4 +69,4 @@ export async function pollReplicatePrediction(getUrl, providerKey, {
     error: 'Prediction polling timed out'
   }
   return timeoutResponse
-} 
+}
