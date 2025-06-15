@@ -6,6 +6,7 @@ const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
 import { storageService } from './storageService.js'
+import crypto from 'crypto'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
 export async function generateImage(fetchParams, userId, res, usageLogId) {
@@ -54,7 +55,8 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       replicate: generateReplicate,
       gemini: generateGemini,
       vertex: generateVertex,
-      test: generateTest
+      test: generateTest,
+      runware: generateRunware
     }
 
     const handler = providerHandlers[provider]
@@ -480,5 +482,96 @@ async function generateTest({ fetchParams, userId }) {
     return {
         created: Date.now(),
         data: [responseData]
+    }
+}
+
+// Runware REST API call
+async function generateRunware({ fetchParams, userId }) {
+    const providerUrl = 'https://api.runware.ai/v1'
+    const providerKey = process.env.RUNWARE_API_KEY
+
+    if (!providerKey) {
+        throw new Error('RUNWARE_API_KEY environment variable is required for Runware provider')
+    }
+
+    const taskUUID = crypto.randomUUID()
+
+    // Build the Runware task payload
+    const taskPayload = {
+        taskType: 'imageInference',
+        taskUUID,
+        positivePrompt: fetchParams.prompt,
+        model: fetchParams.model,
+        outputFormat: "WEBP",
+        width: 1024,
+        height: 1024,
+        numberResults: 1,
+        includeCost: true
+    }
+
+    if (fetchParams.steps) {
+        taskPayload.steps = fetchParams.steps
+    }
+
+    // Include optional negative prompt if supplied
+    if (fetchParams.negative_prompt || fetchParams.negativePrompt) {
+        taskPayload.negativePrompt = fetchParams.negative_prompt || fetchParams.negativePrompt
+    }
+
+    // Image-to-image support
+    if (fetchParams.image) {
+        taskPayload.seedImage = fetchParams.image
+        taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
+    }
+
+    // Inpainting support (mask)
+    if (fetchParams.mask) {
+        taskPayload.maskImage = fetchParams.mask
+        if (!taskPayload.strength) {
+            taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
+        }
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify([taskPayload])
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data?.data) {
+        const errorObj = data?.errors?.[0] || {}
+        const formattedError = {
+            status: response.status,
+            statusText: errorObj?.code || 'Error',
+            error: {
+                message: errorObj?.message || 'Runware generation failed',
+                type: errorObj?.code || 'runware_error'
+            },
+            original_response_from_provider: data
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    // Locate result corresponding to our taskUUID
+    const taskResult = data.data.find(item => item.taskUUID === taskUUID) || data.data[0]
+
+    const imageURL = taskResult?.imageURL || null
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: [{
+            url: imageURL,
+            revised_prompt: null,
+            original_response_from_provider: data
+        }],
+        cost: taskResult.cost
     }
 }

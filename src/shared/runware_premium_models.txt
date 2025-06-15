@@ -1,0 +1,15 @@
+curl --location 'https://api.runware.ai/v1' \
+     --header 'Content-Type: application/json' \
+     --header 'Authorization: Bearer 2jhrEXPR4Qq0Z1VevmlzasSTFPyuWgJ7' \
+     --data-raw '[
+       {
+         "extra":true,
+         "limit": 200,
+         "offset": 0,
+         "search": "",
+         "sort": "-downloadCount",
+         "taskType": "modelSearch",
+         "taskUUID": "50836053-a0ee-4cf5-b9d6-ae7c5d140ada",
+         "verificationStatus": ["premium"]
+       }
+     ]'

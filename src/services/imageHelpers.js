@@ -76,3 +76,20 @@ export function getGeminiApiKey(model) {
         return geminiKeyArray[0]
     }
 }
+
+export async function encodeFileToDataURI(file) {
+  const buffer = await readFile(file.path)
+  const mimeType = file.mimetype || 'image/png'
+  const base64 = buffer.toString('base64')
+  return `data:${mimeType};base64,${base64}`
+}
+
+export function postCalcRunware(imageResult) {
+    try {
+        // just return the cost, it's already in the result
+        return imageResult.cost
+    } catch (error) {
+        console.error('Error calculating Runware price:', error)
+        return 1 // return 1 for safety, this should never happen
+    }
+}
