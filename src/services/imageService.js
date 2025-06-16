@@ -6,7 +6,6 @@ const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
 import { storageService } from './storageService.js'
-import crypto from 'crypto'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
 export async function generateImage(fetchParams, userId, res, usageLogId) {
@@ -80,7 +79,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
     }
 
     try {
-      const result = await handler({ fetchParams, userId })
+      const result = await handler({ fetchParams, userId, usageLogId })
       result.latency = Date.now() - startTime
       if (intervalId) clearInterval(intervalId)
       
@@ -486,7 +485,7 @@ async function generateTest({ fetchParams, userId }) {
 }
 
 // Runware REST API call
-async function generateRunware({ fetchParams, userId }) {
+async function generateRunware({ fetchParams, userId, usageLogId }) {
     const providerUrl = 'https://api.runware.ai/v1'
     const providerKey = process.env.RUNWARE_API_KEY
 
@@ -494,7 +493,12 @@ async function generateRunware({ fetchParams, userId }) {
         throw new Error('RUNWARE_API_KEY environment variable is required for Runware provider')
     }
 
-    const taskUUID = crypto.randomUUID()
+    // Use the APIUsage row id as task UUID to enable easier tracking across systems.
+    if (!usageLogId) {
+        throw new Error('usageLogId is required for Runware provider')
+    }
+
+    const taskUUID = usageLogId
 
     // Build the Runware task payload
     const taskPayload = {
