@@ -17,7 +17,7 @@ class Seedance1 {
       release_date: '2024-06-16',
       examples: [
         {
-          video: '/model-examples/seedance-v1-lite.mp4'
+          video: '/model-examples/seedance-1-2025-06-16T19-01-20-528Z.webm'
         }
       ]
     }
