@@ -1,48 +1,46 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcRunware } from '../../../services/imageHelpers.js'
 
-class Flux1Schnell {
+class HiDreamI1Full {
   constructor() {
     this.data = {
-      id: 'black-forest-labs/FLUX-1-schnell',
+      id: 'HiDream-ai/HiDream-I1-Full',
       providers: [{
         id: 'runware',
-        model_name: 'runware:100@1',
+        model_name: 'runware:97@1',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcRunware,
           range: {
-            min: 0.0006,
-            average: 0.0013,
-            max: 0.0019
+            min: 0.0045,
+            average: 0.009,
+            max: 0.015
           }
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: 1000,
-      release_date: '2024-08-01',
-      examples: [
-        {
-          image: '/model-examples/flux-schnell-4-steps.webp'
-        }
-      ]
+      release_date: '2025-04-28',
+      examples: [{
+        image: '/model-examples/HiDream-I1-Full-2025-06-15T21-31-49-649Z.webp'
+      }]
     }
   }
 
-  getData() {
-    return this.data
-  }
-
   applyQuality(params) {
+    const defaultSteps = 30
     const qualitySteps = {
-      low: 1,
-      medium: 4,
-      high: 8
+      low: Math.round(defaultSteps / 2),
+      medium: defaultSteps,
+      high: Math.round(defaultSteps * 1.5)
     }
     params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
     delete params.quality
     return params
   }
+
+  getData() {
+    return this.data
+  }
 }
 
-export default Flux1Schnell 
+export default HiDreamI1Full 

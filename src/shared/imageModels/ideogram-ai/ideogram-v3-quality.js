@@ -13,7 +13,6 @@ class IdeogramV3Quality {
         },
       }],
       release_date: '2025-03-26',
-      examples: []
     }
   }
 

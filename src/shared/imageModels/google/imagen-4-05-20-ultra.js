@@ -12,7 +12,6 @@ class Imagen4Ultra0520 {
           value: 0.08,
         }
       }],
-      arena_score: null,
       release_date: '2025-05-20',
       examples: [
         {

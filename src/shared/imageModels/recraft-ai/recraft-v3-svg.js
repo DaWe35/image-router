@@ -12,7 +12,6 @@ class RecraftV3Svg {
           value: 0.08,
         }
       }],
-      arena_score: null,
       release_date: '2024-10-30',
       examples: [
         {

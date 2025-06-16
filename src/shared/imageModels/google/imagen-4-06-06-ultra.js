@@ -12,9 +12,7 @@ class Imagen4Ultra0606 {
           value: 0.06,
         }
       }],
-      arena_score: null,
       release_date: '2025-06-06',
-      examples: []
     }
   }
 

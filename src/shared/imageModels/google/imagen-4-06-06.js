@@ -12,9 +12,7 @@ class Imagen40606 {
           value: 0.04,
         }
       }],
-      arena_score: null,
       release_date: '2025-06-06',
-      examples: []
     }
   }
 
