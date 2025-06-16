@@ -3,7 +3,7 @@ import Veo2Mock from './google/veo-2-mock.js'
 import Veo3 from './google/veo-3.js'
 
 import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
-import Seedance1 from './bytedance/seedance-v1-lite.js'
+import Seedance1 from './bytedance/seedance-1.js'
 
 import TestVideo from './test/test-video.js'
 
