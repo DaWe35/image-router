@@ -12,7 +12,7 @@ class Veo2 {
           value: 1.75,
         },
       }],
-      arena_score: 1127,
+      arena_score: 1104,
       release_date: '2024-12-16',
       examples: [
         {

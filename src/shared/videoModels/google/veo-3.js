@@ -12,7 +12,7 @@ class Veo3 {
           value: 6, // price per video on Replicate
         },
       }],
-      arena_score: 1246,
+      arena_score: 1174,
       release_date: '2025-05-20',
       examples: [
         {
