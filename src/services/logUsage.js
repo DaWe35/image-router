@@ -14,7 +14,7 @@ export async function preLogUsage(params, apiKey, req) {
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
     
     // Check if the user has enough credits
-    if (apiKey.user.credits < prePriceInt) {
+    if (prePriceInt !== 0 && apiKey.user.credits < prePriceInt) {
         throw new Error(`Insufficient credits (this model needs minimum $${prePriceUsd} credits), please topup your ImageRouter account: https://imagerouter.io/pricing`)
     }
 
