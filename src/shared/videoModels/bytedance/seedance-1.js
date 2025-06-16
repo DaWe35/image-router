@@ -10,7 +10,7 @@ class Seedance1 {
         model_name: 'fal-ai/bytedance/seedance/v1/lite/text-to-video',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.18,
+          value: 0.186,
         },
       }],
       arena_score: 1197,
