@@ -25,7 +25,7 @@ class GptImage1 {
       release_date: '2025-04-23',
       examples: [
         {
-          image: '/model-examples/gpt-image-1.webp'
+          image: '/model-examples/gpt-image-1-2025-06-15T21-37-41-776Z.webp'
         }
       ]
     }

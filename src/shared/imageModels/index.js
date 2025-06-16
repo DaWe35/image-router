@@ -19,6 +19,8 @@ import Sd3 from './stabilityai/sd3.js'
 import JuggernautFlux from './run-diffusion/Juggernaut-Flux.js'
 import JuggernautLightningFlux from './run-diffusion/Juggernaut-Lightning-Flux.js'
 import JuggernautProFlux from './run-diffusion/Juggernaut-Pro-Flux.js'
+import JuggernautXL from './run-diffusion/Juggernaut-XL.js'
+import RunDiffusionPhotoFlux from './run-diffusion/RunDiffusion-Photo-Flux.js'
 
 import DallE2 from './openai/dall-e-2.js'
 import DallE3 from './openai/dall-e-3.js'
@@ -55,6 +57,14 @@ import PhotonFlash from './luma/photon-flash.js'
 import Image01 from './minimax/image-01.js'
 
 import TestImage from './test/test-image.js'
+
+import DreamShaper from './runware/DreamShaper.js'
+import RealisticVision from './runware/Realistic-Vision.js'
+import RealVisXL from './runware/RealVisXL.js'
+import HiDreamI1Fast from './runware/HiDream-I1-Fast.js'
+import HiDreamI1Dev from './runware/HiDream-I1-Dev.js'
+import HiDreamI1Full from './runware/HiDream-I1-Full.js'
+
 // Initialize all models
 const modelInstances = [
   new Flux11Pro(),
@@ -77,6 +87,8 @@ const modelInstances = [
   new JuggernautFlux(),
   new JuggernautLightningFlux(),
   new JuggernautProFlux(),
+  new JuggernautXL(),
+  new RunDiffusionPhotoFlux(),
   
   new DallE2(),
   new DallE3(),
@@ -113,6 +125,13 @@ const modelInstances = [
   new Image01(),
 
   new TestImage(),
+
+  new DreamShaper(),
+  new RealisticVision(),
+  new RealVisXL(),
+  new HiDreamI1Fast(),
+  new HiDreamI1Dev(),
+  new HiDreamI1Full(),
 ]
 
 // Create an object with model IDs as keys
