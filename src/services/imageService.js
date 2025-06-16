@@ -55,7 +55,8 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       gemini: generateGemini,
       vertex: generateVertex,
       test: generateTest,
-      runware: generateRunware
+      runware: generateRunware,
+      fal: generateFal
     }
 
     const handler = providerHandlers[provider]
@@ -577,5 +578,145 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
             original_response_from_provider: data
         }],
         cost: taskResult.cost
+    }
+}
+
+// Fal.ai Queue API call
+async function generateFal({ fetchParams }) {
+    const baseUrl = 'https://queue.fal.run'
+    const providerKey = process.env.FAL_API_KEY
+
+    if (!providerKey) {
+        throw new Error('FAL_API_KEY environment variable is required for fal.ai provider')
+    }
+
+    const bodyPayload = {
+        prompt: fetchParams.prompt,
+        num_images: 1,
+        /* guidance_scale: fetchParams.guidance_scale,
+        seed: fetchParams.seed,
+        aspect_ratio: fetchParams.aspect_ratio */
+     }
+
+    // Submit generation request
+    const submitResponse = await fetch(baseUrl + "/" + fetchParams.model, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Key ${providerKey}`
+        },
+        body: JSON.stringify(bodyPayload)
+    })
+
+    const submitData = await submitResponse.json()
+
+    if (!submitResponse.ok) {
+        throw {
+            status: submitResponse.status,
+            errorResponse: submitData
+        }
+    }
+
+    // Build helper URLs from response
+    const statusUrl = submitData.status_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}/status`
+    const resultUrl = submitData.response_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}`
+
+    // Poll queue until completed
+    let status = submitData.status
+    const maxAttempts = 60 // ~2 minutes @ 2s interval
+    const delay = 2000
+    let attempts = 0
+    let lastStatusPayload = submitData
+
+    while (status !== 'COMPLETED' && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, delay))
+
+        const pollRes = await fetch(statusUrl + '?logs=0', {
+            headers: {
+                'Authorization': `Key ${providerKey}`
+            }
+        })
+
+        lastStatusPayload = await pollRes.json()
+
+        // If the polling request itself failed, return an error object (do not throw)
+        if (!pollRes.ok) {
+            return {
+                error: {
+                    message: lastStatusPayload?.error || 'Polling request failed',
+                    type: 'polling_error',
+                    original_response_from_provider: lastStatusPayload
+                }
+            }
+        }
+
+        // Early exit for failed / canceled statuses
+        if (['FAILED', 'CANCELED', 'ERROR'].includes(lastStatusPayload.status)) {
+            return {
+                error: {
+                    message: lastStatusPayload?.error || 'Generation failed',
+                    type: (lastStatusPayload.status || 'failed').toLowerCase(),
+                    original_response_from_provider: lastStatusPayload
+                }
+            }
+        }
+
+        status = lastStatusPayload.status
+        attempts++
+    }
+
+    if (status !== 'COMPLETED') {
+        // Timed out or exceeded attempts – do not throw, return timeout error object
+        return {
+            error: {
+                message: 'Prediction timed out on fal.ai – please try again later',
+                type: 'timeout_error',
+                original_response_from_provider: lastStatusPayload
+            }
+        }
+    }
+
+    // Fetch final result
+    const resultRes = await fetch(resultUrl, {
+        headers: {
+            'Authorization': `Key ${providerKey}`
+        }
+    })
+
+    const resultData = await resultRes.json()
+
+    // If fetching the result fails
+    if (!resultRes.ok) {
+        return {
+            error: {
+                message: resultData?.error || 'Failed to fetch generation result',
+                type: 'result_error',
+                original_response_from_provider: resultData
+            }
+        }
+    }
+
+    // Flatten image URLs (API returns nested array)
+    const imageUrls = []
+    if (Array.isArray(resultData.images)) {
+        for (const item of resultData.images) {
+            if (Array.isArray(item)) {
+                for (const obj of item) {
+                    if (obj?.url) imageUrls.push(obj.url)
+                }
+            } else if (item?.url) {
+                imageUrls.push(item.url)
+            }
+        }
+    }
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: imageUrls.map(url => ({
+            url,
+            revised_prompt: null,
+            original_response_from_provider: resultData
+        })),
+        seed: resultData.seed
     }
 }

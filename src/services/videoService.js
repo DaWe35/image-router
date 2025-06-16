@@ -29,7 +29,8 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
         vertex: generateVertexVideo,
         replicate: generateReplicateVideo,
         test: generateTestVideo,
-        geminiMock: generateGeminiMockVideo
+        geminiMock: generateGeminiMockVideo,
+        fal: generateFalVideo
     }
 
     const handler = providerHandlers[provider]
@@ -516,5 +517,136 @@ async function generateReplicateVideo({ fetchParams }) {
             revised_prompt: null,
             original_response_from_provider: data
         }))
+    }
+}
+
+// Fal.ai Queue API call for video generation
+async function generateFalVideo({ fetchParams }) {
+    const baseUrl = 'https://queue.fal.run'
+    const providerKey = process.env.FAL_API_KEY
+
+    if (!providerKey) {
+        throw new Error('FAL_API_KEY environment variable is required for fal.ai provider')
+    }
+
+    // Prepare body with supported parameters
+    const bodyPayload = {
+        prompt: fetchParams.prompt,
+        duration: 5,
+        resolution: '720p'
+    }
+    if (fetchParams.image) bodyPayload.image_url = fetchParams.image
+
+    // Submit request
+    const submitResponse = await fetch(`${baseUrl}/${fetchParams.model}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Key ${providerKey}`
+        },
+        body: JSON.stringify(bodyPayload)
+    })
+
+    const submitData = await submitResponse.json()
+
+    if (!submitResponse.ok) {
+        throw {
+            status: submitResponse.status,
+            errorResponse: submitData
+        }
+    }
+
+    const statusUrl = submitData.status_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}/status`
+    const resultUrl = submitData.response_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}`
+
+    // Polling loop
+    let status = submitData.status
+    let attempts = 0
+    const maxAttempts = 120 // 10 minutes @ 5s
+    const delay = 5000
+    let lastStatusPayload = submitData
+
+    while (status !== 'COMPLETED' && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, delay))
+        const pollRes = await fetch(statusUrl + '?logs=0', {
+            headers: {
+                'Authorization': `Key ${providerKey}`
+            }
+        })
+        lastStatusPayload = await pollRes.json()
+
+        if (!pollRes.ok) {
+            return {
+                error: {
+                    message: lastStatusPayload?.error || 'Polling request failed',
+                    type: 'polling_error',
+                    original_response_from_provider: lastStatusPayload
+                }
+            }
+        }
+
+        if (['FAILED', 'CANCELED', 'ERROR'].includes(lastStatusPayload.status)) {
+            return {
+                error: {
+                    message: lastStatusPayload?.error || 'Generation failed',
+                    type: (lastStatusPayload.status || 'failed').toLowerCase(),
+                    original_response_from_provider: lastStatusPayload
+                }
+            }
+        }
+
+        status = lastStatusPayload.status
+        attempts++
+    }
+
+    if (status !== 'COMPLETED') {
+        return {
+            error: {
+                message: 'Prediction timed out on fal.ai – please try again later',
+                type: 'timeout_error',
+                original_response_from_provider: lastStatusPayload
+            }
+        }
+    }
+
+    // Fetch final result
+    const resultRes = await fetch(resultUrl, {
+        headers: {
+            'Authorization': `Key ${providerKey}`
+        }
+    })
+
+    const resultData = await resultRes.json()
+
+    if (!resultRes.ok) {
+        return {
+            error: {
+                message: resultData?.error || 'Failed to fetch generation result',
+                type: 'result_error',
+                original_response_from_provider: resultData
+            }
+        }
+    }
+
+    const videoUrl = resultData?.video?.url || null
+
+    if (!videoUrl) {
+        return {
+            error: {
+                message: 'No video URL found in response',
+                type: 'no_video',
+                original_response_from_provider: resultData
+            }
+        }
+    }
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: [{
+            url: videoUrl,
+            revised_prompt: null,
+            original_response_from_provider: resultData
+        }],
+        seed: resultData.seed
     }
 }
