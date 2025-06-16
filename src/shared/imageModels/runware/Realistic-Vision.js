@@ -19,7 +19,6 @@ class RealisticVision {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: null,
       release_date: '2024-02-26',
       examples: [{
         image: '/model-examples/Realistic-Vision-2025-06-15T21-45-24-483Z.webp'

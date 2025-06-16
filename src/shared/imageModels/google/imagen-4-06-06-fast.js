@@ -12,7 +12,6 @@ class Imagen4Fast0606 {
           value: 0.02,
         }
       }],
-      arena_score: null,
       release_date: '2025-06-06',
       examples: [{
         image: '/model-examples/imagen-4-fast-06-06-2025-06-14T20-58-35-827Z.webp',

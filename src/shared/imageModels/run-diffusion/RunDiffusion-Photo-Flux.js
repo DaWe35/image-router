@@ -19,9 +19,7 @@ class RunDiffusionPhotoFlux {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: null,
       release_date: '2025-03-05',
-      examples: []
     }
   }
 

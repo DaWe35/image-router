@@ -21,7 +21,6 @@ class Sd15Dpo {
           applyQuality: this.applyQuality
         }
     ],
-      arena_score: null,
       release_date: '2022-10-20',
       examples: [
         {

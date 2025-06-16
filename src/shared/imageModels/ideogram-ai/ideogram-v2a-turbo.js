@@ -12,9 +12,7 @@ class IdeogramV2aTurbo {
           value: 0.025
         },
       }],
-      arena_score: null,
       release_date: '2025-02-27',
-      examples: []
     }
   }
 

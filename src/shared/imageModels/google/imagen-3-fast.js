@@ -12,7 +12,6 @@ class Imagen3Fast {
           value: 0.02,
         }
       }],
-      arena_score: null,
       release_date: '2024-12-16',
       examples: [
         {

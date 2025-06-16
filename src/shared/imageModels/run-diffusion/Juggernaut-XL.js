@@ -19,9 +19,7 @@ class JuggernautXL {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: null,
       release_date: '2024-08-29',
-      examples: []
     }
   }
 

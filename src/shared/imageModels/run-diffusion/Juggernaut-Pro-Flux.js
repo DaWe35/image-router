@@ -19,7 +19,6 @@ class JuggernautProFlux {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: null,
       release_date: '2025-03-05',
       examples: [{
         image: '/model-examples/Juggernaut-Pro-Flux-2025-06-15T17-12-19-100Z.webp'

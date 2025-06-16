@@ -21,7 +21,6 @@ class Sdxl {
           applyQuality: this.applyQuality
         }
     ],
-      arena_score: null,
       release_date: '2023-07-25',
       examples: [
         {

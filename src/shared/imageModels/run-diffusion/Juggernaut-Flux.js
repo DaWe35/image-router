@@ -26,7 +26,6 @@ class JuggernautFlux {
           value: 0.009,
         }
       }],
-      arena_score: null,
       release_date: '2025-03-05',
       examples: [
         {
