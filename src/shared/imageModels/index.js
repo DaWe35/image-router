@@ -65,6 +65,8 @@ import HiDreamI1Fast from './runware/HiDream-I1-Fast.js'
 import HiDreamI1Dev from './runware/HiDream-I1-Dev.js'
 import HiDreamI1Full from './runware/HiDream-I1-Full.js'
 
+import SeedreamV3 from './bytedance/seedream-v3.js'
+
 // Initialize all models
 const modelInstances = [
   new Flux11Pro(),
@@ -132,6 +134,8 @@ const modelInstances = [
   new HiDreamI1Fast(),
   new HiDreamI1Dev(),
   new HiDreamI1Full(),
+  
+  new SeedreamV3(),
 ]
 
 // Create an object with model IDs as keys
