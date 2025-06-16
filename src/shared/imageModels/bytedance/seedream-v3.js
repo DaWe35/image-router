@@ -16,7 +16,7 @@ class SeedreamV3 {
       arena_score: 1160,
       examples: [
         {
-          image: '/model-examples/seedream-v3.webp'
+          image: '/model-examples/seedream-3-2025-06-16T17-59-52-679Z.webp'
         }
       ]
     }
