@@ -1,10 +1,10 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 
-class Seedance1 {
+class Seedance1Lite {
   constructor() {
     this.data = {
-      id: 'bytedance/seedance-1',
+      id: 'bytedance/seedance-1-lite',
       providers: [{
         id: 'fal',
         model_name: 'fal-ai/bytedance/seedance/v1/lite/text-to-video',
@@ -38,4 +38,4 @@ async applyImage(params) {
   } */
 }
 
-export default Seedance1
+export default Seedance1Lite
