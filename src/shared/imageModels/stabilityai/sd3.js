@@ -22,7 +22,7 @@ class Sd3 {
         applyQuality: this.applyQuality
       }],
       arena_score: 1015,
-      release_date: '2025-06-01',
+      release_date: '2024-06-12',
       examples: [
         {
           image: '/model-examples/sd3-2025-06-15T13-09-47-800Z.webp'
