@@ -1,25 +1,21 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 
-class Seedance1Lite {
+class Seedance1Pro {
   constructor() {
     this.data = {
-      id: 'bytedance/seedance-1-lite',
+      id: 'bytedance/seedance-1-pro',
       providers: [{
         id: 'wavespeed',
-        model_name: 'bytedance/seedance-v1-lite-t2v-720p',
+        model_name: 'bytedance/seedance-v1-pro-t2v-720p',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.16,
+          value: 0.3,
         },
       }],
-      arena_score: 1197,
+      arena_score: 1295,
       release_date: '2025-06-16',
-      examples: [
-        {
-          video: '/model-examples/seedance-1-2025-06-16T19-01-20-528Z.webm'
-        }
-      ]
+      examples: []
     }
   }
 
@@ -38,4 +34,4 @@ async applyImage(params) {
   } */
 }
 
-export default Seedance1Lite
+export default Seedance1Pro

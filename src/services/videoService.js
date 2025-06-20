@@ -30,7 +30,8 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
         replicate: generateReplicateVideo,
         test: generateTestVideo,
         geminiMock: generateGeminiMockVideo,
-        fal: generateFalVideo
+        fal: generateFalVideo,
+        wavespeed: generateWavespeedVideo
     }
 
     const handler = providerHandlers[provider]
@@ -645,8 +646,147 @@ async function generateFalVideo({ fetchParams }) {
         data: [{
             url: videoUrl,
             revised_prompt: null,
-            original_response_from_provider: resultData
         }],
         seed: resultData.seed
+    }
+}
+
+// Wavespeed.ai video generation handler
+async function generateWavespeedVideo({ fetchParams }) {
+    const baseUrl = 'https://api.wavespeed.ai/api/v3'
+    const providerKey = process.env.WAVESPEED_API_KEY
+
+    if (!providerKey) {
+        throw new Error('WAVESPEED_API_KEY environment variable is required for wavespeed.ai provider')
+    }
+
+    const input = {
+        prompt: fetchParams.prompt,
+        duration: 5
+    }
+
+    const submitResponse = await fetch(`${baseUrl}/${fetchParams.model}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify(input)
+    })
+
+    const submitData = await submitResponse.json()
+
+    if (!submitResponse.ok) {
+        const formattedError = {
+            status: submitData?.code || submitResponse.status,
+            statusText: submitData?.message || submitResponse.statusText,
+            error: {
+                message: submitData?.message || 'Video generation failed',
+                type: (submitData?.code ? `code_${submitData.code}` : 'unknown_error')
+            },
+            original_response_from_provider: submitData
+        }
+        throw {
+            status: submitResponse.status,
+            errorResponse: formattedError
+        }
+    }
+
+    // Derive polling URL – prefer urls.get if provided, else construct from id
+    const predictionId = submitData?.data?.id || submitData?.data?.task_id || submitData?.id
+    let pollUrl = submitData?.data?.urls?.get
+    if (!pollUrl && predictionId) {
+        pollUrl = `${baseUrl}/predictions/${predictionId}/result`
+    }
+
+    if (!pollUrl) {
+        throw {
+            status: 500,
+            errorResponse: { message: 'Unable to determine polling URL from Wavespeed response', original_response_from_provider: submitData }
+        }
+    }
+
+    // Poll until completed or timeout
+    let attempts = 0
+    const maxAttempts = 120 // 10 minutes @ 5s
+    const delay = 5000
+    let lastStatusPayload = submitData
+
+    while (attempts < maxAttempts) {
+        // Check completed immediately on first loop in case submitData already includes outputs
+        const currentStatus = lastStatusPayload?.data?.status || lastStatusPayload?.status
+        if (currentStatus === 'completed' && Array.isArray(lastStatusPayload?.data?.outputs) && lastStatusPayload.data.outputs.length > 0) {
+            break
+        }
+
+        await new Promise(resolve => setTimeout(resolve, delay))
+
+        const pollRes = await fetch(pollUrl, {
+            headers: {
+                'Authorization': `Bearer ${providerKey}`
+            }
+        })
+
+        lastStatusPayload = await pollRes.json()
+
+        if (!pollRes.ok) {
+            return {
+                error: {
+                    message: lastStatusPayload?.error || 'Polling request failed',
+                    type: 'polling_error',
+                    original_response_from_provider: lastStatusPayload
+                }
+            }
+        }
+
+        const status = lastStatusPayload?.data?.status || lastStatusPayload?.status
+
+        if (status === 'failed') {
+            return {
+                error: {
+                    message: lastStatusPayload?.data?.error || 'Generation failed',
+                    type: 'failed',
+                    original_response_from_provider: lastStatusPayload
+                }
+            }
+        }
+
+        if (status === 'completed') {
+            break
+        }
+
+        attempts++
+    }
+
+    // Timeout handling
+    const finalStatus = lastStatusPayload?.data?.status || lastStatusPayload?.status
+    if (finalStatus !== 'completed') {
+        return {
+            error: {
+                message: 'Prediction timed out on wavespeed.ai – please try again later',
+                type: 'timeout_error',
+                original_response_from_provider: lastStatusPayload
+            }
+        }
+    }
+
+    const outputs = lastStatusPayload?.data?.outputs || []
+
+    if (!outputs.length) {
+        return {
+            error: {
+                message: 'No video URL found in response',
+                type: 'no_video',
+                original_response_from_provider: lastStatusPayload
+            }
+        }
+    }
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: outputs.map(url => ({
+            url,
+            revised_prompt: null,
+        }))
     }
 }
