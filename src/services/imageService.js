@@ -56,7 +56,8 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       vertex: generateVertex,
       test: generateTest,
       runware: generateRunware,
-      fal: generateFal
+      fal: generateFal,
+      chutes: generateChutes
     }
 
     const handler = providerHandlers[provider]
@@ -718,5 +719,62 @@ async function generateFal({ fetchParams }) {
             original_response_from_provider: resultData
         })),
         seed: resultData.seed
+    }
+}
+
+// Chutes HiDream API call
+async function generateChutes({ fetchParams }) {
+    const isEdit = Boolean(fetchParams.image_b64)
+    const subdomain = fetchParams.model
+    const providerUrl = isEdit
+        ? `https://chutes-${subdomain}-edit.chutes.ai/generate`
+        : `https://chutes-${subdomain}.chutes.ai/generate`
+
+    const providerKey = process.env.CHUTES_API_TOKEN
+
+    if (!providerKey) {
+        throw new Error('CHUTES_API_TOKEN environment variable is required for Chutes provider')
+    }
+
+    const bodyPayload = { prompt: fetchParams.prompt }
+    if (isEdit) {
+        bodyPayload.image_b64 = fetchParams.image_b64?.replace(/^data:[^;]+;base64,/, '')
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify(bodyPayload)
+    })
+
+    const buffer = await response.arrayBuffer()
+
+    if (!response.ok) {
+        const errorText = buffer ? Buffer.from(buffer).toString('utf8') : response.statusText
+        const formattedError = {
+            status: response.status,
+            statusText: response.statusText,
+            error: {
+                message: errorText || 'Chutes generation failed',
+                type: 'chutes_error'
+            }
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    const base64Data = Buffer.from(buffer).toString('base64')
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: [{
+            b64_json: base64Data,
+            revised_prompt: null
+        }]
     }
 }

@@ -61,9 +61,10 @@ import TestImage from './test/test-image.js'
 import DreamShaper from './runware/DreamShaper.js'
 import RealisticVision from './runware/Realistic-Vision.js'
 import RealVisXL from './runware/RealVisXL.js'
-import HiDreamI1Fast from './runware/HiDream-I1-Fast.js'
-import HiDreamI1Dev from './runware/HiDream-I1-Dev.js'
-import HiDreamI1Full from './runware/HiDream-I1-Full.js'
+import HiDreamI1Fast from './hidream-ai/HiDream-I1-Fast.js'
+import HiDreamI1Dev from './hidream-ai/HiDream-I1-Dev.js'
+import HiDreamI1Full from './hidream-ai/HiDream-I1-Full.js'
+import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
 
@@ -136,6 +137,7 @@ const modelInstances = [
   new HiDreamI1Full(),
   
   new SeedreamV3(),
+  new HiDreamI1Free(),
 ]
 
 // Create an object with model IDs as keys
