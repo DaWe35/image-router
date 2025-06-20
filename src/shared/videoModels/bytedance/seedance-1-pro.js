@@ -15,7 +15,11 @@ class Seedance1Pro {
       }],
       arena_score: 1295,
       release_date: '2025-06-16',
-      examples: []
+      examples: [
+        {
+          video: '/model-examples/seedance-1-pro-2025-06-20T21-03-30-821Z.webm'
+        }
+      ]
     }
   }
 
