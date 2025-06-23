@@ -67,6 +67,10 @@ import HiDreamI1Full from './hidream-ai/HiDream-I1-Full.js'
 import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
+import InfiniteYou from './bytedance/infiniteyou.js'
+import InfiniteYouFree from './bytedance/infiniteyou-free.js'
+import Chroma from './lodestones/chroma.js'
+import ChromaFree from './lodestones/chroma-free.js'
 
 // Initialize all models
 const modelInstances = [
@@ -138,6 +142,10 @@ const modelInstances = [
   
   new SeedreamV3(),
   new HiDreamI1Free(),
+  new Chroma(),
+  new ChromaFree(),
+  new InfiniteYou(),
+  new InfiniteYouFree(),
 ]
 
 // Create an object with model IDs as keys

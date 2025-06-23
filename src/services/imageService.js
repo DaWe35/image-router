@@ -724,9 +724,17 @@ async function generateFal({ fetchParams }) {
 
 // Chutes HiDream API call
 async function generateChutes({ fetchParams }) {
-    const isEdit = Boolean(fetchParams.image_b64)
+    // Detect if we are sending an input image. The InfiniteYou variant expects the field "id_image_b64",
+    // whereas HiDream uses "image_b64". Treat either as an edit request for payload purposes.
+    const hasImage = Boolean(fetchParams.image_b64 || fetchParams.id_image_b64)
+
+    if (fetchParams.model === 'infiniteyou' && !hasImage) {
+        throw new Error('No image provided. Please provide a reference image with a person in it.')
+    }
+
     const subdomain = fetchParams.model
-    const providerUrl = isEdit
+
+    const providerUrl = hasImage && subdomain === 'hidream'
         ? `https://chutes-${subdomain}-edit.chutes.ai/generate`
         : `https://chutes-${subdomain}.chutes.ai/generate`
 
@@ -737,8 +745,12 @@ async function generateChutes({ fetchParams }) {
     }
 
     const bodyPayload = { prompt: fetchParams.prompt }
-    if (isEdit) {
-        bodyPayload.image_b64 = fetchParams.image_b64?.replace(/^data:[^;]+;base64,/, '')
+
+    // Attach the appropriate base64 field, stripping the data URI prefix if present.
+    if (fetchParams.image_b64) {
+        bodyPayload.image_b64 = fetchParams.image_b64.replace(/^data:[^;]+;base64,/, '')
+    } else if (fetchParams.id_image_b64) {
+        bodyPayload.id_image_b64 = fetchParams.id_image_b64.replace(/^data:[^;]+;base64,/, '')
     }
 
     const response = await fetch(providerUrl, {
