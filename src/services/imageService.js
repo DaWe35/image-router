@@ -609,16 +609,20 @@ async function generateFal({ fetchParams }) {
         throw new Error('FAL_API_KEY environment variable is required for fal.ai provider')
     }
 
-    const bodyPayload = {
-        prompt: fetchParams.prompt,
-        num_images: 1,
-        /* guidance_scale: fetchParams.guidance_scale,
-        seed: fetchParams.seed,
-        aspect_ratio: fetchParams.aspect_ratio */
-     }
+    // Build minimal payload (prompt always required, optional image_url)
+    const bodyPayload = { prompt: fetchParams.prompt }
+    if (fetchParams.image_url) {
+        bodyPayload.image_url = fetchParams.image_url
+    }
+
+    // Determine the correct model path – if an image_url is provided switch to image-to-image variant
+    let modelPath = fetchParams.model
+    if (bodyPayload.image_url && modelPath.includes('/text-to-image')) {
+        modelPath = modelPath.replace('/text-to-image', '/image-to-image')
+    }
 
     // Submit generation request
-    const submitResponse = await fetch(baseUrl + "/" + fetchParams.model, {
+    const submitResponse = await fetch(`${baseUrl}/${modelPath}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -637,8 +641,8 @@ async function generateFal({ fetchParams }) {
     }
 
     // Build helper URLs from response
-    const statusUrl = submitData.status_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}/status`
-    const resultUrl = submitData.response_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}`
+    const statusUrl = submitData.status_url || `${baseUrl}/${modelPath}/requests/${submitData.request_id}/status`
+    const resultUrl = submitData.response_url || `${baseUrl}/${modelPath}/requests/${submitData.request_id}`
 
     // Poll queue until completed
     let status = submitData.status
