@@ -428,43 +428,25 @@ async function generateVertex({ fetchParams, userId }) {
         }
     }
 
-    // Retry logic to handle transient quota-exceeded errors from Vertex AI
-    const MAX_RETRIES = 10
-    const RETRY_DELAY_MS = 60 * 1000 // 1 minute
-    let data
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
 
-    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-        const response = await fetch(providerUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken.token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        })
-
-        if (response.ok) {
-            data = await response.json()
-            break
-        }
-
+    if (!response.ok) {
         const errorResponse = await response.json()
-        const errorMessage = errorResponse?.error?.message || ''
-        const quotaExceeded = errorMessage.includes('online_prediction_requests_per_base_model')
-
-        if (quotaExceeded && attempt < MAX_RETRIES) {
-            // Wait one minute before retrying
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS))
-            continue
-        }
-
-        // Either not a quota error or retries exhausted – throw immediately
         throw {
             status: response.status,
-            errorResponse
+            errorResponse: errorResponse
         }
     }
 
+    const data = await response.json()
+    
     // Convert Vertex AI response to our standard format
     const convertedData = {
         created: Math.floor(new Date().getTime() / 1000),
