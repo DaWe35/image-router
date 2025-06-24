@@ -633,13 +633,32 @@ async function generateFal({ fetchParams }) {
 
     const submitData = await submitResponse.json()
 
-    if (!submitResponse.ok) {
-        throw {
-            status: submitResponse.status,
-            errorResponse: submitData
+    // Helper to pull the most descriptive error message from provider payloads
+    const extractProviderMessage = (payload) => {
+        if (!payload) return null
+        if (typeof payload.error === 'string') return payload.error
+        if (Array.isArray(payload.detail) && payload.detail.length) {
+            return payload.detail.map(d => d?.msg).filter(Boolean).join('; ')
         }
+        return payload.message ?? null
     }
 
+    if (!submitResponse.ok) {
+        const providerMessage = extractProviderMessage(submitData)
+        throw {
+            status: submitResponse.status,
+            errorResponse: {
+                status: submitResponse.status,
+                statusText: submitResponse.statusText,
+                error: {
+                    message: providerMessage || 'fal.ai request failed',
+                    type: 'fal_error'
+                },
+                original_response_from_provider: submitData
+            }
+        }
+    }
+    
     // Build helper URLs from response
     const statusUrl = submitData.status_url || `${baseUrl}/${modelPath}/requests/${submitData.request_id}/status`
     const resultUrl = submitData.response_url || `${baseUrl}/${modelPath}/requests/${submitData.request_id}`
@@ -708,30 +727,30 @@ async function generateFal({ fetchParams }) {
 
     const resultData = await resultRes.json()
 
-    // If fetching the result fails
     if (!resultRes.ok) {
+        const providerMessage = extractProviderMessage(resultData)
         return {
             error: {
-                message: resultData?.error || 'Failed to fetch generation result',
+                message: providerMessage || 'Failed to fetch generation result',
                 type: 'result_error',
                 original_response_from_provider: resultData
             }
         }
     }
 
-    // Flatten image URLs (API returns nested array)
-    const imageUrls = []
-    if (Array.isArray(resultData.images)) {
-        for (const item of resultData.images) {
-            if (Array.isArray(item)) {
-                for (const obj of item) {
-                    if (obj?.url) imageUrls.push(obj.url)
-                }
-            } else if (item?.url) {
-                imageUrls.push(item.url)
-            }
-        }
-    }
+    // Collect image URLs (supports both array and single image response formats)
+    const imageUrls = [
+        // Flatten any nested arrays of images -> objects -> url
+        ...(Array.isArray(resultData.images)
+            ? resultData.images.flat(Infinity).map(i => i?.url).filter(Boolean)
+            : []),
+        // Fallback to single image object / string
+        ...(resultData.image
+            ? (typeof resultData.image === 'string'
+                ? [resultData.image]
+                : [resultData.image.url].filter(Boolean))
+            : [])
+    ]
 
     return {
         created: Math.floor(Date.now() / 1000),
@@ -740,7 +759,8 @@ async function generateFal({ fetchParams }) {
             revised_prompt: null,
             original_response_from_provider: resultData
         })),
-        seed: resultData.seed
+        seed: resultData.seed,
+        original_response_from_provider: resultData
     }
 }
 

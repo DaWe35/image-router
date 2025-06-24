@@ -28,6 +28,7 @@ import GptImage1 from './openai/gpt-image-1.js'
 
 import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
+import RecraftVectorize from './recraft-ai/recraft-vectorize.js'
 
 import IdeogramV2a from './ideogram-ai/ideogram-v2a.js'
 import IdeogramV2aTurbo from './ideogram-ai/ideogram-v2a-turbo.js'
@@ -103,6 +104,7 @@ const modelInstances = [
   
   new RecraftV3(),
   new RecraftV3Svg(),
+  new RecraftVectorize(),
   
   new IdeogramV2a(),
   new IdeogramV2aTurbo(),
