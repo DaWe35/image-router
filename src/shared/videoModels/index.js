@@ -6,6 +6,9 @@ import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
 import Seedance1Lite from './bytedance/seedance-1-lite.js'
 import Seedance1Pro from './bytedance/seedance-1-pro.js'
 
+import Hailuo02Standard from './minimax/hailuo-02-standard.js'
+import Hailuo02Pro from './minimax/hailuo-02-pro.js'
+
 import TestVideo from './test/test-video.js'
 
 // Initialize all models
@@ -18,6 +21,9 @@ const modelInstances = [
 
   new Seedance1Lite(),
   new Seedance1Pro(),
+
+  new Hailuo02Standard(),
+  new Hailuo02Pro(),
 
   new TestVideo(),
 ]

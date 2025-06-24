@@ -13,7 +13,7 @@ class Seedance1Pro {
           value: 0.3,
         },
       }],
-      arena_score: 1295,
+      arena_score: 1347,
       release_date: '2025-06-16',
       examples: [
         {

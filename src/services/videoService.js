@@ -662,7 +662,7 @@ async function generateWavespeedVideo({ fetchParams }) {
 
     const input = {
         prompt: fetchParams.prompt,
-        duration: 5
+        duration: fetchParams.model.includes('hailuo-02') ? 6 : 5 // Use 6-second duration for MiniMax Hailuo-02 models, otherwise default to 5
     }
 
     const submitResponse = await fetch(`${baseUrl}/${fetchParams.model}`, {

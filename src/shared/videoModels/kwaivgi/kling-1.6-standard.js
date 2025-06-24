@@ -12,7 +12,7 @@ class Kling16Standard {
           value: 0.25, // price per video on Replicate
         },
       }],
-      arena_score: 1024,
+      arena_score: 1025,
       release_date: '2024-12-19',
       examples: [
         {

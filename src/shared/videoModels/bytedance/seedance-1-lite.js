@@ -13,7 +13,6 @@ class Seedance1Lite {
           value: 0.16,
         },
       }],
-      arena_score: 1197,
       release_date: '2025-06-16',
       examples: [
         {
