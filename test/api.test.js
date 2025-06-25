@@ -409,4 +409,52 @@ describe('POST /edits', () => {
         expect(data).toHaveProperty('cost')
         expect(typeof data.cost).toBe('number')
     })
-}) 
+})
+
+describe('POST /generations EDITS (with input image)', () => {
+    // A 1x1 pixel black PNG
+    const testBase64Image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+
+    it('should edit an image successfully with test/test', async () => {
+        const form = new FormData()
+        const imageBuffer = Buffer.from(testBase64Image, 'base64')
+        const imageBlob = new Blob([imageBuffer], { type: 'image/png' })
+
+        form.append('image', imageBlob, 'test.png')
+        form.append('model', 'test/test')
+        form.append('prompt', 'Add a hat to the person')
+        form.append('quality', 'low')
+        form.append('response_format', 'b64_json')
+
+        const response = await fetch(`${API_URL}/generations`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.TEST_USER_API_KEY}`
+            },
+            body: form
+        })
+
+        const data = await response.json()
+
+        if (response.status !== 200) {
+            console.error('Failed POST /generations EDITS response:', data)
+        }
+        expect(response.status).toBe(200)
+        expect(data).toHaveProperty('created')
+        expect(typeof data.created).toBe('number')
+        expect(data).toHaveProperty('data')
+        expect(Array.isArray(data.data)).toBe(true)
+        expect(data.data.length).toBeGreaterThan(0)
+
+        const imageData = data.data[0]
+        expect(imageData).toHaveProperty('b64_json')
+        expect(typeof imageData.b64_json).toBe('string')
+        expect(imageData).toHaveProperty('revised_prompt')
+        expect(imageData.revised_prompt === null || typeof imageData.revised_prompt === 'string').toBe(true)
+        
+        expect(data).toHaveProperty('latency')
+        expect(typeof data.latency).toBe('number')
+        expect(data).toHaveProperty('cost')
+        expect(typeof data.cost).toBe('number')
+    })
+})

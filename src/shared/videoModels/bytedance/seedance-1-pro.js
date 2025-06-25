@@ -12,6 +12,7 @@ class Seedance1Pro {
           type: PRICING_TYPES.FIXED,
           value: 0.3,
         },
+        applyImage: this.applyImage,
       }],
       arena_score: 1347,
       release_date: '2025-06-16',
@@ -27,15 +28,12 @@ class Seedance1Pro {
     return this.data
   }
 
-/*
-Broken, fix it later
-async applyImage(params) {
+  async applyImage(params) {
     params.image = await processSingleFile(params.files.image)
-    params.model = 'fal-ai/bytedance/seedance/v1/lite/image-to-video'
-    throw new Error('Apply')
+    params.model = 'bytedance/seedance-v1-pro-i2v-720p'
     delete params.files.image
     return params
-  } */
+  }
 }
 
 export default Seedance1Pro

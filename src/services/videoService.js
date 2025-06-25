@@ -16,6 +16,12 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
         throw new Error('Invalid model specified')
     }
 
+    // Detect Kling v2.1 variant to set replicate mode parameter
+    const klingVariantMatch = fetchParams.model.match(/kling-v2\.1-(standard|pro)$/)
+    if (klingVariantMatch) {
+        fetchParams.mode = klingVariantMatch[1]
+    }    
+
     // Get alias model if available
     fetchParams.model = modelConfig.providers[0].model_name
 
@@ -24,13 +30,28 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
         fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
     }
 
+    // Apply image-to-video if an image file is provided
+    if (fetchParams.files && fetchParams.files.image) {
+        if (typeof modelConfig.providers[0]?.applyImage === 'function') {
+            fetchParams = await modelConfig.providers[0].applyImage(fetchParams)
+        } else {
+            const supportedModels = Object.keys(videoModels).filter(modelId =>
+                videoModels[modelId].supported_params?.edit === true
+            )
+            throw new Error(`Image editing is not supported for this model. Supported models: ${supportedModels.join(', ')}`)
+        }
+    }
+
+    // Clean up files reference (no longer needed after applyImage)
+    if (fetchParams.files) delete fetchParams.files
+
     const providerHandlers = {
+        fal: generateFalVideo,
         gemini: generateGeminiVideo,
-        vertex: generateVertexVideo,
+        geminiMock: generateGeminiMockVideo,
         replicate: generateReplicateVideo,
         test: generateTestVideo,
-        geminiMock: generateGeminiMockVideo,
-        fal: generateFalVideo,
+        vertex: generateVertexVideo,
         wavespeed: generateWavespeedVideo
     }
 
@@ -79,23 +100,31 @@ async function generateGeminiVideo({ fetchParams, userId }) {
     const baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
     const predictUrl = `${baseUrl}/models/${fetchParams.model}:predictLongRunning?key=${providerKey}`
 
+    let bodyPayload = {
+        "instances": [{
+            "prompt": fetchParams.prompt
+        }],
+        "parameters": {
+            "aspectRatio": "16:9",
+            "personGeneration": "allow_adult",
+            "sampleCount": 1,
+            "durationSeconds": 5,
+        }
+    }
+
+    if (fetchParams.image) {
+        bodyPayload.instances[0].image = {
+            "bytesBase64Encoded": fetchParams.image
+        }
+    }
+
     // Start the video generation operation
     const response = await fetch(predictUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            "instances": [{
-                "prompt": fetchParams.prompt
-            }],
-            "parameters": {
-                "aspectRatio": "16:9",
-                "personGeneration": "allow_adult",
-                "sampleCount": 1,
-                "durationSeconds": 5,
-            }
-        })
+        body: JSON.stringify(bodyPayload)
     })
 
     if (!response.ok) {
@@ -460,10 +489,14 @@ async function generateReplicateVideo({ fetchParams }) {
     const providerKey = process.env.REPLICATE_API_KEY
 
     // Build the input object starting with the prompt
-    const input = {
+    const bodyPayload = {
         prompt: fetchParams.prompt,
         enhance_prompt: true
     }
+
+    // Optional parameters specific to certain models
+    if (fetchParams.mode) bodyPayload.mode = fetchParams.mode
+    if (fetchParams.start_image) bodyPayload.start_image = fetchParams.start_image
 
     const createRes = await fetch(providerUrl, {
         method: 'POST',
@@ -472,7 +505,7 @@ async function generateReplicateVideo({ fetchParams }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: JSON.stringify({ input })
+        body: JSON.stringify({ input: bodyPayload })
     })
 
     let data = await createRes.json()
@@ -660,10 +693,11 @@ async function generateWavespeedVideo({ fetchParams }) {
         throw new Error('WAVESPEED_API_KEY environment variable is required for wavespeed.ai provider')
     }
 
-    const input = {
+    const bodyPayload = {
         prompt: fetchParams.prompt,
         duration: fetchParams.model.includes('hailuo-02') ? 6 : 5 // Use 6-second duration for MiniMax Hailuo-02 models, otherwise default to 5
     }
+    if (fetchParams.image) bodyPayload.image = fetchParams.image
 
     const submitResponse = await fetch(`${baseUrl}/${fetchParams.model}`, {
         method: 'POST',
@@ -671,7 +705,7 @@ async function generateWavespeedVideo({ fetchParams }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: JSON.stringify(input)
+        body: JSON.stringify(bodyPayload)
     })
 
     const submitData = await submitResponse.json()

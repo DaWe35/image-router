@@ -30,29 +30,37 @@ export function objectToFormData(obj) {
 }
 
 // Utility function to process image files
-export async function processSingleOrMultipleFiles(imageFiles) {
+export async function processSingleOrMultipleFiles(imageFiles, format = 'blob') {
     if (Array.isArray(imageFiles)) {
-        return processMultipleFiles(imageFiles)
+        return processMultipleFiles(imageFiles, format)
     } else {
-        return processSingleFile(imageFiles)
+        return processSingleFile(imageFiles, format)
     }
 }
 
-export async function processSingleFile(file) {
+export async function processSingleFile(file, format = 'blob') {
     if (Array.isArray(file) && file.length > 1) {
         throw new Error('This model supports only one image input')
     }
     const actualFile = Array.isArray(file) ? file[0] : file
     const buffer = await readFile(actualFile.path);
 
-    return {
-        blob: new Blob([buffer], { type: actualFile.mimetype }),
-        filename: actualFile.originalname
+    if (format === 'blob') {
+        return {
+            blob: new Blob([buffer], { type: actualFile.mimetype }),
+            filename: actualFile.originalname
+        }
+    } else if (format === 'datauri') {
+        const mimeType = file.mimetype || 'image/png'
+        const base64 = buffer.toString('base64')
+        return `data:${mimeType};base64,${base64}`
+    } else {
+        throw new Error(`Invalid image processing format '${format}'`)
     }
 }
 
-export async function processMultipleFiles(files) {
-    return await Promise.all(files.map(file => processSingleFile(file)))
+export async function processMultipleFiles(files, format = 'blob') {
+    return await Promise.all(files.map(file => processSingleFile(file, format)))
 }
 
 // Function to get Google Gemini API key based on model and environment variables
@@ -75,13 +83,6 @@ export function getGeminiApiKey(model) {
     } else {
         return geminiKeyArray[0]
     }
-}
-
-export async function encodeFileToDataURI(file) {
-  const buffer = await readFile(file.path)
-  const mimeType = file.mimetype || 'image/png'
-  const base64 = buffer.toString('base64')
-  return `data:${mimeType};base64,${base64}`
 }
 
 export function postCalcRunware(imageResult) {

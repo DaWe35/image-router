@@ -12,6 +12,7 @@ class Seedance1Lite {
           type: PRICING_TYPES.FIXED,
           value: 0.16,
         },
+        applyImage: this.applyImage,
       }],
       release_date: '2025-06-16',
       examples: [
@@ -26,15 +27,12 @@ class Seedance1Lite {
     return this.data
   }
 
-/*
-Broken, fix it later
-async applyImage(params) {
+  async applyImage(params) {
     params.image = await processSingleFile(params.files.image)
-    params.model = 'fal-ai/bytedance/seedance/v1/lite/image-to-video'
-    throw new Error('Apply')
+    params.model = 'bytedance/seedance-v1-lite-i2v-720p'
     delete params.files.image
     return params
-  } */
+  }
 }
 
 export default Seedance1Lite

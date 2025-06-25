@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { encodeFileToDataURI } from '../../../services/imageHelpers.js'
+import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class RecraftVectorize {
   constructor() {
@@ -15,7 +15,11 @@ class RecraftVectorize {
         applyImage: this.applyImage
       }],
       release_date: '2025-07-01',
-      examples: []
+      examples: [
+        {
+          image: '/model-examples/recraft-vectorize-compressed-2025-06-24T13-39-45-891Z.svg'
+        }
+      ]
     }
   }
 
@@ -25,12 +29,7 @@ class RecraftVectorize {
 
   // Convert uploaded image to a base64 data URI and attach as image_url
   async applyImage(params) {
-    const images = Array.isArray(params.files.image) ? params.files.image : [params.files.image]
-    if (!images.length) {
-      throw new Error('No image provided')
-    }
-
-    params.image_url = await encodeFileToDataURI(images[0])
+    params.image_url = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
   }

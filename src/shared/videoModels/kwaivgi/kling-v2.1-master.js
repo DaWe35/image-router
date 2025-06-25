@@ -1,24 +1,24 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 
-class Veo2 {
+class Kling21Master {
   constructor() {
     this.data = {
-      id: 'google/veo-2',
+      id: 'kwaivgi/kling-v2.1-master',
       providers: [{
-        id: 'gemini',
-        model_name: 'veo-2.0-generate-001',
+        id: 'replicate',
+        model_name: 'kwaivgi/kling-v2.1-master',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 1.75,
+          value: 1.40, // price per 5-second video (0.28 $/sec)
         },
         applyImage: this.applyImage,
       }],
-      arena_score: 1115,
-      release_date: '2024-12-16',
+      arena_score: 1150,
+      release_date: '2025-06-24',
       examples: [
         {
-          video: '/model-examples/veo-2-2025-05-27T22-57-10-794Z.webm'
+          video: '/model-examples/kling-v2.1-master.webm'
         }
       ]
     }
@@ -29,10 +29,10 @@ class Veo2 {
   }
 
   async applyImage(params) {
-    params.image = await processSingleFile(params.files.image)
+    params.start_image = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
   }
 }
 
-export default Veo2 
+export default Kling21Master 

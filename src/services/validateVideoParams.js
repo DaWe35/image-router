@@ -21,7 +21,24 @@ export function validateVideoParams(req) {
     if (!modelConfig) throw new Error(`model '${model}' is not available`)
     if (!modelConfig?.providers[0]?.id) throw new Error(`model provider for '${model}' is not available`)
 
-    return { prompt, model, response_format }
+    const files = req.files || {}
+
+    // Validate image uploads (single image only for now)
+    const validFiles = {}
+    if (files.image) {
+        if (Array.isArray(files.image) && files.image.length > 1) {
+            throw new Error('Maximum of 1 image can be uploaded for video generation')
+        }
+        validFiles.image = Array.isArray(files.image) ? files.image[0] : files.image
+    }
+    
+    // Additional validation – certain models require an image input
+    const modelsRequiringImage = ['kwaivgi/kling-v2.1-standard', 'kwaivgi/kling-v2.1-pro']
+    if (modelsRequiringImage.includes(model) && !validFiles.image) {
+        throw new Error(`'image' is a required input parameter for model '${model}'`)
+    }
+
+    return { prompt, model, response_format, files: validFiles }
 }
 
 export const videoRequestSchema = bodySchema 

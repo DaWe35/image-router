@@ -49,15 +49,15 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
 
 
     const providerHandlers = {
-      openai: generateOpenAI,
+      chutes: generateChutes,
       deepinfra: generateDeepInfra,
-      replicate: generateReplicate,
-      gemini: generateGemini,
-      vertex: generateVertex,
-      test: generateTest,
-      runware: generateRunware,
       fal: generateFal,
-      chutes: generateChutes
+      gemini: generateGemini,
+      openai: generateOpenAI,
+      replicate: generateReplicate,
+      runware: generateRunware,
+      test: generateTest,
+      vertex: generateVertex
     }
 
     const handler = providerHandlers[provider]

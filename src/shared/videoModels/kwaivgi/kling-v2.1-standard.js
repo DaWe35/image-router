@@ -1,24 +1,25 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 
-class Kling16Standard {
+class Kling21Standard {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-1.6-standard',
+      id: 'kwaivgi/kling-v2.1-standard',
       providers: [{
         id: 'replicate',
-        model_name: 'kwaivgi/kling-v1.6-standard',
+        model_name: 'kwaivgi/kling-v2.1',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.25, // price per video on Replicate
+          value: 0.25, // price per 5-second video (0.05 $/sec)
         },
         applyImage: this.applyImage,
       }],
-      arena_score: 1025,
-      release_date: '2024-12-19',
+      // Benchmark / meta data – values are estimates / placeholders
+      arena_score: 1080,
+      release_date: '2025-06-24',
       examples: [
         {
-          video: '/model-examples/kling-1.6-standard.webm'
+          video: '/model-examples/kling-v2.1-standard.webm'
         }
       ]
     }
@@ -35,4 +36,4 @@ class Kling16Standard {
   }
 }
 
-export default Kling16Standard 
+export default Kling21Standard 

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { encodeFileToDataURI } from '../../../services/imageHelpers.js'
+import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class RecraftV3 {
   constructor() {
@@ -30,15 +30,8 @@ class RecraftV3 {
 
   // Convert uploaded image to a base64 data-URI accepted by the Recraft image-to-image endpoint
   async applyImage(params) {
-    const images = Array.isArray(params.files.image) ? params.files.image : [params.files.image]
-    if (!images.length) {
-      throw new Error('No image provided')
-    }
-
-    params.image_url = await encodeFileToDataURI(images[0])
-
+    params.image_url = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
-
     return params
   }
 }

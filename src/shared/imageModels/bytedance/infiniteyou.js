@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { encodeFileToDataURI } from '../../../services/imageHelpers.js'
+import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class InfiniteYou {
   constructor() {
@@ -25,11 +25,10 @@ class InfiniteYou {
 
   // Convert uploaded image to base64 string expected by InfiniteYou endpoint
   async applyImage(params) {
-    const images = Array.isArray(params.files.image) ? params.files.image : [params.files.image]
     if (!images.length) {
       throw new Error('No image provided. Please provide a reference image with a person in it.')
     }
-    params.id_image_b64 = await encodeFileToDataURI(images[0])
+    params.id_image_b64 = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
   }

@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class Hailuo02Standard {
   constructor() {
@@ -11,6 +12,7 @@ class Hailuo02Standard {
           type: PRICING_TYPES.FIXED,
           value: 0.25, // price per video in USD
         },
+        applyImage: this.applyImage,
       }],
       release_date: '2025-06-18',
       examples: [
@@ -24,6 +26,12 @@ class Hailuo02Standard {
   getData() {
     return this.data
   }
+
+    async applyImage(params) {
+      params.image = await processSingleFile(params.files.image, 'datauri')
+      delete params.files.image
+      return params
+    }
 }
 
 export default Hailuo02Standard 

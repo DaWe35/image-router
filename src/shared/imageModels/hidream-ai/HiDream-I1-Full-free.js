@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { encodeFileToDataURI } from '../../../services/imageHelpers.js'
+import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class HiDreamI1FullFree {
   constructor() {
@@ -25,11 +25,7 @@ class HiDreamI1FullFree {
 
   // Convert uploaded image to base64 string expected by Chutes edit endpoint
   async applyImage(params) {
-    const images = Array.isArray(params.files.image) ? params.files.image : [params.files.image]
-    if (!images.length) {
-      throw new Error('No image provided')
-    }
-    params.image_b64 = await encodeFileToDataURI(images[0])
+    params.image_b64 = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
   }

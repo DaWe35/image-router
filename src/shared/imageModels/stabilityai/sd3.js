@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { processSingleFile } from '../../../services/imageHelpers.js'
 
 class Sd3 {
   constructor() {
@@ -36,19 +37,14 @@ class Sd3 {
   }
 
   async applyImage(params) {
-    const { encodeFileToDataURI } = await import('../../../services/imageHelpers.js')
-
-    const images = params.files.image
-    const file = Array.isArray(images) ? images[0] : images
-    params.image = await encodeFileToDataURI(file)
+    params.image = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
   }
 
   async applyMask(params) {
-    const { encodeFileToDataURI } = await import('../../../services/imageHelpers.js')
     const file = params.files.mask
-    params.mask = await encodeFileToDataURI(file)
+    params.mask = await processSingleFile(params.files.mask, 'datauri')
     delete params.files.mask
     return params
   }
