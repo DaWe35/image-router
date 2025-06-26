@@ -16,12 +16,7 @@ class Kling21Standard {
       }],
       // Benchmark / meta data – values are estimates / placeholders
       arena_score: 1080,
-      release_date: '2025-06-24',
-      examples: [
-        {
-          video: '/model-examples/kling-v2.1-standard.webm'
-        }
-      ]
+      release_date: '2025-06-24'
     }
   }
 

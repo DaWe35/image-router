@@ -15,12 +15,7 @@ class Kling21Pro {
         applyImage: this.applyImage,
       }],
       arena_score: 1120,
-      release_date: '2025-06-24',
-      examples: [
-        {
-          video: '/model-examples/kling-v2.1-pro.webm'
-        }
-      ]
+      release_date: '2025-06-24'
     }
   }
 
