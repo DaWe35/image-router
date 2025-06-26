@@ -15,7 +15,7 @@ class FluxKontextPro {
             postCalcFunction: postCalcRunware,
             range: {
               min: 0.01,
-              average: 0.01,
+              average: 0.0105,
               max: 0.03
             }
           },
