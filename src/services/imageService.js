@@ -537,23 +537,24 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.steps = fetchParams.steps
     }
 
-    // Include optional negative prompt if supplied
-    if (fetchParams.negative_prompt || fetchParams.negativePrompt) {
-        taskPayload.negativePrompt = fetchParams.negative_prompt || fetchParams.negativePrompt
-    }
-
     // Image-to-image support
-    if (fetchParams.image) {
-        taskPayload.seedImage = fetchParams.image
+
+    // FLUX Kontext
+    if (fetchParams.referenceImages) {
+        taskPayload.referenceImages = Array.isArray(fetchParams.referenceImages) 
+            ? fetchParams.referenceImages 
+            : [fetchParams.referenceImages]
+    }
+    
+    // SD3
+    if (fetchParams.seedImage) {
+        taskPayload.seedImage = fetchParams.seedImage
         taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
     }
 
     // Inpainting support (mask)
-    if (fetchParams.mask) {
-        taskPayload.maskImage = fetchParams.mask
-        if (!taskPayload.strength) {
-            taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
-        }
+    if (fetchParams.maskImage) {
+        taskPayload.maskImage = fetchParams.maskImage
     }
 
     const response = await fetch(providerUrl, {

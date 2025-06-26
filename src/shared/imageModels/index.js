@@ -6,7 +6,8 @@ import Flux1Dev from './black-forest-labs/FLUX-1-dev.js'
 import FluxPro from './black-forest-labs/FLUX-pro.js'
 import Flux11ProUltra from './black-forest-labs/flux-1.1-pro-ultra.js'
 import FluxKontextPro from './black-forest-labs/flux-kontext-pro.js'
-import FluxKontextMax from './black-forest-labs/flux-kontext-max.js' 
+import FluxKontextMax from './black-forest-labs/flux-kontext-max.js'
+import FluxKontextDev from './black-forest-labs/flux-kontext-dev.js'
 
 import Sd15Dpo from './stabilityai/sd1.5-dpo.js'
 import Sd35Medium from './stabilityai/sd3.5-medium.js'
@@ -83,6 +84,7 @@ const modelInstances = [
   new Flux11ProUltra(),
   new FluxKontextPro(),
   new FluxKontextMax(),
+  new FluxKontextDev(),
 
   new Sd15Dpo(),
   new Sd35Medium(),

@@ -37,14 +37,13 @@ class Sd3 {
   }
 
   async applyImage(params) {
-    params.image = await processSingleFile(params.files.image, 'datauri')
+    params.seedImage = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
   }
 
   async applyMask(params) {
-    const file = params.files.mask
-    params.mask = await processSingleFile(params.files.mask, 'datauri')
+    params.maskImage = await processSingleFile(params.files.mask, 'datauri')
     delete params.files.mask
     return params
   }
