@@ -22,7 +22,12 @@ class FluxKontextPro {
           applyImage: applyReferenceImages,
         }
       ],
-      release_date: '2025-06-26'
+      release_date: '2025-06-26',
+      examples: [
+        {
+          image: '/model-examples/flux-kontext-dev-2025-06-26T20-32-46-915Z.webp'
+        }
+      ]
     }
   }
 
