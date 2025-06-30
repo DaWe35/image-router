@@ -18,13 +18,6 @@ class JuggernautLightningFlux {
           }
         },
         applyQuality: this.applyQuality
-      }, {
-        id: 'deepinfra',
-        model_name: 'run-diffusion/Juggernaut-Lightning-Flux',
-        pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.009,
-        }
       }],
       release_date: '2025-03-05',
       examples: [
