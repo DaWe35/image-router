@@ -1,6 +1,6 @@
 curl --location 'https://api.runware.ai/v1' \
      --header 'Content-Type: application/json' \
-     --header 'Authorization: Bearer 2jhrEXPR4Qq0Z1VevmlzasSTFPyuWgJ7' \
+     --header 'Authorization: Bearer API_KEY' \
      --data-raw '[
        {
          "extra":true,
