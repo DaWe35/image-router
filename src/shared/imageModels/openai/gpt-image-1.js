@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPT } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted } from '../../../services/imageHelpers.js'
 
 class GptImage1 {
   constructor() {
@@ -11,7 +11,7 @@ class GptImage1 {
           model_name: 'gpt-image-1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcNanoGPT,
+            postCalcFunction: postCalcNanoGPTDiscounted,
             range: {
               min: 0.011,
               average: 0.167,
