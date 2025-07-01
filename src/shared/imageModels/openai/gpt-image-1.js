@@ -1,26 +1,42 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPT } from '../../../services/imageHelpers.js'
 
 class GptImage1 {
   constructor() {
     this.data = {
       id: 'openai/gpt-image-1',
-      providers: [{
-        id: 'openai',
-        model_name: 'gpt-image-1',
-        pricing: {
-          type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: this.postCalcPrice,
-          range: {
-            min: 0.011,
-            average: 0.167,
-            max: 0.5
+      providers: [
+        {
+          id: 'nanogpt',
+          model_name: 'gpt-image-1',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcNanoGPT,
+            range: {
+              min: 0.011,
+              average: 0.167,
+              max: 0.5
+            },
           },
-        },
-        applyQuality: this.applyQuality,
-        applyImage: this.applyImage,
-        applyMask: this.applyMask,
-      }],
+          applyQuality: this.applyQuality,
+          applyImage: this.applyImageNanoGPT,
+        }, {
+          id: 'openai',
+          model_name: 'gpt-image-1',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: this.postCalcPrice,
+            range: {
+              min: 0.011,
+              average: 0.167,
+              max: 0.5
+            },
+          },
+          applyQuality: this.applyQuality,
+          applyImage: this.applyImage,
+          applyMask: this.applyMask,
+        }
+      ],
       arena_score: 1151,
       release_date: '2025-04-23',
       examples: [
@@ -67,6 +83,12 @@ class GptImage1 {
   async applyMask(params) {
     params.mask = await processSingleFile(params.files.mask)
     delete params.files.mask
+    return params
+  }
+
+  async applyImageNanoGPT(params) {
+    params.imageDataUrl = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
     return params
   }
 }

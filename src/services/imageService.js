@@ -54,6 +54,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       fal: generateFal,
       gemini: generateGemini,
       openai: generateOpenAI,
+      nanogpt: generateNanoGPT,
       replicate: generateReplicate,
       runware: generateRunware,
       test: generateTest,
@@ -137,6 +138,46 @@ async function generateOpenAI({ fetchParams, userId }) {
         method: 'POST',
         headers,
         body
+    })
+
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        throw {
+            status: response.status,
+            errorResponse: errorResponse
+        }
+    }
+
+    const data = await response.json()
+    return data
+}
+
+// OpenAI format API call
+async function generateNanoGPT({ fetchParams, userId }) {
+    const providerUrl = 'https://nano-gpt.com/v1/images/generations'
+    const providerKey = process.env.NANO_GPT_API_KEY
+    
+    // Set up basic parameters
+    let fetchBody = {
+        prompt: fetchParams.prompt,
+        model: fetchParams.model,
+        quality: fetchParams.quality,
+        user: userId,
+        n: 1,
+    }
+    if (fetchParams.imageDataUrl) {
+        fetchBody.imageDataUrl = fetchParams.imageDataUrl
+    }
+
+    const headers = {
+        'Authorization': `Bearer ${providerKey}`,
+        'Content-Type': 'application/json'
+    }
+    
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(fetchBody)
     })
 
     if (!response.ok) {

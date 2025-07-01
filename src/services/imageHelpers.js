@@ -94,3 +94,13 @@ export function postCalcRunware(imageResult) {
         return 1 // return 1 for safety, this should never happen
     }
 }
+
+export function postCalcNanoGPTDiscounted(imageResult) {
+    try {
+        // just return 110% of the cost, since NanoGPT is discounted by 10%
+        return imageResult.cost * 1.1
+    } catch (error) {
+        console.error('Error calculating NanoGPT price:', error)
+        return 1 // return 1 for safety, this should never happen
+    }
+}
