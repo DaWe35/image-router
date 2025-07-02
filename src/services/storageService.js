@@ -98,7 +98,7 @@ class StorageService {
         }
     }
 
-    async downloadAndUpload(url, contentType, usageLogId) {
+    async downloadAndUpload(url, contentType, usageLogId, needBuffer = false) {
         if (!this.isEnabled()) {
             throw new Error('Storage service is not configured')
         }
@@ -109,14 +109,9 @@ class StorageService {
                 throw new Error(`Failed to download content: ${response.statusText}`)
             }
 
-            // Directly stream response body to S3 to save memory
-            if (response.body) {
-                return await this._uploadBody(response.body, contentType, usageLogId)
-            }
-
-            // Fallback to buffering if body stream not available (older node-fetch versions)
-            const buffer = await response.buffer()
-            return await this._uploadBody(buffer, contentType, usageLogId)
+            // Stream directly to S3 unless we explicitly need the buffer (e.g. when returning b64_json)
+            const body = needBuffer ? Buffer.from(await response.arrayBuffer()) : response.body
+            return await this._uploadBody(body, contentType, usageLogId)
         } catch (error) {
             console.error('Storage upload error:', error)
             throw new Error(`Failed to upload to storage: ${error.message}`)
@@ -155,7 +150,8 @@ class StorageService {
 
             if (content.url) {
                 const contentType = this.detectContentType(content.url)
-                uploadResult = await this.downloadAndUpload(content.url, contentType, usageLogId)
+                const needBuffer = responseFormat === 'b64_json'
+                uploadResult = await this.downloadAndUpload(content.url, contentType, usageLogId, needBuffer)
             } else if (content.b64_json) {  
                 const contentType = this.detectContentTypeFromBase64(content.b64_json)
                 uploadResult = await this.uploadBase64(content.b64_json, contentType, usageLogId)

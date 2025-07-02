@@ -643,7 +643,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         data: [{
             url: imageURL,
             revised_prompt: null,
-            original_response_from_provider: data
+            //original_response_from_provider: data
         }],
         cost: taskResult.cost
     }
