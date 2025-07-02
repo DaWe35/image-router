@@ -87,10 +87,10 @@ class GptImage1 {
   }
 
   async applyImageNanoGPT(params) {
-    params.imageDataUrl = await processSingleFile(params.files.image, 'datauri')
+    params.image = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     delete params.files.image
     return params
   }
 }
 
-export default GptImage1 
+export default GptImage1

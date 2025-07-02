@@ -165,8 +165,15 @@ async function generateNanoGPT({ fetchParams, userId }) {
         user: userId,
         n: 1,
     }
-    if (fetchParams.imageDataUrl) {
-        fetchBody.imageDataUrl = fetchParams.imageDataUrl
+
+    if (fetchParams.image) {
+        if (Array.isArray(fetchParams.image) && fetchParams.image.length > 1) {
+            fetchBody.imageDataUrls = fetchParams.image.map(image => image.datauri)
+        } else if (Array.isArray(fetchParams.image) && fetchParams.image.length === 1) {
+            fetchBody.imageDataUrl = fetchParams.image[0].datauri
+        } else {
+            fetchBody.imageDataUrl = fetchParams.image.datauri
+        }
     }
 
     const headers = {
