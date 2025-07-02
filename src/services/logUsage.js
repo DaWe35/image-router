@@ -129,7 +129,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
         return postPriceInt
     } catch (error) {
         console.error('Error in postLogUsage for image generation:', JSON.stringify(params), error)
-        throw new Error('Failed to postlog usage')
+        throw new Error('Failed to postlog usage for ' + params.model + ' ' + usageLogEntry.id)
 
     }
 }

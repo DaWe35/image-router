@@ -189,9 +189,9 @@ async function generateNanoGPT({ fetchParams, userId }) {
 
     if (!response.ok) {
         const errorResponse = await response.json()
-        throw {
-            status: response.status,
-            errorResponse: errorResponse
+        return {
+            error: errorResponse.error,
+            cost: errorResponse?.cost
         }
     }
 
