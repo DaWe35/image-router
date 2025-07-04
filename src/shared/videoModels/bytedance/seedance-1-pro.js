@@ -5,15 +5,17 @@ class Seedance1Pro {
   constructor() {
     this.data = {
       id: 'bytedance/seedance-1-pro',
-      providers: [{
+      providers: [
+        {
         id: 'wavespeed',
         model_name: 'bytedance/seedance-v1-pro-t2v-720p',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.3,
         },
-        applyImage: this.applyImage,
-      }],
+        applyImage: this.applyImageWaveSpeed,
+      }
+    ],
       arena_score: 1347,
       release_date: '2025-06-16',
       examples: [
@@ -28,7 +30,7 @@ class Seedance1Pro {
     return this.data
   }
 
-  async applyImage(params) {
+  async applyImageWaveSpeed(params) {
     params.image = await processSingleFile(params.files.image)
     params.model = 'bytedance/seedance-v1-pro-i2v-720p'
     delete params.files.image

@@ -50,6 +50,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
         gemini: generateGeminiVideo,
         geminiMock: generateGeminiMockVideo,
         replicate: generateReplicateVideo,
+        runware: generateRunwareVideo,
         test: generateTestVideo,
         vertex: generateVertexVideo,
         wavespeed: generateWavespeedVideo
@@ -76,7 +77,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
     }
 
     try {
-      const result = await handler({ fetchParams, userId })
+      const result = await handler({ fetchParams, userId, usageLogId })
       result.latency = Date.now() - startTime
       if (intervalId) clearInterval(intervalId)
       
@@ -94,7 +95,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
     }
 }
 
-async function generateGeminiVideo({ fetchParams, userId }) {
+async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
     const providerKey = getGeminiApiKey(fetchParams.model)
     
     const baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
@@ -218,7 +219,7 @@ async function generateGeminiVideo({ fetchParams, userId }) {
     console.log('ERROR: video generation timed out after 10 minutes. Url:', checkUrl)
 }
 
-async function generateVertexVideo({ fetchParams, userId }) {
+async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
     const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
     const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
@@ -408,7 +409,7 @@ async function generateVertexVideo({ fetchParams, userId }) {
     }
 }
 
-async function generateTestVideo({ fetchParams, userId }) {
+async function generateTestVideo({ fetchParams, userId, usageLogId }) {
     // Return a placeholder video URL for testing
     return {
         created: Math.floor(Date.now() / 1000),
@@ -419,7 +420,7 @@ async function generateTestVideo({ fetchParams, userId }) {
     }
 } 
 
-async function generateGeminiMockVideo({ fetchParams, userId }) {
+async function generateGeminiMockVideo({ fetchParams, userId, usageLogId }) {
     const checkData = {
         "name": "models/veo-2.0-generate-001/operations/ld6i6vp968tt",
         "done": true,
@@ -484,7 +485,7 @@ async function generateGeminiMockVideo({ fetchParams, userId }) {
 }
 
 // Add Replicate video generation handler
-async function generateReplicateVideo({ fetchParams }) {
+async function generateReplicateVideo({ fetchParams, userId, usageLogId }) {
     const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
@@ -555,7 +556,7 @@ async function generateReplicateVideo({ fetchParams }) {
 }
 
 // Fal.ai Queue API call for video generation
-async function generateFalVideo({ fetchParams }) {
+async function generateFalVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = 'https://queue.fal.run'
     const providerKey = process.env.FAL_API_KEY
 
@@ -685,7 +686,7 @@ async function generateFalVideo({ fetchParams }) {
 }
 
 // Wavespeed.ai video generation handler
-async function generateWavespeedVideo({ fetchParams }) {
+async function generateWavespeedVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = 'https://api.wavespeed.ai/api/v3'
     const providerKey = process.env.WAVESPEED_API_KEY
 
@@ -822,5 +823,162 @@ async function generateWavespeedVideo({ fetchParams }) {
             url,
             revised_prompt: null,
         }))
+    }
+}
+
+// Runware REST API call
+async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
+    const providerUrl = 'https://api.runware.ai/v1'
+    const providerKey = process.env.RUNWARE_API_KEY
+
+    if (!providerKey) {
+        throw new Error('RUNWARE_API_KEY environment variable is required for Runware provider')
+    }
+
+    // Use the APIUsage row id as task UUID to enable easier tracking across systems.
+    if (!usageLogId) {
+        throw new Error('usageLogId is required for Runware provider')
+    }
+
+    const taskUUID = usageLogId
+
+    // Build the Runware task payload
+    const taskPayload = {
+        taskType: 'videoInference',
+        taskUUID,
+        deliveryMethod: 'async',
+        positivePrompt: fetchParams.prompt,
+        model: fetchParams.model,
+        duration: 5,
+        outputFormat: "mp4",
+        numberResults: 1,
+        includeCost: true
+    }
+
+    switch (fetchParams.model) {
+        case 'bytedance:1@1':
+            taskPayload.width = 1248
+            taskPayload.height = 704
+            break
+    }
+
+    // Image-to-image support
+    // Seedance
+    if (fetchParams.frameImages) {
+        taskPayload.frameImages = fetchParams.frameImages
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify([taskPayload])
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data?.data) {
+        const errorObj = data?.errors?.[0] || {}
+        const formattedError = {
+            status: response.status,
+            statusText: errorObj?.code || 'Error',
+            error: {
+                message: errorObj?.message || 'Runware generation failed',
+                type: errorObj?.code || 'runware_error'
+            },
+            original_response_from_provider: data
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    // ---- Async polling using Runware `getResponse` ----
+    let attempts = 0
+    const maxAttempts = 120            // ~10 minutes max (initial 2 s, capped at 10 s)
+    let delay = 2000                   // start with 2 s delay (recommended 1-2 s)
+    let lastPollPayload = data         // keep reference for timeout / error reporting
+
+    while (attempts < maxAttempts) {
+        await new Promise(r => setTimeout(r, delay))
+        attempts++
+        delay = Math.min(Math.round(delay * 1.5), 10000) // exponential back-off, cap at 10 s
+
+        const pollRes = await fetch(providerUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${providerKey}`
+            },
+            body: JSON.stringify([{ taskType: 'getResponse', taskUUID }])
+        })
+
+        lastPollPayload = await pollRes.json()
+
+        // If HTTP error, surface provider message without throwing (credits should not be fully refunded)
+        if (!pollRes.ok) {
+            const providerError = lastPollPayload?.errors?.[0] || {}
+            return {
+                error: {
+                    message: providerError.message || 'Polling request failed',
+                    type: providerError.code || 'polling_error',
+                    original_response_from_provider: lastPollPayload
+                }
+            }
+        }
+
+        // Check for error specific to this task in errors array first
+        const errorTask = lastPollPayload.errors?.find(e => e.taskUUID === taskUUID)
+        if (errorTask) {
+            return {
+                error: {
+                    message: errorTask.message || 'Runware generation failed',
+                    type: errorTask.code || 'runware_error',
+                    original_response_from_provider: lastPollPayload
+                }
+            }
+        }
+
+        // Locate latest state of our task in data array
+        const pollTask = lastPollPayload.data?.find(item => item.taskUUID === taskUUID)
+
+        if (!pollTask) {
+            // If the task is not found, keep polling – provider might not have registered it yet
+            continue
+        }
+
+        if (pollTask.status === 'success' && pollTask.videoURL) {
+            return {
+                created: Math.floor(Date.now() / 1000),
+                data: [{
+                    url: pollTask.videoURL,
+                    revised_prompt: null,
+                }],
+                cost: pollTask.cost
+            }
+        }
+
+        // If status is error (but not surfaced in errors array) – treat similarly
+        if (pollTask.status === 'error') {
+            return {
+                error: {
+                    message: pollTask.message || 'Runware generation failed',
+                    type: pollTask.code || 'runware_error',
+                    original_response_from_provider: lastPollPayload
+                }
+            }
+        }
+    }
+
+    // Timed-out – return timeout error (do not throw)
+    return {
+        error: {
+            message: 'Video generation timed out on Runware – please try again later',
+            type: 'timeout_error',
+            original_response_from_provider: lastPollPayload
+        }
     }
 }

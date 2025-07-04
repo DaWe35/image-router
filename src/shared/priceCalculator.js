@@ -22,7 +22,7 @@ export function preCalcPrice(modelName, size, quality) {
         case PRICING_TYPES.CALCULATED:
             return modelConfig.providers[0].pricing.calcFunction(quality)
         case PRICING_TYPES.POST_GENERATION:
-            return modelConfig.providers[0].pricing.range.max
+            return modelConfig.providers[0].pricing.range?.max ?? modelConfig.providers[0].pricing.value
         default:
             throw new Error('Invalid price format for model ' + modelConfig.name + ', please contact support')
     }
