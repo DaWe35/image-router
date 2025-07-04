@@ -10,7 +10,7 @@ class Hailuo02Pro {
         model_name: 'minimax/hailuo-02/pro',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.44, // price per video in USD
+          value: 0.49, // price per video in USD
         },
         applyImage: this.applyImage,
       }],
