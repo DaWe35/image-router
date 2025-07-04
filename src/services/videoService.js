@@ -855,11 +855,13 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         includeCost: true
     }
 
-    switch (fetchParams.model) {
-        case 'bytedance:1@1':
-            taskPayload.width = 1248
-            taskPayload.height = 704
-            break
+    if (!fetchParams.image) {
+        switch (fetchParams.model) {
+            case 'bytedance:1@1':
+                taskPayload.width = 1248
+                taskPayload.height = 704
+                break
+        }
     }
 
     // Image-to-image support
