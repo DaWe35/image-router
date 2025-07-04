@@ -9,8 +9,8 @@ const router = express.Router()
 const videoGenerationHandler = createGenerationHandler({ validateParams: validateVideoParams, generateFn: generateVideo })
 
 const uploadFields = upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'image[]', maxCount: 1 }
+    { name: 'image', maxCount: 6 },
+    { name: 'image[]', maxCount: 6 }
 ])
 
 const normalizeUploadFiles = normalizeUploadFilesFactory(['image'])

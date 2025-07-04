@@ -26,9 +26,6 @@ export function validateVideoParams(req) {
     // Validate image uploads (single image only for now)
     const validFiles = {}
     if (files.image) {
-        if (Array.isArray(files.image) && files.image.length > 1) {
-            throw new Error('Maximum of 1 image can be uploaded for video generation')
-        }
         validFiles.image = Array.isArray(files.image) ? files.image[0] : files.image
     }
     
