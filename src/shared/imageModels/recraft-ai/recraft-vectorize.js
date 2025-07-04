@@ -14,7 +14,7 @@ class RecraftVectorize {
         },
         applyImage: this.applyImage
       }],
-      release_date: '2025-07-01',
+      release_date: '2024-10-30',
       examples: [
         {
           image: '/model-examples/recraft-vectorize-compressed-2025-06-24T13-39-45-891Z.svg'
