@@ -864,8 +864,9 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
 
     // Image-to-image support
     // Seedance
-    if (fetchParams.frameImages) {
-        taskPayload.frameImages = fetchParams.frameImages
+    if (fetchParams.image) {
+        const images = Array.isArray(fetchParams.image) ? fetchParams.image : [fetchParams.image]
+        taskPayload.frameImages = images.map(id => ({ inputImage: id }))
     }
 
     const response = await fetch(providerUrl, {
