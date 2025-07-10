@@ -861,6 +861,10 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                 taskPayload.width = 1248
                 taskPayload.height = 704
                 break
+            case 'klingai:5@3':
+                taskPayload.width = 1920
+                taskPayload.height = 1080
+                break
         }
     }
 
