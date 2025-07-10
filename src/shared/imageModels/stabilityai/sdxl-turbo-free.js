@@ -6,15 +6,15 @@ class SdxlTurboFree {
       id: 'stabilityai/sdxl-turbo:free',
       providers: [
         {
-          id: 'runware',
-          model_name: 'civitai:215418@273102',
+          id: 'deepinfra',
+          model_name: 'stabilityai/sdxl-turbo',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0,
           },
         }, {
-          id: 'deepinfra',
-          model_name: 'stabilityai/sdxl-turbo',
+          id: 'runware',
+          model_name: 'civitai:215418@273102',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0,

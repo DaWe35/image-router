@@ -7,6 +7,13 @@ class SdxlTurbo {
       id: 'stabilityai/sdxl-turbo',
       providers: [
         {
+          id: 'deepinfra',
+          model_name: 'stabilityai/sdxl-turbo',
+          pricing: {
+            type: PRICING_TYPES.FIXED,
+            value: 0.0002,
+          }
+        }, {
           id: 'runware',
           model_name: 'civitai:215418@273102',
           pricing: {
@@ -14,13 +21,6 @@ class SdxlTurbo {
             postCalcFunction: postCalcRunware,
             value: 0.0006,
           },
-        }, {
-          id: 'deepinfra',
-          model_name: 'stabilityai/sdxl-turbo',
-          pricing: {
-            type: PRICING_TYPES.FIXED,
-            value: 0.0002,
-          }
         },
         /* {
           name: 'replicate',
