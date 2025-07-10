@@ -1,6 +1,7 @@
 import Veo2 from './google/veo-2.js'
 import Veo2Mock from './google/veo-2-mock.js'
 import Veo3 from './google/veo-3.js'
+import Veo3Fast from './google/veo-3-fast.js'
 
 import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
 import Kling21Standard from './kwaivgi/kling-v2.1-standard.js'
@@ -18,6 +19,7 @@ import TestVideo from './test/test-video.js'
 const modelInstances = [
   new Veo2(),
   new Veo3(),
+  new Veo3Fast(),
   //new Veo2Mock(),
 
   new Kling16Standard(),
