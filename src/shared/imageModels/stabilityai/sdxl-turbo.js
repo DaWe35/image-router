@@ -11,7 +11,7 @@ class SdxlTurbo {
           model_name: 'civitai:215418@273102',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalc: postCalcRunware,
+            postCalcFunction: postCalcRunware,
             value: 0.0006,
           },
         }, {
