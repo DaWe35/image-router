@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { postCalcRunware } from '../../../services/imageHelpers.js'
 
 class SdxlTurbo {
   constructor() {
@@ -6,6 +7,14 @@ class SdxlTurbo {
       id: 'stabilityai/sdxl-turbo',
       providers: [
         {
+          id: 'runware',
+          model_name: 'civitai:215418@273102',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalc: postCalcRunware,
+            value: 0.0006,
+          },
+        }, {
           id: 'deepinfra',
           model_name: 'stabilityai/sdxl-turbo',
           pricing: {
