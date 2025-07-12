@@ -567,10 +567,11 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     }
 
     const taskUUID = usageLogId
+    const taskType = fetchParams.model.includes('runware:110@1') ? 'imageBackgroundRemoval' : 'imageInference'
 
     // Build the Runware task payload
     const taskPayload = {
-        taskType: 'imageInference',
+        taskType,
         taskUUID,
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
@@ -592,6 +593,11 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.referenceImages = Array.isArray(fetchParams.referenceImages) 
             ? fetchParams.referenceImages 
             : [fetchParams.referenceImages]
+    }
+
+    // RMBG
+    if (fetchParams.inputImage) {
+        taskPayload.inputImage = fetchParams.inputImage
     }
     
     // SD3

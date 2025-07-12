@@ -11,3 +11,9 @@ export async function applyReferenceImages(params) {
     delete params.files.image
     return params
 }
+
+export async function applySingleInputImage(params) {
+    params.inputImage = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+}

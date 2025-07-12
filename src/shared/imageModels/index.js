@@ -67,6 +67,7 @@ import HiDreamI1Fast from './hidream-ai/HiDream-I1-Fast.js'
 import HiDreamI1Dev from './hidream-ai/HiDream-I1-Dev.js'
 import HiDreamI1Full from './hidream-ai/HiDream-I1-Full.js'
 import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
+import RMBG20 from './runware/RMBG-2.0.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
 import InfiniteYou from './bytedance/infiniteyou.js'
@@ -140,6 +141,7 @@ const modelInstances = [
   new DreamShaper(),
   new RealisticVision(),
   new RealVisXL(),
+  new RMBG20(),
   new HiDreamI1Fast(),
   new HiDreamI1Dev(),
   new HiDreamI1Full(),
