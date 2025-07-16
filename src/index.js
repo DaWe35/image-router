@@ -69,7 +69,7 @@ const ipLimiter = rateLimit({
 // API Key based rate limiting configuration
 const userLimiter = rateLimit({
     windowMs: 1 * 1000, // 1 seconds
-    max: 6, // limit each API key to 6 requests
+    max: 10, // limit each API key to 10 requests
     keyGenerator: (req, res) => {
         return res.locals.key.user.id
     },
