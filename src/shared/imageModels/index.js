@@ -70,6 +70,7 @@ import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 import RMBG20 from './runware/RMBG-2.0.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
+import SeedreamEditV3 from './bytedance/seededit-v3.js'
 import InfiniteYou from './bytedance/infiniteyou.js'
 import InfiniteYouFree from './bytedance/infiniteyou-free.js'
 import Chroma from './lodestones/chroma.js'
@@ -147,6 +148,7 @@ const modelInstances = [
   new HiDreamI1Full(),
   
   new SeedreamV3(),
+  new SeedreamEditV3(),
   new HiDreamI1Free(),
   new Chroma(),
   new ChromaFree(),

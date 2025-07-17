@@ -17,3 +17,9 @@ export async function applySingleInputImage(params) {
     delete params.files.image
     return params
 }
+
+export async function applyFalImage(params) {
+    params.image_url = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+  }

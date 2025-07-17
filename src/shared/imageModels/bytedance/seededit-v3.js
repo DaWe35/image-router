@@ -1,26 +1,20 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { applyFalImage } from '../../applyImage.js'
 
-class RecraftV3 {
+class SeedreamEditV3 {
   constructor() {
     this.data = {
-      id: 'recraft-ai/recraft-v3',
+      id: 'bytedance/seedream-3',
       providers: [{
         id: 'fal',
-        model_name: 'fal-ai/recraft/v3/text-to-image',
+        model_name: 'fal-ai/bytedance/seededit/v3/edit-image',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.04,
+          value: 0.03,
         },
         applyImage: applyFalImage
       }],
-      arena_score: 1110,
-      release_date: '2024-10-30',
-      examples: [
-        {
-          image: '/model-examples/recraft-v3-2025-04-03T15-09-40-800Z.webp'
-        }
-      ]
+      release_date: '2025-07-06'
     }
   }
 
@@ -29,4 +23,4 @@ class RecraftV3 {
   }
 }
 
-export default RecraftV3 
+export default SeedreamEditV3 

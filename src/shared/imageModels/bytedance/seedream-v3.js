@@ -10,7 +10,8 @@ class SeedreamV3 {
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.03,
-        }
+        },
+        applyImage: this.applyImage
       }],
       release_date: '2025-04-16',
       arena_score: 1160,
@@ -20,6 +21,13 @@ class SeedreamV3 {
         }
       ]
     }
+  }
+
+  async applyImage(params) {
+    params.image_url = await processSingleFile(params.files.image, 'datauri')
+    params.model = 'fal-ai/bytedance/seededit/v3/edit-image'
+    delete params.files.image
+    return params
   }
 
   getData() {

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile } from '../../../services/imageHelpers.js'
+import { applyFalImage } from '../../applyImage.js'
 
 class RecraftVectorize {
   constructor() {
@@ -12,7 +12,7 @@ class RecraftVectorize {
           type: PRICING_TYPES.FIXED,
           value: 0.01
         },
-        applyImage: this.applyImage
+        applyImage: applyFalImage
       }],
       release_date: '2024-10-30',
       examples: [
@@ -25,13 +25,6 @@ class RecraftVectorize {
 
   getData() {
     return this.data
-  }
-
-  // Convert uploaded image to a base64 data URI and attach as image_url
-  async applyImage(params) {
-    params.image_url = await processSingleFile(params.files.image, 'datauri')
-    delete params.files.image
-    return params
   }
 }
 
