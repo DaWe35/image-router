@@ -223,7 +223,6 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        // TODO: Enable customization
         body: body
     })
 

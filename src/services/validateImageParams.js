@@ -35,7 +35,7 @@ export function validateImageParams(req) {
 
   // Restrict size for free tier models
   if (model.endsWith(':free')) {
-    const { width, height } = extractWidthHeight(fetchParams.size)
+    const { width, height } = extractWidthHeight(size)
     if (width > 1024 || height > 1024) {
       throw new Error('Free models support maximum size of 1024x1024. Please use the paid models for higher quality.')
     }
