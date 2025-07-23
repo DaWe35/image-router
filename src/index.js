@@ -54,7 +54,7 @@ const generalLimiter = rateLimit({
 
 const ipLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 120, // limit each IP to 100 requests per minute
+    max: 6000, // allow up to 100 requests/sec average per IP
     keyGenerator: ipKeyGenerator, // Use custom key generator
     message: {
         error: {
@@ -66,13 +66,18 @@ const ipLimiter = rateLimit({
     legacyHeaders: false
 })
 
-// API Key based rate limiting configuration
-const userLimiter = rateLimit({
-    windowMs: 1 * 1000, // 1 seconds
-    max: 10, // limit each API key to 10 requests
-    keyGenerator: (req, res) => {
-        return res.locals.key.user.id
+// Dynamic API-key rate limiters (per 1-second window)
+// Helper to build a rate-limit function from balance-to-limit converter
+const buildUserLimiter = (calcFn, min, max) => rateLimit({
+    windowMs: 1 * 1000,
+    max: (req, res) => {
+        const credits = res.locals.key?.user?.credits ?? 0 // stored in 1e-4 USD units
+        const usdBalance = credits / 10000
+        const proposed = calcFn(usdBalance)
+        const clamped = Math.max(min, Math.min(max, Math.floor(proposed)))
+        return clamped
     },
+    keyGenerator: (req, res) => res.locals.key.user.id,
     message: {
         error: {
             message: 'API key rate limit exceeded, please try again later.',
@@ -83,17 +88,22 @@ const userLimiter = rateLimit({
     legacyHeaders: false
 })
 
+// Image generation: limit = balanceUSD * 4 (min 6, max 100)
+const userImageLimiter = buildUserLimiter((usd) => usd * 4, 6, 100)
+
+// Video generation: limit = balanceUSD / 6 (min 1, max 20)
+const userVideoLimiter = buildUserLimiter((usd) => usd / 6, 1, 20)
+
 app.use(generalLimiter) // Apply general limiter to all other routes
 
-// Define a protected middleware chain based on DATABASE_URL availability
-const protectedChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userLimiter] : [ipLimiter]
+// Protected middleware chains (depend on DB availability)
+const protectedImageChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userImageLimiter] : [ipLimiter]
+const protectedVideoChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userVideoLimiter] : [ipLimiter]
 
-// Apply the protected middleware chain to both image generations and edits routes
-app.use('/v1/openai/images/generations', ...protectedChain)
-app.use('/v1/openai/images/edits', ...protectedChain)
-
-// Apply the protected middleware chain to video generations route
-app.use('/v1/openai/videos/generations', ...protectedChain)
+// Apply chains to routes
+app.use('/v1/openai/images/generations', ...protectedImageChain)
+app.use('/v1/openai/images/edits', ...protectedImageChain)
+app.use('/v1/openai/videos/generations', ...protectedVideoChain)
 
 // Debug endpoint that returns the detected client IP
 app.get('/ip', (req, res) => {
