@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
-import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
+import { objectToFormData, getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
@@ -569,6 +569,8 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     const taskUUID = usageLogId
     const taskType = fetchParams.model.includes('runware:110@1') ? 'imageBackgroundRemoval' : 'imageInference'
 
+    const { width, height } = extractWidthHeight(fetchParams.size)
+
     // Build the Runware task payload
     const taskPayload = {
         taskType,
@@ -576,8 +578,8 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
         outputFormat: "WEBP",
-        width: 1024,
-        height: 1024,
+        width: width || 1024,
+        height: height || 1024,
         numberResults: 1,
         includeCost: true
     }

@@ -11,7 +11,8 @@ const bodySchema = z.object({
     invalid_type_error: "'model' must be a string"
   }).min(1, { message: "'model' is a required parameter" }),
   response_format: z.enum(['url', 'b64_json']).default('url'),
-  quality: z.enum(['auto', 'low', 'medium', 'high']).default('auto')
+  quality: z.enum(['auto', 'low', 'medium', 'high']).default('auto'),
+  size: z.string().regex(/^\d+x\d+$/,{ message: "'size' must be in the format 'WIDTHxHEIGHT' (e.g. '1024x768')" }).default('auto')
 })
 
 export function validateImageParams(req) {
@@ -20,7 +21,7 @@ export function validateImageParams(req) {
     throw new Error(parseResult.error.errors[0].message)
   }
 
-  const { prompt, model, response_format, quality } = parseResult.data
+  const { prompt, model, response_format, quality, size } = parseResult.data
   const files = req.files || {}
 
   if (model === 'google/gemini-2.0-flash-prev') {
@@ -42,7 +43,7 @@ export function validateImageParams(req) {
     validFiles.mask = Array.isArray(files.mask) ? files.mask[0] : files.mask
   }
 
-  return { prompt, model, response_format, quality, files: validFiles }
+  return { prompt, model, response_format, quality, size, files: validFiles }
 }
 
 export const imageRequestSchema = bodySchema
