@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcRunware, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
 
 class Seedance1Lite {
   constructor() {
@@ -11,7 +11,7 @@ class Seedance1Lite {
           model_name: 'bytedance:1@1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcRunware,
+            postCalcFunction: postCalcSimple,
             value: 0.144,
           },
           applyImage: this.applyImageRunware,

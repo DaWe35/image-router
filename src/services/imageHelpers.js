@@ -85,7 +85,7 @@ export function getGeminiApiKey(model) {
     }
 }
 
-export function postCalcRunware(imageResult) {
+export function postCalcSimple(imageResult) {
     try {
         // just return the cost, it's already in the result
         return imageResult.cost

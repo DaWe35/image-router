@@ -12,6 +12,7 @@ class SdxlTurboFree {
             type: PRICING_TYPES.FIXED,
             value: 0,
           },
+          applyQuality: this.applyQuality
         }, {
           id: 'runware',
           model_name: 'civitai:215418@273102',
@@ -29,6 +30,19 @@ class SdxlTurboFree {
         }
       ]
     }
+  }
+
+  applyQuality(params) {
+    if (params.quality === 'high') {
+      throw new Error(`Free model only supports 'medium' and 'low' quality. Please use the paid model 'stabilityai/sdxl-turbo' for higher quality.`)
+    }
+    const qualitySteps = {
+      low: 2,
+      medium: 5,
+    }
+    params.num_inference_steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   getData() {

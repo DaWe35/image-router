@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcRunware } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 
 class Kling21Master {
   constructor() {
@@ -11,7 +11,7 @@ class Kling21Master {
           model_name: 'klingai:5@3',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcRunware,
+            postCalcFunction: postCalcSimple,
             value: 0.924,
           },
           applyImage: this.applyImageRunware,

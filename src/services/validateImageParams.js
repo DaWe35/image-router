@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { imageModels } from '../shared/imageModels/index.js'
+import { extractWidthHeight } from './imageHelpers.js'
 
 const bodySchema = z.object({
   prompt: z.string({
@@ -31,6 +32,14 @@ export function validateImageParams(req) {
   const modelConfig = imageModels[model]
   if (!modelConfig) throw new Error(`model '${model}' is not available`)
   if (!modelConfig?.providers[0]?.id) throw new Error(`model provider for '${model}' is not available`)
+
+  // Restrict size for free tier models
+  if (model.endsWith(':free')) {
+    const { width, height } = extractWidthHeight(fetchParams.size)
+    if (width > 1024 || height > 1024) {
+      throw new Error('Free models support maximum size of 1024x1024. Please use the paid models for higher quality.')
+    }
+  }
 
   // Validate files
   const validFiles = {}

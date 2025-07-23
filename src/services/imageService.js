@@ -200,9 +200,22 @@ async function generateNanoGPT({ fetchParams, userId }) {
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ fetchParams, userId }) {
-    const providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
+async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
+    const providerUrl = 'https://api.deepinfra.com/v1/inference/' + fetchParams.model
     const providerKey = process.env.DEEPINFRA_API_KEY
+
+    const body = JSON.stringify({
+        prompt: fetchParams.prompt,
+        num_images: 1,
+    })
+
+    const { width, height } = extractWidthHeight(fetchParams.size)
+    if (width) body.width = width
+    if (height) body.height = height
+
+    if (fetchParams.num_inference_steps) body.num_inference_steps = fetchParams.num_inference_steps
+    if (fetchParams.steps) body.steps = fetchParams.steps
+
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -211,14 +224,7 @@ async function generateDeepInfra({ fetchParams, userId }) {
             'Authorization': `Bearer ${providerKey}`
         },
         // TODO: Enable customization
-        body: JSON.stringify({
-            prompt: fetchParams.prompt,
-            model: fetchParams.model,
-            user: userId,
-            //n: 1,
-            //size: '1024x1024',
-            //response_format: 'url'
-        })
+        body: body
     })
 
     if (!response.ok) {
@@ -239,11 +245,18 @@ async function generateDeepInfra({ fetchParams, userId }) {
     }
 
     const data = await response.json()
-    return data
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: data.images.map(image => ({
+            b64_json: image,
+            revised_prompt: null,
+        })),
+        cost: data.cost
+    }
 }
 
 // Replicate format API call
-async function generateReplicate({ fetchParams }) {
+async function generateReplicate({ fetchParams, userId, usageLogId }) {
     const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
@@ -319,7 +332,7 @@ async function generateReplicate({ fetchParams }) {
 
 
 // OpenAI format API call
-async function generateGemini({ fetchParams, userId }) {
+async function generateGemini({ fetchParams, userId, usageLogId }) {
     const providerKey = getGeminiApiKey(fetchParams.model)
     
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`
