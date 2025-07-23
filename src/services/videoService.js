@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey } from './imageHelpers.js'
+import { getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
@@ -855,7 +855,12 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         includeCost: true
     }
 
-    if (!fetchParams.image) {
+    const { width, height } = extractWidthHeight(fetchParams.size)
+
+    if (width && height) {
+        taskPayload.width = width
+        taskPayload.height = height
+    } else if (!fetchParams.image) {
         switch (fetchParams.model) {
             case 'bytedance:1@1':
                 taskPayload.width = 1248
