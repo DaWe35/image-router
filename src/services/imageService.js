@@ -112,6 +112,7 @@ async function generateOpenAI({ fetchParams, userId }) {
         prompt: fetchParams.prompt,
         model: fetchParams.model,
         quality: fetchParams.quality,
+        size: fetchParams.size,
         user: userId,
         n: 1,
     }
