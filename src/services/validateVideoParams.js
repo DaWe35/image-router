@@ -5,8 +5,11 @@ const bodySchema = z.object({
   prompt: z.string().min(1, { message: "'prompt' is a required parameter" }),
   model: z.string().min(1, { message: "'model' is a required parameter" }),
   response_format: z.enum(['url', 'b64_json']).default('url'),
-  size: z.string().regex(/^\d+x\d+$/,{ message: "'size' must be in the format 'WIDTHxHEIGHT' (e.g. '1024x768')" }).default('auto')
-})
+  size: z.string()
+    .default('auto')
+    .refine(val => val === 'auto' || /^\d+x\d+$/.test(val), {
+      message: "'size' must be 'auto' or in the format 'WIDTHxHEIGHT' (e.g. '1024x768')"
+    })})
 
 // Validate the parameters for the video generation request and return only the valid parameters
 export function validateVideoParams(req) {

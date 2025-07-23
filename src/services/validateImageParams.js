@@ -13,7 +13,12 @@ const bodySchema = z.object({
   }).min(1, { message: "'model' is a required parameter" }),
   response_format: z.enum(['url', 'b64_json']).default('url'),
   quality: z.enum(['auto', 'low', 'medium', 'high']).default('auto'),
-  size: z.string().regex(/^\d+x\d+$/,{ message: "'size' must be in the format 'WIDTHxHEIGHT' (e.g. '1024x768')" }).default('auto')
+  // Allow explicit 'auto' or dimensions like "1024x768"
+  size: z.string()
+    .default('auto')
+    .refine(val => val === 'auto' || /^\d+x\d+$/.test(val), {
+      message: "'size' must be 'auto' or in the format 'WIDTHxHEIGHT' (e.g. '1024x768')"
+    })
 })
 
 export function validateImageParams(req) {

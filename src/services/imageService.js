@@ -204,10 +204,10 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
     const providerUrl = 'https://api.deepinfra.com/v1/inference/' + fetchParams.model
     const providerKey = process.env.DEEPINFRA_API_KEY
 
-    const body = JSON.stringify({
+    const body = {
         prompt: fetchParams.prompt,
         num_images: 1,
-    })
+    }
 
     const { width, height } = extractWidthHeight(fetchParams.size)
     if (width) body.width = width
@@ -223,20 +223,28 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: body
+        body: JSON.stringify(body)
     })
 
     if (!response.ok) {
         const errorResponse = await response.json()
+
+        const extractedMessages = Array.isArray(errorResponse?.detail)
+            ? errorResponse.detail.map(d => {
+                const loc = Array.isArray(d?.loc) ? d.loc.join('.') : String(d?.loc || '')
+                return loc + " " + d?.msg.toLowerCase()
+            }).filter(Boolean)
+            : []
+
         const formattedError = {
-            status: errorResponse?.status || 500,
-            statusText: errorResponse?.statusText || 'Unknown Error',
+            status: errorResponse?.status || response.status || 500,
+            statusText: errorResponse?.statusText || response.statusText || 'Unknown Error',
             error: {
-                message: errorResponse?.error?.message || 'An unknown error occurred (152)',
-                type: errorResponse?.error?.type || errorResponse?.statusText || 'Unknown Error'
+                message: extractedMessages.join('; ') || 'An unknown error occurred (deepinfra error format)',
+                type: errorResponse.detail[0]?.type || 'Unknown Error'
             },
             original_response_from_provider: errorResponse
-          }
+        }
         throw {
             status: response.status,
             errorResponse: formattedError
@@ -250,7 +258,7 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
             b64_json: image,
             revised_prompt: null,
         })),
-        cost: data.cost
+        cost: data.inference_status.cost
     }
 }
 
