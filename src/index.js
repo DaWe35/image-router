@@ -14,8 +14,12 @@ import { getGeminiApiKey } from './services/imageHelpers.js'
 import { storageService } from './services/storageService.js'
 import YAML from 'yaml'
 import { openApiDocument } from './openapiDoc.js'
+import { exec } from 'child_process'
+import { promisify } from 'util'
 
 dotenv.config()
+
+const execAsync = promisify(exec)
 
 const app = express()
 const port = 3000
@@ -205,6 +209,25 @@ app.get('/timeout-test',
         }, delay)
     }
 )
+
+// Endpoint returns 507 if disk space is low (80% used)
+// This endpoint can be watched by UptimeRobot.
+app.get('/disk-space', async (req, res) => {
+    try {
+        const { stdout } = await execAsync('df -k /')
+        const used = parseInt(stdout.trim().split('\n')[1].split(/\s+/)[4]) // "Use%" column
+
+        if (used > 80) {
+            console.log('Low disk space:', used + '% used')
+            return res.sendStatus(507)
+        }
+
+        res.sendStatus(200)
+    } catch (error) {
+        console.error('Disk space check error:', error)
+        res.sendStatus(500)
+    }
+})
 
 // Health check
 app.get('/health', (req, res) => {
