@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class JuggernautLightningFlux {
   constructor() {
@@ -10,11 +10,11 @@ class JuggernautLightningFlux {
         model_name: 'rundiffusion:110@101',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: postCalcRunware,
+          postCalcFunction: postCalcSimple,
           range: {
             min: 0.0008,
             average: 0.0017,
-            max: 0.0034
+            max: 0.0142
           }
         },
         applyQuality: this.applyQuality

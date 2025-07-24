@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class Sd35 {
   constructor() {
@@ -9,9 +10,11 @@ class Sd35 {
           id: 'deepinfra',
           model_name: 'stabilityai/sd3.5',
           pricing: {
-            type: PRICING_TYPES.FIXED,
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
             value: 0.06,
-          }
+          },
+          applyQuality: this.applyQuality
         },
         /* {
           name: 'replicate',
@@ -30,6 +33,17 @@ class Sd35 {
         }
       ]
     }
+  }
+
+  applyQuality(params) {
+    const qualitySteps = {
+      low: 25,
+      medium: 35,
+      high: 50
+    }
+    params.num_inference_steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   getData() {

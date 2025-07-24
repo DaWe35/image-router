@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class HiDreamI1Dev {
   constructor() {
@@ -10,7 +10,7 @@ class HiDreamI1Dev {
         model_name: 'runware:97@2',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: postCalcRunware,
+          postCalcFunction: postCalcSimple,
           range: {
             min: 0.0019,
             average: 0.0045,

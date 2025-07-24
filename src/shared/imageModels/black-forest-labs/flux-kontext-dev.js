@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { applyReferenceImages } from '../../applyImage.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class FluxKontextPro {
   constructor() {
@@ -12,11 +12,11 @@ class FluxKontextPro {
           model_name: 'runware:106@1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcRunware,
+            postCalcFunction: postCalcSimple,
             range: {
               min: 0.01,
               average: 0.0105,
-              max: 0.03
+              max: 0.007
             }
           },
           applyImage: applyReferenceImages,

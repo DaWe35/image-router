@@ -35,7 +35,7 @@ describe('Image Router API Tests', () => {
                     if (provider.pricing.type === 'fixed') {
                         expect(provider.pricing).toHaveProperty('value')
                         expect(typeof provider.pricing.value).toBe('number')
-                    } else if (provider.pricing.type === 'calculated' || provider.pricing.type === 'post_generation') {
+                    } else if (provider.pricing.type === 'calculated') {
                         expect(provider.pricing).toHaveProperty('range')
                         expect(provider.pricing.range).toHaveProperty('min')
                         expect(provider.pricing.range).toHaveProperty('average')
@@ -43,6 +43,19 @@ describe('Image Router API Tests', () => {
                         expect(typeof provider.pricing.range.min).toBe('number')
                         expect(typeof provider.pricing.range.average).toBe('number')
                         expect(typeof provider.pricing.range.max).toBe('number')
+                    } else if (provider.pricing.type === 'post_generation') {
+                        // post_generation pricing can be specified either as a range or a fixed value
+                        if (provider.pricing.range) {
+                            expect(provider.pricing.range).toHaveProperty('min')
+                            expect(provider.pricing.range).toHaveProperty('average')
+                            expect(provider.pricing.range).toHaveProperty('max')
+                            expect(typeof provider.pricing.range.min).toBe('number')
+                            expect(typeof provider.pricing.range.average).toBe('number')
+                            expect(typeof provider.pricing.range.max).toBe('number')
+                        } else {
+                            expect(provider.pricing).toHaveProperty('value')
+                            expect(typeof provider.pricing.value).toBe('number')
+                        }
                     }
                 })
 

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class JuggernautXL {
   constructor() {
@@ -10,11 +10,11 @@ class JuggernautXL {
         model_name: 'civitai:133005@782002',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: postCalcRunware,
+          postCalcFunction: postCalcSimple,
           range: {
             min: 0.0025,
             average: 0.005,
-            max: 0.0095
+            max: 0.038
           }
         },
         applyQuality: this.applyQuality

@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey } from './imageHelpers.js'
+import { getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
@@ -849,21 +849,39 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         deliveryMethod: 'async',
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
-        duration: 5,
+        duration: fetchParams.model.includes('hailuo-02') ? 6 : 5,
         outputFormat: "mp4",
         numberResults: 1,
         includeCost: true
     }
 
-    if (!fetchParams.image) {
+    const { width, height } = extractWidthHeight(fetchParams.size)
+
+    if (width && height) {
+        taskPayload.width = width
+        taskPayload.height = height
+    } else if (!fetchParams.image) {
         switch (fetchParams.model) {
             case 'bytedance:1@1':
                 taskPayload.width = 1248
                 taskPayload.height = 704
                 break
-            case 'klingai:5@3':
+            case 'bytedance:2@1':
+                taskPayload.width = 1920
+                taskPayload.height = 1088
+                break
+            case 'klingai:5@1':
+            case 'klingai:4@3':
+                taskPayload.width = 1280
+                taskPayload.height = 720
+                break
+            case 'klingai:5@2':
                 taskPayload.width = 1920
                 taskPayload.height = 1080
+                break
+            case 'minimax:3@1':
+                taskPayload.width = 1366
+                taskPayload.height = 768
                 break
         }
     }

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class SdxlTurbo {
   constructor() {
@@ -10,15 +10,17 @@ class SdxlTurbo {
           id: 'deepinfra',
           model_name: 'stabilityai/sdxl-turbo',
           pricing: {
-            type: PRICING_TYPES.FIXED,
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
             value: 0.0002,
-          }
+          },
+          applyQuality: this.applyQuality
         }, {
           id: 'runware',
           model_name: 'civitai:215418@273102',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcRunware,
+            postCalcFunction: postCalcSimple,
             value: 0.0006,
           },
         },
@@ -39,6 +41,17 @@ class SdxlTurbo {
         }
       ]
     }
+  }
+
+  applyQuality(params) {
+    const qualitySteps = {
+      low: 2,
+      medium: 5,
+      high: 10,
+    }
+    params.num_inference_steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   getData() {

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class Sdxl {
   constructor() {
@@ -11,7 +11,7 @@ class Sdxl {
           model_name: 'civitai:101055@128078',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcRunware,
+            postCalcFunction: postCalcSimple,
             range: {
               min: 0.0013,
               average: 0.0019,

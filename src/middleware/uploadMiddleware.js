@@ -1,5 +1,6 @@
 import multer from 'multer'
 import path from 'path'
+import fs from 'fs/promises'
 
 // Configure multer disk storage to /tmp with unique filenames
 const storage = multer.diskStorage({
@@ -46,4 +47,40 @@ export const normalizeUploadFilesFactory = (fieldNames = []) => {
         }
         next()
     }
+}
+
+// Automatically delete any files uploaded via Multer once the response is finished
+export const cleanupUploadedFiles = (req, res, next) => {
+    // Gather every file object Multer attached
+    const uploadedFiles = []
+
+    if (req.file) uploadedFiles.push(req.file)
+
+    if (req.files) {
+        Object.values(req.files).forEach(val => {
+            if (Array.isArray(val)) uploadedFiles.push(...val)
+            else if (val) uploadedFiles.push(val)
+        })
+    }
+
+    // If no files -> nothing to clean up
+    if (uploadedFiles.length === 0) return next()
+
+    const deleteFiles = async () => {
+        for (const file of uploadedFiles) {
+            if (!file?.path) continue
+            try {
+                await fs.unlink(file.path)
+            } catch (err) {
+                // Silent fail – tmp cleaners or next reboot will remove leftovers
+                console.error(`Failed to remove temp upload ${file.path}:`, err.message)
+            }
+        }
+    }
+
+    // Remove when the response has been completely sent or the connection is closed
+    res.on('finish', deleteFiles)
+    res.on('close', deleteFiles)
+
+    next()
 } 

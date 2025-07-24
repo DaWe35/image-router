@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Seedance1Pro {
   constructor() {
@@ -7,6 +8,19 @@ class Seedance1Pro {
       id: 'bytedance/seedance-1-pro',
       providers: [
         {
+          id: 'runware',
+          model_name: 'bytedance:2@1',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.1132,
+              average: 0.57,
+              max: 0.7,
+            },
+          },
+          applyImage: applyImageRunwareVideo,
+        }, {
         id: 'wavespeed',
         model_name: 'bytedance/seedance-v1-pro-t2v-720p',
         pricing: {

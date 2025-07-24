@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcRunware } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Kling21Master {
   constructor() {
@@ -8,13 +9,13 @@ class Kling21Master {
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:5@3',
+          model_name: 'klingai:4@3',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcRunware,
+            postCalcFunction: postCalcSimple,
             value: 0.924,
           },
-          applyImage: this.applyImageRunware,
+          applyImage: applyImageRunwareVideo,
         },
         {
           id: 'replicate',
@@ -37,12 +38,6 @@ class Kling21Master {
 
   async applyImage(params) {
     params.start_image = await processSingleFile(params.files.image, 'datauri')
-    delete params.files.image
-    return params
-  }
-
-  async applyImageRunware(params) {
-    params.image = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     delete params.files.image
     return params
   }

@@ -15,7 +15,7 @@ class GptImage1 {
             range: {
               min: 0.011,
               average: 0.167,
-              max: 0.5
+              max: 0.3
             },
           },
           applyQuality: this.applyQuality,
@@ -29,7 +29,7 @@ class GptImage1 {
             range: {
               min: 0.011,
               average: 0.167,
-              max: 0.5
+              max: 0.3
             },
           },
           applyQuality: this.applyQuality,

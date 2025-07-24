@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class Flux11Pro {
   constructor() {
@@ -8,7 +9,8 @@ class Flux11Pro {
         id: 'deepinfra',
         model_name: 'black-forest-labs/FLUX-1.1-pro',
         pricing: {
-          type: PRICING_TYPES.FIXED,
+          type: PRICING_TYPES.POST_GENERATION,
+          postCalcFunction: postCalcSimple,
           value: 0.04,
         }
       }],

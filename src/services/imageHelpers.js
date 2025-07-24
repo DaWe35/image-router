@@ -85,7 +85,7 @@ export function getGeminiApiKey(model) {
     }
 }
 
-export function postCalcRunware(imageResult) {
+export function postCalcSimple(imageResult) {
     try {
         // just return the cost, it's already in the result
         return imageResult.cost
@@ -104,3 +104,25 @@ export function postCalcNanoGPTDiscounted(imageResult) {
         return 1 // return 1 for safety, this should never happen
     }
 }
+
+// Function to extract width and height from a size string (e.g. "1024x1024")
+// Returns an object with numeric `width` and `height` properties. If the
+// provided value is the special keyword 'auto', both values will be null.
+// Throws if the format is invalid.
+export function extractWidthHeight(size) {
+    if (size === undefined || size === null || size === 'auto') {
+        return { width: null, height: null }
+    }
+
+    // Accept forms like "1024x1024" or "512X768" (case-insensitive on the separator)
+    const match = /^\s*(\d+)\s*[xX]\s*(\d+)\s*$/.exec(size)
+    if (!match) {
+        throw new Error("'size' must be in the format 'WIDTHxHEIGHT' (e.g. '1024x768')")
+    }
+
+    const width = parseInt(match[1], 10)
+    const height = parseInt(match[2], 10)
+
+    return { width, height }
+}
+

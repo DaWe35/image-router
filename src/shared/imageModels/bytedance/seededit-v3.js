@@ -4,7 +4,7 @@ import { applyFalImage } from '../../applyImage.js'
 class SeedreamEditV3 {
   constructor() {
     this.data = {
-      id: 'bytedance/seedream-3',
+      id: 'bytedance/seededit-3',
       providers: [{
         id: 'fal',
         model_name: 'fal-ai/bytedance/seededit/v3/edit-image',

@@ -25,7 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "https-proxy-agent": "^5.0.1",
     "jest": "^29.7.0",
-    "multer": "2.0.1",
+    "multer": "2.0.2",
     "google-auth-library": "^9.0.0",
     "@aws-sdk/client-s3": "^3.450.0",
     "@aws-sdk/lib-storage": "^3.450.0",

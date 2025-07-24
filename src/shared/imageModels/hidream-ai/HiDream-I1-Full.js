@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcRunware } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 class HiDreamI1Full {
   constructor() {
@@ -10,11 +10,11 @@ class HiDreamI1Full {
         model_name: 'runware:97@1',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: postCalcRunware,
+          postCalcFunction: postCalcSimple,
           range: {
             min: 0.0045,
             average: 0.009,
-            max: 0.015
+            max: 0.0128
           }
         },
         applyQuality: this.applyQuality

@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
-import { objectToFormData, getGeminiApiKey } from './imageHelpers.js'
+import { objectToFormData, getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
@@ -112,6 +112,7 @@ async function generateOpenAI({ fetchParams, userId }) {
         prompt: fetchParams.prompt,
         model: fetchParams.model,
         quality: fetchParams.quality,
+        size: fetchParams.size,
         user: userId,
         n: 1,
     }
@@ -200,9 +201,22 @@ async function generateNanoGPT({ fetchParams, userId }) {
 }
 
 // OpenAI format API call
-async function generateDeepInfra({ fetchParams, userId }) {
-    const providerUrl = 'https://api.deepinfra.com/v1/openai/images/generations'
+async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
+    const providerUrl = 'https://api.deepinfra.com/v1/inference/' + fetchParams.model
     const providerKey = process.env.DEEPINFRA_API_KEY
+
+    const body = {
+        prompt: fetchParams.prompt,
+        num_images: 1,
+    }
+
+    const { width, height } = extractWidthHeight(fetchParams.size)
+    if (width) body.width = width
+    if (height) body.height = height
+
+    if (fetchParams.num_inference_steps) body.num_inference_steps = fetchParams.num_inference_steps
+    if (fetchParams.steps) body.steps = fetchParams.steps
+
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -210,28 +224,28 @@ async function generateDeepInfra({ fetchParams, userId }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        // TODO: Enable customization
-        body: JSON.stringify({
-            prompt: fetchParams.prompt,
-            model: fetchParams.model,
-            user: userId,
-            //n: 1,
-            //size: '1024x1024',
-            //response_format: 'url'
-        })
+        body: JSON.stringify(body)
     })
 
     if (!response.ok) {
         const errorResponse = await response.json()
+
+        const extractedMessages = Array.isArray(errorResponse?.detail)
+            ? errorResponse.detail.map(d => {
+                const loc = Array.isArray(d?.loc) ? d.loc.join('.') : String(d?.loc || '')
+                return loc + " " + d?.msg.toLowerCase()
+            }).filter(Boolean)
+            : []
+
         const formattedError = {
-            status: errorResponse?.status || 500,
-            statusText: errorResponse?.statusText || 'Unknown Error',
+            status: errorResponse?.status || response.status || 500,
+            statusText: errorResponse?.statusText || response.statusText || 'Unknown Error',
             error: {
-                message: errorResponse?.error?.message || 'An unknown error occurred (152)',
-                type: errorResponse?.error?.type || errorResponse?.statusText || 'Unknown Error'
+                message: extractedMessages.join('; ') || 'An unknown error occurred (deepinfra error format)',
+                type: errorResponse.detail[0]?.type || 'Unknown Error'
             },
             original_response_from_provider: errorResponse
-          }
+        }
         throw {
             status: response.status,
             errorResponse: formattedError
@@ -239,11 +253,18 @@ async function generateDeepInfra({ fetchParams, userId }) {
     }
 
     const data = await response.json()
-    return data
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: data.images.map(image => ({
+            b64_json: image,
+            revised_prompt: null,
+        })),
+        cost: data.inference_status.cost
+    }
 }
 
 // Replicate format API call
-async function generateReplicate({ fetchParams }) {
+async function generateReplicate({ fetchParams, userId, usageLogId }) {
     const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
@@ -319,7 +340,7 @@ async function generateReplicate({ fetchParams }) {
 
 
 // OpenAI format API call
-async function generateGemini({ fetchParams, userId }) {
+async function generateGemini({ fetchParams, userId, usageLogId }) {
     const providerKey = getGeminiApiKey(fetchParams.model)
     
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`
@@ -569,6 +590,8 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     const taskUUID = usageLogId
     const taskType = fetchParams.model.includes('runware:110@1') ? 'imageBackgroundRemoval' : 'imageInference'
 
+    const { width, height } = extractWidthHeight(fetchParams.size)
+
     // Build the Runware task payload
     const taskPayload = {
         taskType,
@@ -576,8 +599,8 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
         outputFormat: "WEBP",
-        width: 1024,
-        height: 1024,
+        width: width || 1024,
+        height: height || 1024,
         numberResults: 1,
         includeCost: true
     }
