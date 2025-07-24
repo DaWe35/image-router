@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
+import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Seedance1Lite {
   constructor() {
@@ -12,9 +13,13 @@ class Seedance1Lite {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.144,
+            range: {
+              min: 0.0680,
+              average: 0.144,
+              max: 0.144,
+            },
           },
-          applyImage: this.applyImageRunware,
+          applyImage: applyImageRunwareVideo,
         }, {
           id: 'wavespeed',
           model_name: 'bytedance/seedance-v1-lite-t2v-720p',
@@ -41,12 +46,6 @@ class Seedance1Lite {
   async applyImageWaveSpeed(params) {
     params.image = await processSingleFile(params.files.image)
     params.model = 'bytedance/seedance-v1-lite-i2v-720p'
-    delete params.files.image
-    return params
-  }
-
-  async applyImageRunware(params) {
-    params.image = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     delete params.files.image
     return params
   }
