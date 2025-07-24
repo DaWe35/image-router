@@ -24,4 +24,4 @@ router.post('/generations',
     videoGenerationHandler
 )
 
-export const videoRoutes = router 
+export const videoRoutes = router
