@@ -1,5 +1,5 @@
 import express from 'express'
-import { upload, handleMulterError, normalizeUploadFilesFactory } from '../middleware/uploadMiddleware.js'
+import { upload, handleMulterError, normalizeUploadFilesFactory, cleanupUploadedFiles } from '../middleware/uploadMiddleware.js'
 import { generateImage } from '../services/imageService.js'
 import { imageModels } from '../shared/imageModels/index.js'
 import { validateImageParams } from '../services/validateImageParams.js'
@@ -30,6 +30,7 @@ router.post('/generations',
     uploadFields,
     handleMulterError,
     normalizeUploadFiles,
+    cleanupUploadedFiles,
     imageGenerationHandler
 )
 
@@ -38,6 +39,7 @@ router.post('/edits',
     uploadFields,
     handleMulterError,
     normalizeUploadFiles,
+    cleanupUploadedFiles,
     imageGenerationHandler
 )
 

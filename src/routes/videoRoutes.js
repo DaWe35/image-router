@@ -2,7 +2,7 @@ import express from 'express'
 import { generateVideo } from '../services/videoService.js'
 import { validateVideoParams } from '../services/validateVideoParams.js'
 import { createGenerationHandler } from '../services/generationWrapper.js'
-import { upload, handleMulterError, normalizeUploadFilesFactory } from '../middleware/uploadMiddleware.js'
+import { upload, handleMulterError, normalizeUploadFilesFactory, cleanupUploadedFiles } from '../middleware/uploadMiddleware.js'
 
 const router = express.Router()
 
@@ -20,6 +20,7 @@ router.post('/generations',
     uploadFields,
     handleMulterError,
     normalizeUploadFiles,
+    cleanupUploadedFiles,
     videoGenerationHandler
 )
 
