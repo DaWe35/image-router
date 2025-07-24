@@ -14,7 +14,7 @@ class RealVisXL {
           range: {
             min: 0.0013,
             average: 0.0019,
-            max: 0.0038
+            max: 0.009
           }
         },
         applyQuality: this.applyQuality

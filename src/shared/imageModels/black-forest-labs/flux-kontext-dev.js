@@ -16,7 +16,7 @@ class FluxKontextPro {
             range: {
               min: 0.01,
               average: 0.0105,
-              max: 0.03
+              max: 0.007
             }
           },
           applyImage: applyReferenceImages,

@@ -14,7 +14,7 @@ class Flux1Schnell {
           range: {
             min: 0.0006,
             average: 0.0013,
-            max: 0.0019
+            max: 0.007
           }
         },
         applyQuality: this.applyQuality

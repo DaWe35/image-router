@@ -13,11 +13,7 @@ class RMBG20 {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
-          range: {
-            min: 0.0006,
-            average: 0.0006,
-            max: 0.0038
-          }
+          value: 0.0006,
         },
         applyImage: applySingleInputImage
       }],

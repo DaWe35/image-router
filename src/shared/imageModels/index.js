@@ -60,6 +60,7 @@ import Image01 from './minimax/image-01.js'
 
 import TestImage from './test/test-image.js'
 
+import CyberRealisticPony from './runware/CyberRealistic-Pony.js'
 import DreamShaper from './runware/DreamShaper.js'
 import RealisticVision from './runware/Realistic-Vision.js'
 import RealVisXL from './runware/RealVisXL.js'
@@ -139,6 +140,7 @@ const modelInstances = [
 
   new TestImage(),
 
+  new CyberRealisticPony(),
   new DreamShaper(),
   new RealisticVision(),
   new RealVisXL(),

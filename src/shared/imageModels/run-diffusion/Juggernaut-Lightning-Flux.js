@@ -14,7 +14,7 @@ class JuggernautLightningFlux {
           range: {
             min: 0.0008,
             average: 0.0017,
-            max: 0.0034
+            max: 0.0142
           }
         },
         applyQuality: this.applyQuality

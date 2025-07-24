@@ -14,7 +14,7 @@ class HiDreamI1Full {
           range: {
             min: 0.0045,
             average: 0.009,
-            max: 0.015
+            max: 0.0128
           }
         },
         applyQuality: this.applyQuality
