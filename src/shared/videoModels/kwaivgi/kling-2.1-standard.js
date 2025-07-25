@@ -5,7 +5,7 @@ import { applyImageRunwareVideo } from '../../applyImage.js'
 class Kling21Standard {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-v2.1-standard',
+      id: 'kwaivgi/kling-2.1-standard',
       providers: [
         {
           id: 'runware',

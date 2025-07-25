@@ -241,7 +241,7 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
             status: errorResponse?.status || response.status || 500,
             statusText: errorResponse?.statusText || response.statusText || 'Unknown Error',
             error: {
-                message: extractedMessages.join('; ') || 'An unknown error occurred (deepinfra error format)',
+                message: extractedMessages.join('; ') || 'An unknown error occurred',
                 type: errorResponse.detail[0]?.type || 'Unknown Error'
             },
             original_response_from_provider: errorResponse

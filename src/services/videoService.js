@@ -17,7 +17,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
     }
 
     // Detect Kling v2.1 variant to set replicate mode parameter
-    const klingVariantMatch = fetchParams.model.match(/kling-v2\.1-(standard|pro)$/)
+    const klingVariantMatch = fetchParams.model.match(/kling-2\.1-(standard|pro)$/)
     if (klingVariantMatch) {
         fetchParams.mode = klingVariantMatch[1]
     }    
@@ -849,7 +849,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         deliveryMethod: 'async',
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
-        duration: fetchParams.model.includes('hailuo-02') ? 6 : 5,
+        duration: fetchParams.model.includes('minimax:3@1') ? 6 : 5,
         outputFormat: "mp4",
         numberResults: 1,
         includeCost: true
@@ -860,16 +860,8 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
     if (width && height) {
         taskPayload.width = width
         taskPayload.height = height
-    } else if (!fetchParams.image) {
+    } else {
         switch (fetchParams.model) {
-            case 'bytedance:1@1':
-                taskPayload.width = 1248
-                taskPayload.height = 704
-                break
-            case 'bytedance:2@1':
-                taskPayload.width = 1920
-                taskPayload.height = 1088
-                break
             case 'klingai:5@1':
             case 'klingai:4@3':
                 taskPayload.width = 1280
@@ -879,10 +871,23 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                 taskPayload.width = 1920
                 taskPayload.height = 1080
                 break
-            case 'minimax:3@1':
-                taskPayload.width = 1366
-                taskPayload.height = 768
-                break
+        }
+
+        if (!fetchParams.image) {
+            switch (fetchParams.model) {
+                case 'bytedance:1@1':
+                    taskPayload.width = 1248
+                    taskPayload.height = 704
+                    break
+                case 'bytedance:2@1':
+                    taskPayload.width = 1920
+                    taskPayload.height = 1088
+                    breaky
+                case 'minimax:3@1':
+                    taskPayload.width = 1366
+                    taskPayload.height = 768
+                    break
+            }
         }
     }
 
