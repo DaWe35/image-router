@@ -17,7 +17,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
     }
 
     // Detect Kling v2.1 variant to set replicate mode parameter
-    const klingVariantMatch = fetchParams.model.match(/kling-v2\.1-(standard|pro)$/)
+    const klingVariantMatch = fetchParams.model.match(/kling-2\.1-(standard|pro)$/)
     if (klingVariantMatch) {
         fetchParams.mode = klingVariantMatch[1]
     }    

@@ -4,9 +4,9 @@ import Veo3 from './google/veo-3.js'
 import Veo3Fast from './google/veo-3-fast.js'
 
 import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
-import Kling21Standard from './kwaivgi/kling-v2.1-standard.js'
-import Kling21Pro from './kwaivgi/kling-v2.1-pro.js'
-import Kling21Master from './kwaivgi/kling-v2.1-master.js'
+import Kling21Standard from './kwaivgi/kling-2.1-standard.js'
+import Kling21Pro from './kwaivgi/kling-2.1-pro.js'
+import Kling21Master from './kwaivgi/kling-2.1-master.js'
 import Seedance1Lite from './bytedance/seedance-1-lite.js'
 import Seedance1Pro from './bytedance/seedance-1-pro.js'
 
