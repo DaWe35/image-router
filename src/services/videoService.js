@@ -387,6 +387,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
                 data: generatedSamples.map(sample => {
                     // Vertex AI returns base64 video data when no storageUri is specified
                     const base64Data = sample.video?.bytesBase64Encoded || sample.bytesBase64Encoded
+                    const mimeType = sample.video?.mimeType || sample.mimeType || 'video/mp4'
                     
                     if (!base64Data) {
                         console.log('ERROR: no base64 video data found in sample:', sample)
@@ -397,7 +398,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
                     }
                     
                     return {
-                        b64_json: base64Data,
+                        b64_json: `data:${mimeType};base64,${base64Data}`,
                         revised_prompt: null,
                     }
                 })
