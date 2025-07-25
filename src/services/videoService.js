@@ -860,16 +860,8 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
     if (width && height) {
         taskPayload.width = width
         taskPayload.height = height
-    } else if (!fetchParams.image) {
+    } else {
         switch (fetchParams.model) {
-            case 'bytedance:1@1':
-                taskPayload.width = 1248
-                taskPayload.height = 704
-                break
-            case 'bytedance:2@1':
-                taskPayload.width = 1920
-                taskPayload.height = 1088
-                break
             case 'klingai:5@1':
             case 'klingai:4@3':
                 taskPayload.width = 1280
@@ -879,10 +871,23 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                 taskPayload.width = 1920
                 taskPayload.height = 1080
                 break
-            case 'minimax:3@1':
-                taskPayload.width = 1366
-                taskPayload.height = 768
-                break
+        }
+
+        if (!fetchParams.image) {
+            switch (fetchParams.model) {
+                case 'bytedance:1@1':
+                    taskPayload.width = 1248
+                    taskPayload.height = 704
+                    break
+                case 'bytedance:2@1':
+                    taskPayload.width = 1920
+                    taskPayload.height = 1088
+                    breaky
+                case 'minimax:3@1':
+                    taskPayload.width = 1366
+                    taskPayload.height = 768
+                    break
+            }
         }
     }
 
