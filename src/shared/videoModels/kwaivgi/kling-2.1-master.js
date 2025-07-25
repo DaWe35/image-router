@@ -2,31 +2,32 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-class Kling21Pro {
+class Kling21Master {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-v2.1-pro',
+      id: 'kwaivgi/kling-2.1-master',
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:5@2',
+          model_name: 'klingai:4@3',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.3234,
+            value: 0.924,
           },
           applyImage: applyImageRunwareVideo,
-        }, {
+        },
+        {
           id: 'replicate',
-          model_name: 'kwaivgi/kling-v2.1', // same replicate model, but pro mode
+          model_name: 'kwaivgi/kling-v2.1-master',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.45, // price per 5-second video (0.09 $/sec)
+            value: 1.40, // price per 5-second video (0.28 $/sec)
           },
           applyImage: this.applyImage,
         }
       ],
-      arena_score: 1120,
+      arena_score: 1150,
       release_date: '2025-06-24'
     }
   }
@@ -42,4 +43,4 @@ class Kling21Pro {
   }
 }
 
-export default Kling21Pro 
+export default Kling21Master 

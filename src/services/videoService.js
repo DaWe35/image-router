@@ -849,7 +849,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         deliveryMethod: 'async',
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
-        duration: fetchParams.model.includes('hailuo-02') ? 6 : 5,
+        duration: fetchParams.model.includes('minimax:3@1') ? 6 : 5,
         outputFormat: "mp4",
         numberResults: 1,
         includeCost: true
