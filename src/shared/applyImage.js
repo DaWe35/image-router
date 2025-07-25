@@ -26,6 +26,12 @@ export async function applyFalImage(params) {
     return params
 }
 
+export async function applyVertexImage(params) {
+    params.image_url = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+}
+
 // Video helpers
 
 export async function applyImageRunwareVideo(params) {

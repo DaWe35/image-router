@@ -219,6 +219,7 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
     console.log('ERROR: video generation timed out after 10 minutes. Url:', checkUrl)
 }
 
+
 async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
     const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
@@ -269,6 +270,13 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             durationSeconds: 8, // veo-3 supports 8 seconds
         }
     }
+
+    // I dont think this is working
+    /*  if (fetchParams.image) {
+        requestBody.instances[0].image = {
+            "bytesBase64Encoded": fetchParams.image
+        }
+    } */
 
     // Add generateAudio for veo-3
     if (fetchParams.model === 'veo-3.0-generate-preview') {
@@ -360,10 +368,10 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             }
 
             // Extract video URLs from response - Vertex AI format
-            const generatedSamples = checkData.response?.generatedSamples
+            const generatedSamples = checkData.response?.videos
             
             if (!generatedSamples || generatedSamples.length === 0) {
-                console.log('ERROR: no video samples found in response:', checkData)
+                console.log('ERROR: no video samples found in response:', JSON.stringify(checkData))
                 return {
                     error: {
                         message: 'no video samples found in response: ' + JSON.stringify(checkData),
@@ -392,8 +400,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
                         b64_json: base64Data,
                         revised_prompt: null,
                     }
-                }),
-                original_response_from_provider: checkData
+                })
             }
         }
     }

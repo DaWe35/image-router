@@ -53,6 +53,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       deepinfra: generateDeepInfra,
       fal: generateFal,
       gemini: generateGemini,
+      geminiImagen: generateGeminiImagen,
       openai: generateOpenAI,
       nanogpt: generateNanoGPT,
       replicate: generateReplicate,
@@ -339,7 +340,6 @@ async function generateReplicate({ fetchParams, userId, usageLogId }) {
 }
 
 
-// OpenAI format API call
 async function generateGemini({ fetchParams, userId, usageLogId }) {
     const providerKey = getGeminiApiKey(fetchParams.model)
     
@@ -908,5 +908,75 @@ async function generateChutes({ fetchParams }) {
             b64_json: base64Data,
             revised_prompt: null
         }]
+    }
+}
+
+async function generateGeminiImagen({ fetchParams }) {
+    const providerKey = getGeminiApiKey(fetchParams.model)
+
+    const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:predict?key=${providerKey}`
+
+    const requestBody = {
+        instances: [{
+            prompt: fetchParams.prompt
+        }],
+        parameters: {
+            sampleCount: 1,
+            personGeneration: "allow_adult"
+        }
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        const formattedError = {
+            status: data?.error?.code || response.status,
+            statusText: data?.error?.status || response.statusText,
+            error: {
+                message: data?.error?.message || 'Imagen generation failed',
+                type: data?.error?.status || 'Unknown Error'
+            },
+            original_response_from_provider: data
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    // Collect base-64 image strings from the response
+    const images = (data?.predictions || [])
+        .map(p => p?.bytesBase64Encoded || p?.image?.bytesBase64Encoded || p?.bytes)
+        .filter(Boolean)
+
+    if (images.length === 0) {
+        throw {
+            status: 406,
+            errorResponse: {
+                status: 406,
+                statusText: 'No image generated',
+                error: {
+                    message: 'No image data found in Imagen response',
+                    type: 'No image generated'
+                },
+                original_response_from_provider: data
+            }
+        }
+    }
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: images.map(b64 => ({
+            b64_json: b64,
+            revised_prompt: null
+        }))
     }
 }
