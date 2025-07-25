@@ -16,7 +16,7 @@ class Hailuo02Standard {
             range: {
               min: 0.231,
               average: 0.231,
-              max: 0.4,
+              max: 0.431,
             },
           },
           applyImage: applyImageRunwareVideo,
