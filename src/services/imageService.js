@@ -254,6 +254,22 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
     }
 
     const data = await response.json()
+
+    if (data.status === 'request_moderated') {
+        throw {
+            status: 406,
+            errorResponse: {
+                status: 406,
+                statusText: 'Request was moderated',
+                error: {
+                    message: 'Request was moderated',
+                    type: 'request_moderated'
+                },
+                original_response_from_provider: data
+            }
+        }
+    }
+
     return {
         created: Math.floor(Date.now() / 1000),
         data: data.images.map(image => ({
