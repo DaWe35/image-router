@@ -306,7 +306,8 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
         }
         throw {
             status: response.status,
-            errorResponse: formattedError
+            errorResponse: formattedError,
+            original_response_from_provider: errorData
         }
     }
 
@@ -890,7 +891,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                 case 'bytedance:2@1':
                     taskPayload.width = 1920
                     taskPayload.height = 1088
-                    breaky
+                    break
                 case 'minimax:3@1':
                     taskPayload.width = 1366
                     taskPayload.height = 768
