@@ -20,6 +20,7 @@ class FluxKontextPro {
             }
           },
           applyImage: applyReferenceImages,
+          applyQuality: this.applyQuality
         }
       ],
       release_date: '2025-06-26',
@@ -29,6 +30,17 @@ class FluxKontextPro {
         }
       ]
     }
+  }
+
+  applyQuality(params) {
+    const qualitySteps = {
+      low: 15,
+      medium: 25,
+      high: 45
+    }
+    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   getData() {
