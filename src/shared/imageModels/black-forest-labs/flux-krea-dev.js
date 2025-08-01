@@ -21,7 +21,7 @@ class FluxKreaDev {
       release_date: '2024-07-31',
       examples: [
         {
-          image: '/model-examples/sd3-2025-06-15T13-09-47-800Z.webp'
+          image: '/model-examples/flux-krea-dev.webp'
         }
       ]
     }
