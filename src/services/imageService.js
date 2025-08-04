@@ -276,11 +276,28 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
 
     return {
         created: Math.floor(Date.now() / 1000),
-        data: data.images.map(image => ({
-            b64_json: image,
-            revised_prompt: null,
-        })),
-        cost: data.inference_status.cost
+        data: (() => {
+            if (Array.isArray(data.images)) {
+                return data.images.map(image => ({
+                    b64_json: image,
+                    revised_prompt: null,
+                }))
+            }
+            if (Array.isArray(data.image_urls)) {
+                return data.image_urls.map(url => ({
+                    url,
+                    revised_prompt: null,
+                }))
+            }
+            if (data.image_url) {
+                return [{
+                    url: data.image_url,
+                    revised_prompt: null,
+                }]
+            }
+            return []
+        })(),
+        cost: data.inference_status?.cost
     }
 }
 
