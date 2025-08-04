@@ -9,6 +9,15 @@ class SeedreamEditV3 {
       id: 'bytedance/seededit-3',
       providers: [
         {
+          id: 'fal',
+          model_name: 'fal-ai/bytedance/seededit/v3/edit-image',
+          pricing: {
+            type: PRICING_TYPES.FIXED,
+            value: 0.03,
+          },
+          applyImage: applyFalImage
+        },
+        {
           id: 'runware',
           model_name: 'bytedance:4@1',
           pricing: {
@@ -17,14 +26,6 @@ class SeedreamEditV3 {
             value: 0.03,
           },
           applyImage: applyReferenceImages
-        }, {
-          id: 'fal',
-          model_name: 'fal-ai/bytedance/seededit/v3/edit-image',
-          pricing: {
-            type: PRICING_TYPES.FIXED,
-            value: 0.03,
-          },
-          applyImage: applyFalImage
         }
       ],
       release_date: '2025-07-06'
