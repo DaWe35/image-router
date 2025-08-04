@@ -18,7 +18,7 @@ class SeedreamEditV3 {
           applyImage: applyFalImage
         },
         {
-          id: 'runware',
+          id: 'runware', // MODERATION ISSUES WITH THIS PROVIDER
           model_name: 'bytedance:4@1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
