@@ -636,10 +636,13 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
         outputFormat: "WEBP",
-        width: width || 1024,
-        height: height || 1024,
         numberResults: 1,
         includeCost: true
+    }
+
+    if (!fetchParams.model.includes('bytedance:4@1')) { // seededit-v3
+        taskPayload.width = width || 1024
+        taskPayload.height = height || 1024
     }
 
     if (fetchParams.steps) {
