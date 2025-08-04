@@ -640,7 +640,9 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         includeCost: true
     }
 
-    if (!fetchParams.model.includes('bytedance:4@1')) { // seededit-v3
+    if (fetchParams.model.includes('bytedance:4@1')) { // seededit-v3
+        taskPayload.CFGScale = 0.5
+    } else {
         taskPayload.width = width || 1024
         taskPayload.height = height || 1024
     }
