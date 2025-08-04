@@ -107,6 +107,10 @@ async function generateOpenAI({ fetchParams, userId }) {
     const isEdit = Boolean(fetchParams.image)
     const providerUrl = isEdit ? 'https://api.openai.com/v1/images/edits' : 'https://api.openai.com/v1/images/generations'
     const providerKey = process.env.OPENAI_API_KEY
+
+    if ((fetchParams.model === 'openai/dall-e-3' || fetchParams.model === 'openai/dall-e-2') && fetchParams.size === 'auto') {
+        fetchParams.size = '1024x1024'
+    }
     
     // Set up basic parameters
     let fetchBody = {
