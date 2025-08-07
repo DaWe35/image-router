@@ -16,7 +16,7 @@ class QwenImage {
       release_date: '2025-08-01',
       examples: [
         {
-          image: ''
+          image: '/model-examples/qwen-image-2025-08-07T13-00-25-337Z.webp'
         }
       ]
     }
