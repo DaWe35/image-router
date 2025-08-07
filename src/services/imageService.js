@@ -729,20 +729,19 @@ async function generateFal({ fetchParams }) {
         throw new Error('FAL_API_KEY environment variable is required for fal.ai provider')
     }
 
-    // Build minimal payload (prompt always required, optional image_url)
-    const bodyPayload = { prompt: fetchParams.prompt }
+    const bodyPayload = {
+        prompt: fetchParams.prompt
+    }
+
     if (fetchParams.image_url) {
         bodyPayload.image_url = fetchParams.image_url
     }
 
-    // Determine the correct model path – if an image_url is provided switch to image-to-image variant
-    let modelPath = fetchParams.model
-    if (bodyPayload.image_url && modelPath.includes('/text-to-image')) {
-        modelPath = modelPath.replace('/text-to-image', '/image-to-image')
+    if (fetchParams.num_inference_steps) {
+        bodyPayload.num_inference_steps = fetchParams.num_inference_steps
     }
 
-    // Submit generation request
-    const submitResponse = await fetch(`${baseUrl}/${modelPath}`, {
+    const submitResponse = await fetch(`${baseUrl}/${fetchParams.model}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
