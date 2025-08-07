@@ -69,6 +69,7 @@ import HiDreamI1Fast from './hidream-ai/HiDream-I1-Fast.js'
 import HiDreamI1Dev from './hidream-ai/HiDream-I1-Dev.js'
 import HiDreamI1Full from './hidream-ai/HiDream-I1-Full.js'
 import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
+import HidreamE11 from './hidream-ai/hidream-e1-1.js'
 import RMBG20 from './runware/RMBG-2.0.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
@@ -77,6 +78,7 @@ import InfiniteYou from './bytedance/infiniteyou.js'
 import InfiniteYouFree from './bytedance/infiniteyou-free.js'
 import Chroma from './lodestones/chroma.js'
 import ChromaFree from './lodestones/chroma-free.js'
+import DreaminaV31 from './bytedance/dreamina-3.1.js'
 
 // Initialize all models
 const modelInstances = [
@@ -150,6 +152,7 @@ const modelInstances = [
   new HiDreamI1Fast(),
   new HiDreamI1Dev(),
   new HiDreamI1Full(),
+  new HidreamE11(),
   
   new SeedreamV3(),
   new SeedreamEditV3(),
@@ -158,6 +161,7 @@ const modelInstances = [
   new ChromaFree(),
   new InfiniteYou(),
   new InfiniteYouFree(),
+  new DreaminaV31(),
 ]
 
 // Create an object with model IDs as keys
