@@ -17,6 +17,9 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
         throw new Error('Invalid model specified')
     }
 
+    // Get alias model if available
+    fetchParams.model = modelConfig.providers[0].model_name
+
     // Apply image editing if available
     if (fetchParams.files.image) {
         if (typeof modelConfig.providers[0]?.applyImage === 'function') {
@@ -38,9 +41,6 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
         }
     }
     delete fetchParams.files
-
-    // Get alias model if available
-    fetchParams.model = modelConfig.providers[0].model_name
 
     // Apply quality if available and a function is defined. This can change the model to use, or any other variables!
     if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
@@ -641,7 +641,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     }
 
     if (fetchParams.model.includes('bytedance:4@1')) { // seededit-v3
-        taskPayload.CFGScale = 0.5
+        // taskPayload.CFGScale = 0.5 // This is not needed anymore ?
     } else {
         taskPayload.width = width || 1024
         taskPayload.height = height || 1024
