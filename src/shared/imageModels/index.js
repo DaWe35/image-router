@@ -81,6 +81,7 @@ import ChromaFree from './lodestones/chroma-free.js'
 import DreaminaV31 from './bytedance/dreamina-3.1.js'
 
 import QwenImage from './qwen/qwen-image.js'
+import Grok2Image from './xAI/grok-2-image.js'
 
 // Initialize all models
 const modelInstances = [
@@ -166,6 +167,7 @@ const modelInstances = [
   new DreaminaV31(),
 
   new QwenImage(),
+  new Grok2Image(),
 ]
 
 // Create an object with model IDs as keys

@@ -52,6 +52,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       chutes: generateChutes,
       deepinfra: generateDeepInfra,
       fal: generateFal,
+      grok: generateGrok,
       gemini: generateGemini,
       geminiImagen: generateGeminiImagen,
       openai: generateOpenAI,
@@ -99,6 +100,41 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       if (intervalId) clearInterval(intervalId)
       throw error
     }
+}
+// xAI Grok Images API call
+async function generateGrok({ fetchParams, userId }) {
+    const providerUrl = 'https://api.x.ai/v1/images/generations'
+    const providerKey = process.env.XAI_API_KEY
+
+    if (!providerKey) {
+        throw new Error('XAI_API_KEY environment variable is required for xAI provider')
+    }
+
+    const body = {
+        model: fetchParams.model,
+        prompt: fetchParams.prompt
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json',
+            'Authorization': `Bearer ${providerKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            errorResponse: data
+        }
+    }
+    
+    return data
 }
 
 // OpenAI format API call
