@@ -9,13 +9,19 @@ extendZodWithOpenApi(z)
 const registry = new OpenAPIRegistry()
 
 // Schemas
-const imageEditSchema = imageRequestSchema.extend({
-  image: z.any(),
-  mask: z.any().optional()
-})
-.openapi('ImageEditRequest')
+const imageWithUploadsSchema = imageRequestSchema.extend({
+  image: z.string().openapi({ type: 'string', format: 'binary' }).optional(),
+  'image[]': z.string().openapi({ type: 'string', format: 'binary' }).optional(),
+  mask: z.string().openapi({ type: 'string', format: 'binary' }).optional(),
+  'mask[]': z.string().openapi({ type: 'string', format: 'binary' }).optional()
+}).openapi('ImageGenerationWithUploads')
 registry.register('ImageGenerationRequest', imageRequestSchema)
 registry.register('VideoGenerationRequest', videoRequestSchema)
+// Video generation with optional image upload (multipart)
+const videoGenerationWithImageSchema = videoRequestSchema.extend({
+  image: z.string().openapi({ type: 'string', format: 'binary' }).optional(),
+  'image[]': z.string().openapi({ type: 'string', format: 'binary' }).optional()
+}).openapi('VideoGenerationWithImageRequest')
 
 // Paths
 registry.registerPath({
@@ -27,6 +33,9 @@ registry.registerPath({
       content: {
         'application/json': {
           schema: imageRequestSchema
+        },
+        'multipart/form-data': {
+          schema: imageWithUploadsSchema
         }
       }
     }
@@ -47,6 +56,9 @@ registry.registerPath({
       content: {
         'application/json': {
           schema: videoRequestSchema
+        },
+        'multipart/form-data': {
+          schema: videoGenerationWithImageSchema
         }
       }
     }
@@ -65,8 +77,11 @@ registry.registerPath({
     body: {
       required: true,
       content: {
+        'application/json': {
+          schema: imageRequestSchema
+        },
         'multipart/form-data': {
-          schema: imageEditSchema
+          schema: imageWithUploadsSchema
         }
       }
     }
