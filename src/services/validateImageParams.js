@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { imageModels } from '../shared/imageModels/index.js'
+import { videoModels } from '../shared/videoModels/index.js'
 import { extractWidthHeight } from './imageHelpers.js'
 
 const bodySchema = z.object({
@@ -35,7 +36,12 @@ export function validateImageParams(req) {
   }
 
   const modelConfig = imageModels[model]
-  if (!modelConfig) throw new Error(`model '${model}' is not available`)
+  if (!modelConfig) {
+    if (videoModels[model]) {
+      throw new Error(`'${model}' is a video model. Please use the video generation endpoint.`)
+    }
+    throw new Error(`model '${model}' is not available`)
+  }
   if (!modelConfig?.providers[0]?.id) throw new Error(`model provider for '${model}' is not available`)
 
   // Restrict size for free tier models

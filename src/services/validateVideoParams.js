@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { videoModels } from '../shared/videoModels/index.js'
+import { imageModels } from '../shared/imageModels/index.js'
 
 const bodySchema = z.object({
   prompt: z.string().min(1, { message: "'prompt' is a required parameter" }),
@@ -22,7 +23,12 @@ export function validateVideoParams(req) {
 
     // Validate model parameter and config
     const modelConfig = videoModels[model]
-    if (!modelConfig) throw new Error(`model '${model}' is not available`)
+    if (!modelConfig) {
+        if (imageModels[model]) {
+            throw new Error(`'${model}' is an image model. Please use the image generation endpoint.`)
+        }
+        throw new Error(`model '${model}' is not available`)
+    }
     if (!modelConfig?.providers[0]?.id) throw new Error(`model provider for '${model}' is not available`)
 
     const files = req.files || {}
