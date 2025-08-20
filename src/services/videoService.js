@@ -900,7 +900,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         }
     }
 
-    // Image-to-image support
+    // Image-to-video support
     // Seedance
     if (fetchParams.image) {
         const images = Array.isArray(fetchParams.image) ? fetchParams.image : [fetchParams.image]
@@ -960,6 +960,21 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         // If HTTP error, surface provider message without throwing (credits should not be fully refunded)
         if (!pollRes.ok) {
             const providerError = lastPollPayload?.errors?.[0] || {}
+            console.log('Runware generation failed at 1', JSON.stringify(providerError))
+            if (providerError?.code === 'invalidProviderContent') {
+                throw {
+                    status: pollRes.status,
+                    errorResponse: {
+                        status: pollRes.status,
+                        statusText: providerError?.code || 'polling_error',
+                        error: {
+                            message: providerError.message,
+                            type: providerError?.code || 'polling_error'
+                        },
+                        original_response_from_provider: lastPollPayload
+                    }
+                }
+            }
             return {
                 error: {
                     message: providerError.message || 'Polling request failed',
@@ -972,6 +987,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         // Check for error specific to this task in errors array first
         const errorTask = lastPollPayload.errors?.find(e => e.taskUUID === taskUUID)
         if (errorTask) {
+            console.log('Runware generation failed at 2', JSON.stringify(errorTask))
             return {
                 error: {
                     message: errorTask.message || 'Runware generation failed',
