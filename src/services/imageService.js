@@ -7,23 +7,24 @@ import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
+import { selectProvider } from '../utils/providerSelector.js'
 
-export async function generateImage(fetchParams, userId, res, usageLogId) {
+export async function generateImage(fetchParams, userId, res, usageLogId, providerIndex) {
     const startTime = Date.now()
     const modelConfig = imageModels[fetchParams.model]
-    const provider = modelConfig?.providers[0]?.id
-    
-    if (!provider) {
+    const selectedProvider = modelConfig.providers[providerIndex]
+
+    if (!selectedProvider) {
         throw new Error('Invalid model specified')
     }
 
     // Get alias model if available
-    fetchParams.model = modelConfig.providers[0].model_name
+    fetchParams.model = selectedProvider.model_name
 
     // Apply image editing if available
     if (fetchParams.files.image) {
-        if (typeof modelConfig.providers[0]?.applyImage === 'function') {
-            fetchParams = await modelConfig.providers[0]?.applyImage(fetchParams)
+        if (typeof selectedProvider?.applyImage === 'function') {
+            fetchParams = await selectedProvider.applyImage(fetchParams)
         } else {
             const supportedModels = Object.keys(imageModels).filter(modelId => 
                 imageModels[modelId].supported_params?.edit === true
@@ -34,8 +35,8 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
 
     // Apply mask editing if available
     if (fetchParams.files.mask) {
-        if (typeof modelConfig.providers[0]?.applyMask === 'function') {
-            fetchParams = await modelConfig.providers[0]?.applyMask(fetchParams)
+        if (typeof selectedProvider?.applyMask === 'function') {
+            fetchParams = await selectedProvider.applyMask(fetchParams)
         } else {
             throw new Error('Mask editing is not supported for this model')
         }
@@ -43,8 +44,8 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
     delete fetchParams.files
 
     // Apply quality if available and a function is defined. This can change the model to use, or any other variables!
-    if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
-        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
+    if (fetchParams.quality && typeof selectedProvider?.applyQuality === 'function') {
+        fetchParams = selectedProvider.applyQuality(fetchParams)
     }
 
 
@@ -63,9 +64,9 @@ export async function generateImage(fetchParams, userId, res, usageLogId) {
       vertex: generateVertex
     }
 
-    const handler = providerHandlers[provider]
+    const handler = providerHandlers[selectedProvider.id]
     if (!handler) {
-      throw new Error(`No handler implemented for provider ${provider}`)
+      throw new Error(`No handler implemented for provider ${selectedProvider.id}`)
     }
 
     let intervalId

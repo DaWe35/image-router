@@ -6,11 +6,13 @@ import { getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
+import { selectProvider } from '../utils/providerSelector.js'
 
-export async function generateVideo(fetchParams, userId, res, usageLogId) {
+export async function generateVideo(fetchParams, userId, res, usageLogId, providerIndex) {
     const startTime = Date.now()
     const modelConfig = videoModels[fetchParams.model]
-    const provider = modelConfig?.providers[0]?.id
+    const providerConfig = modelConfig.providers[providerIndex]
+    const provider = providerConfig?.id
     
     if (!provider) {
         throw new Error('Invalid model specified')
@@ -23,17 +25,17 @@ export async function generateVideo(fetchParams, userId, res, usageLogId) {
     }    
 
     // Get alias model if available
-    fetchParams.model = modelConfig.providers[0].model_name
+    fetchParams.model = providerConfig.model_name
 
     // Apply quality if available and a function is defined
-    if (fetchParams.quality && typeof modelConfig.providers[0]?.applyQuality === 'function') {
-        fetchParams = modelConfig.providers[0]?.applyQuality(fetchParams)
+    if (fetchParams.quality && typeof providerConfig?.applyQuality === 'function') {
+        fetchParams = providerConfig.applyQuality(fetchParams)
     }
 
     // Apply image-to-video if an image file is provided
     if (fetchParams.files && fetchParams.files.image) {
-        if (typeof modelConfig.providers[0]?.applyImage === 'function') {
-            fetchParams = await modelConfig.providers[0].applyImage(fetchParams)
+        if (typeof providerConfig?.applyImage === 'function') {
+            fetchParams = await providerConfig.applyImage(fetchParams)
         } else {
             const supportedModels = Object.keys(videoModels).filter(modelId =>
                 videoModels[modelId].supported_params?.edit === true

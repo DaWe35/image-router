@@ -6,7 +6,7 @@ class GptImage1 {
     this.data = {
       id: 'openai/gpt-image-1',
       providers: [
-        /* {
+        {
           id: 'nanogpt',
           model_name: 'gpt-image-1',
           pricing: {
@@ -20,7 +20,7 @@ class GptImage1 {
           },
           applyQuality: this.applyQuality,
           applyImage: this.applyImageNanoGPT,
-        }, */ {
+        }, {
           id: 'openai',
           model_name: 'gpt-image-1',
           pricing: {

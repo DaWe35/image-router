@@ -6,11 +6,12 @@ const models = {
 }
 import { prisma } from '../config/database.js'
 import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
+import { selectProvider } from '../utils/providerSelector.js'
 
-export async function preLogUsage(params, apiKey, req) {
+export async function preLogUsage(params, apiKey, req, providerIndex) {
     const modelConfig = models[params.model]
 
-    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality)
+    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality, providerIndex)
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
     
     // Check if the user has enough credits
@@ -48,7 +49,7 @@ export async function preLogUsage(params, apiKey, req) {
                 apiKeyTempJwt: apiKey.apiKeyTempJwt,
                 userId: apiKey.user.id,
                 model: params.model,
-                provider: modelConfig?.providers[0].id,
+                provider: modelConfig?.providers[providerIndex].id,
                 prompt: params.prompt || '',
                 cost: prePriceInt, // Initial cost is max price
                 speedMs: 0,
@@ -92,11 +93,11 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
 }
 
 
-export async function postLogUsage(params, apiKey, usageLogEntry, imageResult) {
-    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality)
+export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, providerIndex) {
+    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality, providerIndex)
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
 
-    const postPriceUsd = postCalcPrice(params.model, params.size, params.quality, imageResult)
+    const postPriceUsd = postCalcPrice(params.model, params.size, params.quality, imageResult, providerIndex)
     const postPriceInt = convertPriceToDbFormat(postPriceUsd)
 
     // Extract URLs from the result

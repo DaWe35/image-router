@@ -1,5 +1,8 @@
 import { preLogUsage, refundUsage, postLogUsage } from './logUsage.js'
 import { freeTierLimiter } from '../middleware/freeTierLimiter.js'
+import { imageModels } from '../shared/imageModels/index.js'
+import { videoModels } from '../shared/videoModels/index.js'
+import { selectProvider } from '../utils/providerSelector.js'
 
 function cleanupInternalFields(result) {
   if (result && result.data && Array.isArray(result.data)) {
@@ -23,19 +26,24 @@ export function createGenerationHandler({ validateParams, generateFn }) {
           return
         }
 
-        const usageLogEntry = await preLogUsage(params, apiKey, req)
+        // Select provider once per request to keep consistency across logging and generation
+        const models = { ...imageModels, ...videoModels }
+        const modelConfig = models[params.model]
+        const providerIndex = selectProvider(modelConfig?.providers, params)
+
+        const usageLogEntry = await preLogUsage(params, apiKey, req, providerIndex)
 
         let generationResult
         try {
           const fetchParams = structuredClone(params) // prevent side effects
-          generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id)
+          generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
         } catch (error) {
           const errorToLog = error?.errorResponse?.error?.message || error?.message || 'unknown error'
           await refundUsage(apiKey, usageLogEntry, errorToLog)
           throw error
         }
 
-        const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, generationResult)
+        const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, generationResult, providerIndex)
         generationResult.cost = postPriceInt / 10000
 
         cleanupInternalFields(generationResult)
