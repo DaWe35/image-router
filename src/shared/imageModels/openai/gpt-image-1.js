@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10 } from '../../../services/imageHelpers.js'
+import { applyImageNanoGPT } from '../../applyImage.js'
 
 class GptImage1 {
   constructor() {
@@ -11,7 +12,7 @@ class GptImage1 {
           model_name: 'gpt-image-1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcNanoGPTDiscounted,
+            postCalcFunction: postCalcNanoGPTDiscounted10,
             range: {
               min: 0.011,
               average: 0.167,
@@ -19,7 +20,7 @@ class GptImage1 {
             },
           },
           applyQuality: this.applyQuality,
-          applyImage: this.applyImageNanoGPT,
+          applyImage: applyImageNanoGPT,
         }, {
           id: 'openai',
           model_name: 'gpt-image-1',
@@ -83,12 +84,6 @@ class GptImage1 {
   async applyMask(params) {
     params.mask = await processSingleFile(params.files.mask)
     delete params.files.mask
-    return params
-  }
-
-  async applyImageNanoGPT(params) {
-    params.image = await processSingleOrMultipleFiles(params.files.image, 'datauri')
-    delete params.files.image
     return params
   }
 }

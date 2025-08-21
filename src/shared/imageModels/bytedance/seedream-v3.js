@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles, postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
+import { applyImageNanoGPT } from '../../applyImage.js'
 
 class SeedreamV3 {
   constructor() {
@@ -7,6 +8,15 @@ class SeedreamV3 {
       id: 'bytedance/seedream-3',
       providers: [
         {
+          id: 'nanogpt',
+          model_name: 'seedream-v3',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcNanoGPTDiscounted5,
+            value: 0.03,
+          },
+          applyImage: applyImageNanoGPT,
+        }, {
           id: 'runware',
           model_name: 'bytedance:3@1',
           pricing: {

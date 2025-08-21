@@ -36,6 +36,12 @@ export async function applyVertexImage(params) {
     return params
 }
 
+export async function applyImageNanoGPT(params) {
+    params.image = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+}
+
 // Video helpers
 
 export async function applyImageRunwareVideo(params) {

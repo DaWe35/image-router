@@ -34,6 +34,11 @@ export function selectProvider(providers, requestParams = {}) {
     // otherwise we prefer NanoGPT which is cheaper for pure text-to-image.
     desiredProviderId = hasInputImage ? 'openai' : 'nanogpt';
   }
+  // Special-case selection for Seedream-3
+  if (modelId === 'bytedance/seedream-3') {
+    // Prefer NanoGPT for pure text-to-image; use RunWare when an input image is supplied
+    desiredProviderId = hasInputImage ? 'runware' : 'nanogpt';
+  }
 
   // Find index of desired provider; fallback to 0 if not found
   const idx = providers.findIndex(p => p.id === desiredProviderId);
