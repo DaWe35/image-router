@@ -3,7 +3,7 @@ import { applyReferenceImages } from '../../applyImage.js'
 import { applyFalImage } from '../../applyImage.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 
-class SeedreamEditV3 {
+class SeedEditV3 {
   constructor() {
     this.data = {
       id: 'bytedance/seededit-3',
@@ -37,4 +37,4 @@ class SeedreamEditV3 {
   }
 }
 
-export default SeedreamEditV3 
+export default SeedEditV3 
