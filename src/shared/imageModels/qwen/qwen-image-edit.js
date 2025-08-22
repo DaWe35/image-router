@@ -1,42 +1,30 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
 
-class QwenImage {
+class QwenImageEdit {
   constructor() {
     this.data = {
-      id: 'qwen/qwen-image',
+      id: 'qwen/qwen-image-edit',
       providers: [
         {
           id: 'runware',
-          model_name: 'runware:108@1',
+          model_name: 'runware:108@20',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.0058,
-              average: 0.007,
-              max: 0.0122
+              min: 0.0032,
+              average: 0.0058,
+              max: 0.0096
             }
           },
           applyQuality: this.applyQualityRunware,
           applyImage: this.applyImageRunware
-        }, {
-          id: 'fal',
-          model_name: 'fal-ai/qwen-image',
-          pricing: {
-            type: PRICING_TYPES.FIXED,
-            value: 0.02
-          },
-          applyQuality: this.applyQualityFal
         }
       ],
-      arena_score: 1074,
-      release_date: '2025-08-01',
-      examples: [
-        {
-          image: '/model-examples/qwen-image-2025-08-07T13-00-25-337Z.webp'
-        }
-      ]
+      arena_score: 1099,
+      release_date: '2025-08-18'
+
     }
   }
 
@@ -48,20 +36,9 @@ class QwenImage {
 
   applyQualityRunware(params) {
     const qualitySteps = {
-      low: 20,
-      medium: 25,
-      high: 40
-    }
-    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
-    delete params.quality
-    return params
-  }
-
-  applyQualityFal(params) {
-    const qualitySteps = {
-      low: 20,
-      medium: 30,
-      high: 45
+      low: 8,
+      medium: 15,
+      high: 30
     }
     params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
     delete params.quality
@@ -73,4 +50,4 @@ class QwenImage {
   }
 }
 
-export default QwenImage
+export default QwenImageEdit
