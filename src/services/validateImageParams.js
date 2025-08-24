@@ -35,7 +35,7 @@ export function validateImageParams(req) {
     throw new Error("'google/gemini-2.0-flash-prev' is temporary disabled. Please use 'google/gemini-2.0-flash-exp' instead.")
   }
   if (model === 'google/gemini-2.0-flash-exp:free') {
-    throw new Error("Sorry, I'm unable to provide free gemini-2.0-flash-exp images, because Google pulled the free tier without any notice.")
+    throw new Error("Sorry, I'm unable to provide free gemini-2.0-flash images, because Google pulled the free tier without any notice. Please try other free models.")
   }
 
   const modelConfig = imageModels[model]
