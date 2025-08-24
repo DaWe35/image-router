@@ -12,9 +12,9 @@ class Gemini20FlashExp {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,
           range: {
-            min: 0.01,
-            average: 0.01,
-            max: 0.20
+            min: 0.04,
+            average: 0.04,
+            max: 0.8
           },
         },
         applyImage: this.applyImage,
@@ -45,7 +45,7 @@ class Gemini20FlashExp {
 
   postCalcPrice(imageResult) {
     // Calculate price based on number of images generated
-    const pricePerImage = 0.01
+    const pricePerImage = 0.04
     const numberOfImages = imageResult.data ? imageResult.data.length : 1
     return pricePerImage * numberOfImages
   }

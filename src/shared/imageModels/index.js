@@ -50,7 +50,6 @@ import Imagen4 from './google/imagen-4.js'
 import Imagen4Ultra from './google/imagen-4-ultra.js'
 import imagen4Fast from './google/imagen-4-fast.js'
 import Gemini20FlashExp from './google/gemini-2.0-flash-exp.js'
-import Gemini20FlashExpFree from './google/gemini-2.0-flash-exp-free.js'
 // Temporary disabled because of postCalcPrice function. Be careful! This model can generate multiple images.
 // import Gemini20FlashPrev from './google/gemini-2.0-flash-prev.js'
 
@@ -138,7 +137,6 @@ const modelInstances = [
   new imagen4Fast(),
 
   new Gemini20FlashExp(),
-  new Gemini20FlashExpFree(),
   // new Gemini20FlashPrev(),
   
   new Photon(),
