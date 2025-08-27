@@ -42,7 +42,7 @@ export const freeTierLimiter = async (req, res, next) => {
       prisma.APIUsage.count({ where: { ...whereCommon, ip: clientIp } })
     ])
 
-    const dailyFreeLimit = 50
+    const dailyFreeLimit = 30
 
     if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
       return res.status(429).json({

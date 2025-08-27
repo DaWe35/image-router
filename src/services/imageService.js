@@ -56,6 +56,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
       grok: generateGrok,
       gemini: generateGemini,
       geminiImagen: generateGeminiImagen,
+      openrouter: generateOpenRouter,
       openai: generateOpenAI,
       nanogpt: generateNanoGPT,
       replicate: generateReplicate,
@@ -1055,6 +1056,99 @@ async function generateGeminiImagen({ fetchParams }) {
         data: images.map(b64 => ({
             b64_json: b64,
             revised_prompt: null
+        }))
+    }
+}
+
+// OpenRouter image generation API call
+async function generateOpenRouter({ fetchParams, userId }) {
+    const providerUrl = 'https://openrouter.ai/api/v1/chat/completions'
+    const providerKeys = (process.env.OPENROUTER_API_KEY || '')
+        .split(',')
+        .map(k => k.trim())
+        .filter(Boolean)
+
+    if (providerKeys.length === 0) {
+        throw new Error('OPENROUTER_API_KEY environment variable is required for OpenRouter provider')
+    }
+
+    const providerKey = providerKeys[Math.floor(Math.random() * providerKeys.length)]
+    console.log('using key', Math.floor(Math.random() * providerKeys.length))
+
+    let contentPayload
+
+    // Build multimodal content array with text and image parts
+    contentPayload = [{
+        type: 'text',
+        text: fetchParams.prompt
+    }]
+
+    if (fetchParams.imagesData && fetchParams.imagesData.length > 0) {
+        for (const imageData of fetchParams.imagesData) {
+            contentPayload.push({
+                type: 'image_url',
+                image_url: { url: imageData }
+            })
+        }
+    }
+
+    const requestBody = {
+        model: fetchParams.model,
+        messages: [{
+            role: 'user',
+            content: contentPayload
+        }]
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`,
+            'HTTP-Referer': 'https://imagerouter.io',
+            'X-Title': 'ImageRouter'
+        },
+        body: JSON.stringify(requestBody)
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            errorResponse: data
+        }
+    }
+
+    const images = data?.choices?.[0]?.message?.images || []
+
+    if (images.length === 0) {
+        throw {
+            status: 406,
+            errorResponse: {
+                status: 406,
+                statusText: 'No image generated',
+                error: {
+                    message: 'No image data found in OpenRouter response',
+                    type: 'No image generated'
+                },
+                original_response_from_provider: data
+            }
+        }
+    }
+
+    // Convert data URLs to pure base64 strings
+    const b64Images = images.map(imgObj => {
+        const dataUrl = imgObj?.image_url?.url || ''
+        return dataUrl.replace(/^data:[^;]+;base64,/, '')
+    })
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: b64Images.map(b64 => ({
+            b64_json: b64,
+            revised_prompt: null,
+            original_response_from_provider: data
         }))
     }
 }
