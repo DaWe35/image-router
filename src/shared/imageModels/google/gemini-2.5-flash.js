@@ -19,7 +19,7 @@ export default class Gemini25Flash {
       release_date: '2025-08-26',
       examples: [
         {
-          image: '/model-examples/404.webp'
+          image: '/model-examples/gemini-2.5-flash_free-2025-08-27T20-15-19-867Z.webp'
         }
       ]
     }
