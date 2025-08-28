@@ -7,7 +7,7 @@ export default class Gemini25FlashFree {
       id: 'google/gemini-2.5-flash:free',
       providers: [{
         id: 'openrouter',
-        model_name: 'google/gemini-2.5-flash-image-preview',
+        model_name: 'google/gemini-2.5-flash-image-preview:free',
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0,
