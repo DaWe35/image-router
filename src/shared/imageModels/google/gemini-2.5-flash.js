@@ -13,7 +13,7 @@ export default class Gemini25Flash {
           postCalcFunction: this.postCalcPrice,
           value: 0.0272,
         },
-        applyImage: this.applyImage,
+        applyImage: this.applyImageGemini,
       }],
       arena_score: 1165,
       release_date: '2025-08-26',
@@ -29,9 +29,9 @@ export default class Gemini25Flash {
     return this.data
   }
 
-  async applyImage(params) {
+  async applyImageGemini(params) {
     // Process single or multiple image files
-    const processedImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+    const processedImages = await processSingleOrMultipleFiles(params.files.image)
     
     // Store the images for use in the API call
     params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]

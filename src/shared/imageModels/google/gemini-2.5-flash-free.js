@@ -12,7 +12,7 @@ export default class Gemini25FlashFree {
           type: PRICING_TYPES.FIXED,
           value: 0,
         },
-        applyImage: this.applyImage,
+        applyImage: this.applyImageOpenRouter,
       }],
       arena_score: 1165,
       release_date: '2025-08-26',
@@ -28,7 +28,7 @@ export default class Gemini25FlashFree {
     return this.data
   }
 
-  async applyImage(params) {
+  async applyImageOpenRouter(params) {
     // Process single or multiple image files
     const processedImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     
