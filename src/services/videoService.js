@@ -963,14 +963,14 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         if (!pollRes.ok) {
             const providerError = lastPollPayload?.errors?.[0] || {}
             console.log('Runware generation failed at 1', JSON.stringify(providerError))
-            if (providerError?.code === 'invalidProviderContent') {
+            if (providerError?.code === 'invalidProviderContent' || providerError?.code === 'providerError') {
                 throw {
                     status: pollRes.status,
                     errorResponse: {
                         status: pollRes.status,
                         statusText: providerError?.code || 'polling_error',
                         error: {
-                            message: providerError.message,
+                            message: providerError?.responseContent?.data?.task_status_msg || providerError.message,
                             type: providerError?.code || 'polling_error'
                         },
                         original_response_from_provider: lastPollPayload
