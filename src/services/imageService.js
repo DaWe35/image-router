@@ -1073,7 +1073,7 @@ async function generateOpenRouter({ fetchParams, userId }) {
     }
 
     const providerKey = providerKeys[Math.floor(Math.random() * providerKeys.length)]
-    console.log('using key', Math.floor(Math.random() * providerKeys.length))
+    console.log('Using OpenRouter key', Math.floor(Math.random() * providerKeys.length))
 
     let contentPayload
 
