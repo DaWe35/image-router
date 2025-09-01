@@ -103,6 +103,15 @@ registry.registerPath({
   }
 })
 
+registry.registerPath({
+  method: 'get',
+  path: '/v1/auth/test',
+  responses: {
+    200: { description: 'API key valid' },
+    401: { description: 'Unauthorized' }
+  }
+})
+
 const generator = new OpenApiGeneratorV31(registry.definitions)
 
 export const openApiDocument = generator.generateDocument({

@@ -16,6 +16,7 @@ import YAML from 'yaml'
 import { openApiDocument } from './openapiDoc.js'
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import { authRoutes } from './routes/authRoutes.js'
 
 dotenv.config()
 
@@ -119,6 +120,7 @@ app.get('/ip', (req, res) => {
 // Routes
 app.use('/v1/openai/images', imageRoutes)
 app.use('/v1/openai/videos', videoRoutes)
+app.use('/v1/auth', authRoutes)
 
 app.get('/v1/models', (req, res) => {
     const removeProvider = obj => {
