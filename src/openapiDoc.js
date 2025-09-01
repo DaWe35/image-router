@@ -104,7 +104,7 @@ registry.registerPath({
 })
 
 registry.registerPath({
-  method: 'get',
+  method: 'post',
   path: '/v1/auth/test',
   responses: {
     200: { description: 'API key valid' },
