@@ -10,7 +10,6 @@ authRoutes.post('/test', validateApiKey, (req, res) => {
   const { id, credits } = res.locals.key.user
   return res.json({
     success: true,
-    userId: id,
     credits
   })
 })
