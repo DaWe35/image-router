@@ -34,6 +34,10 @@ export function validateImageParams(req) {
   if (model === 'google/gemini-2.0-flash-exp:free') {
     throw new Error("Please switch to 'google/gemini-2.0-flash-exp' (paid) or 'google/gemini-2.5-flash:free' (free) instead.")
   }
+  if (model === 'google/gemini-2.5-flash:free') {
+    throw new Error("The free trial is over for this model. Please switch to 'google/gemini-2.5-flash' (paid) or use other models instead.")
+  }
+  
 
   const modelConfig = imageModels[model]
   if (!modelConfig) {
