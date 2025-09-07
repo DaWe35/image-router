@@ -42,13 +42,24 @@ export const freeTierLimiter = async (req, res, next) => {
       prisma.APIUsage.count({ where: { ...whereCommon, ip: clientIp } })
     ])
 
-    const dailyFreeLimit = 50
+    // Determine if the user has ever deposited credits. For now we approximate this by the current credit balance.
+    const hasDeposit = (res.locals.key?.user?.credits ?? 0) > 0
+
+    // If the user has no deposit, they are limited to zero free generations until they top-up.
+    const dailyFreeLimit = hasDeposit ? 50 : 0
 
     if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
-      return res.status(429).json({
+      // Respond with a different message if the user has never deposited.
+      const message = hasDeposit
+        ? `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`
+        : 'Please deposit a small amount of credits to get access to 50 daily free generations: https://imagerouter.io/pricing'
+
+      const type = hasDeposit ? 'rate_limit_error' : 'deposit_required'
+
+      return res.status(hasDeposit ? 429 : 403).json({
         error: {
-          message: `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`,
-          type: 'rate_limit_error'
+          message,
+          type
         }
       })
     }
