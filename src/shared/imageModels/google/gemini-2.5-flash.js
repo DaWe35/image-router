@@ -7,7 +7,7 @@ export default class Gemini25Flash {
       id: 'google/gemini-2.5-flash',
       providers: [{
         id: 'gemini',
-        model_name: 'gemini-2.0-flash-preview-image-generation',
+        model_name: 'gemini-2.5-flash-image-preview',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,
