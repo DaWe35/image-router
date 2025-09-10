@@ -35,7 +35,7 @@ export function selectProvider(providers, requestParams = {}) {
     desiredProviderId = hasInputImage ? 'openai' : 'nanogpt';
   }
   // Special-case selection for Seedream-3
-  if (modelId === 'bytedance/seedream-3') {
+  if (modelId === 'bytedance/seedream-3' || modelId === 'bytedance/seedream-4') {
     // Prefer NanoGPT for pure text-to-image; use RunWare when an input image is supplied
     desiredProviderId = hasInputImage ? 'runware' : 'nanogpt';
   }
