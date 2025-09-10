@@ -14,7 +14,7 @@ export default class Gemini25FlashFree {
         },
         applyImage: this.applyImageOpenRouter,
       }],
-      arena_score: 1165,
+      arena_score: 1167,
       release_date: '2025-08-26',
       examples: [
         {

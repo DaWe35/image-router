@@ -15,7 +15,7 @@ export default class Gemini25Flash {
         },
         applyImage: this.applyImageGemini,
       }],
-      arena_score: 1165,
+      arena_score: 1167,
       release_date: '2025-08-26',
       examples: [
         {

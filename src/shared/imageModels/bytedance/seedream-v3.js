@@ -36,7 +36,7 @@ export default class SeedreamV3 {
         }
       ],
       release_date: '2025-04-16',
-      arena_score: 1160,
+      arena_score: 1156,
       examples: [
         {
           image: '/model-examples/seedream-3-2025-06-16T17-59-52-679Z.webp'

@@ -23,7 +23,7 @@ class Flux11ProUltra {
           }
         }
       ],
-      arena_score: 1094,
+      arena_score: 1101,
       release_date: '2024-11-06',
       examples: [
         {

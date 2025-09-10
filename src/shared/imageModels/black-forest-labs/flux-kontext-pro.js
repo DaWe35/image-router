@@ -24,7 +24,7 @@ class FluxKontextPro {
           applyImage: applyImageSingle,
         }
     ],
-      arena_score: 1076,
+      arena_score: 1098,
       release_date: '2025-05-29',
       examples: [
         {

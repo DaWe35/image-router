@@ -22,7 +22,7 @@ class QwenImageEdit {
           applyImage: this.applyImageRunware
         }
       ],
-      arena_score: 1099,
+      arena_score: 1092,
       release_date: '2025-08-18'
 
     }

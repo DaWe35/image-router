@@ -24,7 +24,7 @@ class FluxKontextMax {
           applyImage: applyImageSingle,
         }
       ],
-      arena_score: 1103,
+      arena_score: 1128,
       release_date: '2025-05-29',
       examples: [
         {
