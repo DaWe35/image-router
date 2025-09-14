@@ -459,17 +459,24 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
         agent
     })
 
-    const data = await response.json()
+    // Safely parse body (fallback to text for non-JSON errors)
+    const rawBody = await response.text()
+    let data
+    try {
+        data = rawBody ? JSON.parse(rawBody) : null
+    } catch (_) {
+        data = null
+    }
 
     if (!response.ok) {
         const formattedError = {
-            status: data?.error?.code,
-            statusText: data?.error?.status,
+            status: data?.error?.code || response.status,
+            statusText: data?.error?.status || response.statusText,
             error: {
-                message: data?.error?.message,
-                type: data?.error?.status
+                message: data?.error?.message || (rawBody || 'Request failed'),
+                type: data?.error?.status || 'Unknown Error'
             },
-            original_response_from_provider: data
+            original_response_from_provider: data ?? rawBody
         }
         if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
             formattedError.error.message = 'This model hit a global rate limit. Please try again.'
@@ -477,6 +484,21 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
         throw {
             status: response.status,
             errorResponse: formattedError
+        }
+    }
+
+    if (!data) {
+        throw {
+            status: 502,
+            errorResponse: {
+                status: 502,
+                statusText: 'Invalid JSON response from provider',
+                error: {
+                    message: 'Provider returned a non-JSON success response',
+                    type: 'invalid_response'
+                },
+                original_response_from_provider: rawBody
+            }
         }
     }
     
@@ -1013,21 +1035,42 @@ async function generateGeminiImagen({ fetchParams }) {
         body: JSON.stringify(requestBody)
     })
 
-    const data = await response.json()
+    const rawBody = await response.text()
+    let data
+    try {
+        data = rawBody ? JSON.parse(rawBody) : null
+    } catch (_) {
+        data = null
+    }
 
     if (!response.ok) {
         const formattedError = {
             status: data?.error?.code || response.status,
             statusText: data?.error?.status || response.statusText,
             error: {
-                message: data?.error?.message || 'Imagen generation failed',
+                message: data?.error?.message || (rawBody || 'Imagen generation failed'),
                 type: data?.error?.status || 'Unknown Error'
             },
-            original_response_from_provider: data
+            original_response_from_provider: data ?? rawBody
         }
         throw {
             status: response.status,
             errorResponse: formattedError
+        }
+    }
+
+    if (!data) {
+        throw {
+            status: 502,
+            errorResponse: {
+                status: 502,
+                statusText: 'Invalid JSON response from provider',
+                error: {
+                    message: 'Provider returned a non-JSON success response',
+                    type: 'invalid_response'
+                },
+                original_response_from_provider: rawBody
+            }
         }
     }
 
