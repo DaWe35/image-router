@@ -3,7 +3,7 @@ import { prisma } from '../config/database.js'
 // Daily free-tier limiter shared by all endpoints.
 // Must be executed AFTER body parsing so that req.body.model is defined.
 export const freeTierLimiter = async (req, res, next) => {
-  if (!res.locals.key) {
+  if (!res.locals.key || res.locals.key?.isAnon) {
     // No validated API key – nothing to do here; any missing/invalid key
     // should already be handled earlier in the middleware chain.
     return next()
