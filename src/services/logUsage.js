@@ -6,7 +6,6 @@ const models = {
 }
 import { prisma } from '../config/database.js'
 import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
-import { selectProvider } from '../utils/providerSelector.js'
 
 export async function preLogUsage(params, apiKey, req, providerIndex) {
     const modelConfig = models[params.model]
@@ -29,6 +28,13 @@ export async function preLogUsage(params, apiKey, req, providerIndex) {
 
     if (apiKey.id === null && apiKey.apiKeyTempJwt === false) {
         throw new Error('API key is not found, please contact support')
+    }
+
+    // Check if anon token and enforce free model & metadata
+    const isAnon = apiKey.isAnon === true
+
+    if (isAnon && prePriceInt !== 0) {
+        throw new Error('Anon tokens are only valid for free-tier models')
     }
 
     // Get client IP

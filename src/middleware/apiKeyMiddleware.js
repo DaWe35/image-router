@@ -33,39 +33,85 @@ export const validateApiKey = async (req, res, next) => {
                 }
             })
             key.apiKeyTempJwt = false
-        } else if (apiKeyString.length === 192) {
-            // JWT token validation
+        } else if (apiKeyString.length >= 100) { // JWT token validation, could be temp-login or anon
             const jwtResult = validateTempToken(apiKeyString)
-            if (!jwtResult || !jwtResult.userId) {
+            if (!jwtResult) {
                 return res.status(401).json({
-                    error: {
-                        message: 'Invalid or expired JWT token',
-                        type: 'unauthorized'
-                    }
+                    error: { message: 'Invalid or expired JWT token', type: 'unauthorized' }
                 })
             }
 
-            const user = await prisma.user.findUnique({
-                where: { id: jwtResult.userId },
-                select: {
-                    id: true,
-                    credits: true
+            // Anonymous token path
+            if (jwtResult.anonIp) {
+                const proxyCount = Number(process.env.PROXY_COUNT || 0)
+                const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
+                if (clientIp !== jwtResult.anonIp) {
+                    return res.status(403).json({
+                        error: { message: 'Anon token IP mismatch: ' + clientIp + ' !== ' + jwtResult.anonIp, type: 'unauthorized' }
+                    })
                 }
-            })
-            if (!user) {
+
+                // Check if token already used
+                const today = new Date()
+                today.setHours(0,0,0,0)
+                const tokenCount = await prisma.APIUsage.count({
+                    where: {
+                        apiKeyTempJwt: true,
+                        ip: clientIp,
+                        createdAt: { gte: today }
+                    }
+                })
+                if (tokenCount >= 3) {
+                    return res.status(429).json({
+                        error: { message: 'Daily free limit reached. Deposit any amount to unlock 50 free images/day: https://imagerouter.io/pricing', type: 'rate_limit_error' }
+                    })
+                }
+
+                // Ensure we have a shared anon user row
+                const anonUser = await prisma.user.upsert({
+                    where: { id: 'anon_user' },
+                    update: {},
+                    create: { id: 'anon_user', credits: 0 }
+                })
+
+                key = {
+                    id: null,
+                    apiKeyTempJwt: true,
+                    isActive: true,
+                    isAnon: true,
+                    user: anonUser
+                }
+            } else if (jwtResult.userId) {
+                // existing temp-login path
+                const user = await prisma.user.findUnique({
+                    where: { id: jwtResult.userId },
+                    select: {
+                        id: true,
+                        credits: true
+                    }
+                })
+                if (!user) {
+                    return res.status(401).json({
+                        error: {
+                            message: 'User not found for this JWT token',
+                            type: 'unauthorized'
+                        }
+                    })
+                }
+
+                key = {
+                    id: null,
+                    apiKeyTempJwt: true,
+                    isActive: true,
+                    user: user
+                }
+            } else {
                 return res.status(401).json({
                     error: {
-                        message: 'User not found for this JWT token',
+                        message: `Invalid JWT token format`,
                         type: 'unauthorized'
                     }
                 })
-            }
-
-            key = {
-                id: null,
-                apiKeyTempJwt: true,
-                isActive: true,
-                user: user
             }
         } else {
             return res.status(401).json({
@@ -80,15 +126,6 @@ export const validateApiKey = async (req, res, next) => {
             return res.status(401).json({
                 error: {
                     message: 'Invalid authorization token',
-                    type: 'unauthorized'
-                }
-            })
-        }
-
-        if (!key.isActive) {
-            return res.status(401).json({
-                error: {
-                    message: 'API key is inactive',
                     type: 'unauthorized'
                 }
             })
