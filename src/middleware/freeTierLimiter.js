@@ -51,8 +51,8 @@ export const freeTierLimiter = async (req, res, next) => {
     if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
       // Respond with a different message if the user has never deposited.
       const message = hasDeposit
-        ? `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`
-        : 'Please deposit a small amount of credits to get access to 50 daily free generations: https://imagerouter.io/pricing'
+        ? `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models, so you can continue by removing ":free" from the model name.`
+        : 'Please deposit any amount to get access to 50 daily free generations: https://imagerouter.io/pricing'
 
       const type = hasDeposit ? 'rate_limit_error' : 'deposit_required'
 
