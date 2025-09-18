@@ -62,7 +62,7 @@ export const validateApiKey = async (req, res, next) => {
                     }
                 })
                 if (tokenCount >= 3) {
-                    return res.status(401).json({
+                    return res.status(429).json({
                         error: { message: 'Daily free limit reached. Deposit $5 to unlock 50 images/day.', type: 'rate_limit_error' }
                     })
                 }
