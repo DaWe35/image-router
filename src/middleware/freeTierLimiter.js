@@ -3,7 +3,7 @@ import { prisma } from '../config/database.js'
 // Daily free-tier limiter shared by all endpoints.
 // Must be executed AFTER body parsing so that req.body.model is defined.
 export const freeTierLimiter = async (req, res, next) => {
-  if (!res.locals.key) {
+  if (!res.locals.key || res.locals.key?.isAnon) {
     // No validated API key – nothing to do here; any missing/invalid key
     // should already be handled earlier in the middleware chain.
     return next()
@@ -51,8 +51,8 @@ export const freeTierLimiter = async (req, res, next) => {
     if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
       // Respond with a different message if the user has never deposited.
       const message = hasDeposit
-        ? `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models.`
-        : 'Please deposit a small amount of credits to get access to 50 daily free generations: https://imagerouter.io/pricing'
+        ? `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models, so you can continue by removing ":free" from the model name.`
+        : 'Please deposit any amount to get access to 50 daily free generations: https://imagerouter.io/pricing'
 
       const type = hasDeposit ? 'rate_limit_error' : 'deposit_required'
 
