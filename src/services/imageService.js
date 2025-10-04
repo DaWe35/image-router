@@ -658,7 +658,7 @@ async function generateTest({ fetchParams, userId }) {
         revised_prompt: null
     }
 
-    if (fetchParams.response_format === 'b64_json') {
+    if (fetchParams.response_format === 'b64_json' || fetchParams.response_format === 'b64_ephemeral') {
         responseData.b64_json = b64_json
     } else {
         responseData.url = `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/imageModels/test/${fetchParams.quality}.png`

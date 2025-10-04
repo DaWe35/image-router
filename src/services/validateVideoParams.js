@@ -5,7 +5,7 @@ import { imageModels } from '../shared/imageModels/index.js'
 const bodySchema = z.object({
   prompt: z.string().min(1, { message: "'prompt' is a required parameter" }),
   model: z.string().min(1, { message: "'model' is a required parameter" }),
-  response_format: z.enum(['url', 'b64_json']).default('url'),
+  response_format: z.enum(['url', 'b64_json', 'b64_ephemeral']).default('url'),
   size: z.string()
     .default('auto')
     .refine(val => val === 'auto' || /^\d+x\d+$/.test(val), {

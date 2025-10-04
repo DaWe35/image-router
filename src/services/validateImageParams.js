@@ -12,7 +12,7 @@ const bodySchema = z.object({
     required_error: "'model' is a required parameter",
     invalid_type_error: "'model' must be a string"
   }).min(1, { message: "'model' is a required parameter" }),
-  response_format: z.enum(['url', 'b64_json']).default('url'),
+  response_format: z.enum(['url', 'b64_json', 'b64_ephemeral']).default('url'),
   quality: z.enum(['auto', 'low', 'medium', 'high']).default('auto'),
   // Allow explicit 'auto' or dimensions like "1024x768"
   size: z.string()

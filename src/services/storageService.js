@@ -142,8 +142,26 @@ class StorageService {
         }
 
         try {
-            if (!content.url && !content.b64_json) {
-                return content
+            // Handle b64_ephemeral (return base64 without uploading)
+            if (responseFormat === 'b64_ephemeral') {
+                if (content.b64_json) {
+                    return content
+                } else if (content.url) {
+                    try {
+                        const resp = await fetch(content.url)
+                        if (!resp.ok) {
+                            return content
+                        }
+                        const buffer = Buffer.from(await resp.arrayBuffer())
+                        return {
+                            revised_prompt: content.revised_prompt ?? null,
+                            b64_json: buffer.toString('base64')
+                        }
+                    } catch (err) {
+                        console.error('b64_ephemeral fetch error:', err)
+                        return content
+                    }
+                }
             }
 
             let uploadResult
