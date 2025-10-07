@@ -70,6 +70,7 @@ import HiDreamI1Full from './hidream-ai/HiDream-I1-Full.js'
 import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 import HidreamE11 from './hidream-ai/hidream-e1-1.js'
 import RMBG20 from './runware/RMBG-2.0.js'
+import RMBG20Free from './runware/RMBG-2.0-free.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
 import SeedEditV3 from './bytedance/seededit-v3.js'
@@ -153,6 +154,7 @@ const modelInstances = [
   new RealisticVision(),
   new RealVisXL(),
   new RMBG20(),
+  new RMBG20Free(),
   new HiDreamI1Fast(),
   new HiDreamI1Dev(),
   new HiDreamI1Full(),
