@@ -14,6 +14,11 @@ class Imagen4 {
       }],
       release_date: '2025-08-14',
       arena_score: 1159,
+      examples: [
+        {
+          image: '/model-examples/imagen-4-2025-10-08T20-54-27-306Z.webp'
+        }
+      ],
       sizes: [
         '1024x1024',
         '896x1280',

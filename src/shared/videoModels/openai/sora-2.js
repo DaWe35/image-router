@@ -17,12 +17,11 @@ class Sora2 {
         applyImage: applyImageRunwareVideo,
       }],
       release_date: '2025-09-30',
-      /* examples: [
+      examples: [
         {
-          // TODO: Add an example video URL
-          video: ''
+          video: '/model-examples/Sora-2-2025-10-08T20-46-57-089Z.webm'
         }
-      ] */
+      ]
     }
   }
 
