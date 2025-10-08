@@ -5,9 +5,21 @@ export default class Gemini25Flash {
   constructor() {
     this.data = {
       id: 'google/gemini-2.5-flash',
+      sizes: [
+        '1024x1024',
+        '832x1248',
+        '1248x832',
+        '864x1184',
+        '1184x864',
+        '896x1152',
+        '1152x896',
+        '768x1344',
+        '1344x768',
+        '1536x672',
+      ],
       providers: [{
         id: 'gemini',
-        model_name: 'gemini-2.5-flash-image-preview',
+        model_name: 'gemini-2.5-flash-image',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,

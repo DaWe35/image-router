@@ -445,17 +445,45 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
         }
     }
 
+    const sizeToAspectRatio = {
+        '1024x1024': '1:1',
+        '832x1248': '2:3',
+        '1248x832': '3:2',
+        '864x1184': '3:4',
+        '1184x864': '4:3',
+        '896x1152': '4:5',
+        '1152x896': '5:4',
+        '768x1344': '9:16',
+        '1344x768': '16:9',
+        '1536x672': '21:9',
+    };
+
+    const generationConfig = {
+        responseModalities: ["Text", "Image"],
+    };
+
+    if (fetchParams.size) {
+        const aspectRatio = sizeToAspectRatio[fetchParams.size];
+        if (aspectRatio) {
+            generationConfig.imageConfig = {
+                aspectRatio: aspectRatio
+            };
+        }
+    }
+
+    const body = {
+        "contents": [{
+            "parts": parts
+        }],
+        "generationConfig": generationConfig
+    };
+
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            "contents": [{
-                "parts": parts
-            }],
-            "generationConfig": {"responseModalities": ["Text", "Image"]}
-        }),
+        body: JSON.stringify(body),
         agent
     })
 
