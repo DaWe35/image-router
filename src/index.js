@@ -135,6 +135,25 @@ app.get('/v1/models', (req, res) => {
     })
 })
 
+app.get('/v1/models/:modelId', (req, res) => {
+    const { modelId } = req.params
+    const allModels = { ...imageModels, ...videoModels }
+    const model = allModels[modelId]
+
+    if (model) {
+        res.json(model)
+    } else {
+        res.status(404).json({
+            error: {
+                message: `The model '${modelId}' does not exist.`,
+                type: 'invalid_request_error',
+                param: 'model',
+                code: 'model_not_found'
+            }
+        })
+    }
+})
+
 // Video proxy endpoint to serve videos without exposing API keys
 app.get('/proxy/video', async (req, res) => {
     try {
