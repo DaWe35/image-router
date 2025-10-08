@@ -3,6 +3,8 @@ import Veo2Mock from './google/veo-2-mock.js'
 import Veo3 from './google/veo-3.js'
 import Veo3Fast from './google/veo-3-fast.js'
 
+import Sora2 from './openai/sora-2.js'
+
 import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
 import Kling21Standard from './kwaivgi/kling-2.1-standard.js'
 import Kling21Pro from './kwaivgi/kling-2.1-pro.js'
@@ -21,6 +23,8 @@ const modelInstances = [
   new Veo3(),
   new Veo3Fast(),
   //new Veo2Mock(),
+
+  new Sora2(),
 
   new Kling16Standard(),
   new Kling21Standard(),

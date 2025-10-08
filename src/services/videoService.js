@@ -854,13 +854,25 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
     const taskUUID = usageLogId
 
     // Build the Runware task payload
+    let duration
+    switch (true) {
+        case fetchParams.model.includes('openai:3@1'):
+            duration = 4
+            break
+        case fetchParams.model.includes('minimax:3@1'):
+            duration = 6
+            break
+        default:
+            duration = 5
+    }
+    
     const taskPayload = {
         taskType: 'videoInference',
         taskUUID,
         deliveryMethod: 'async',
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
-        duration: fetchParams.model.includes('minimax:3@1') ? 6 : 5,
+        duration,
         outputFormat: "mp4",
         numberResults: 1,
         includeCost: true
@@ -886,6 +898,10 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
 
         if (!fetchParams.image) {
             switch (fetchParams.model) {
+                case 'openai:3@1':
+                    taskPayload.width = 1280
+                    taskPayload.height = 720
+                    break
                 case 'bytedance:1@1':
                     taskPayload.width = 1248
                     taskPayload.height = 704
