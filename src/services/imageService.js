@@ -29,7 +29,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
             const supportedModels = Object.keys(imageModels).filter(modelId => 
                 imageModels[modelId].supported_params?.edit === true
             )
-            throw new Error(`Image editing is not supported for this model. Supported models: ${supportedModels.join(', ')}`)
+            throw new Error(`This model does not support image inputs`)
         }
     }
 
