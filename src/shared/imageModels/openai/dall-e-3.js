@@ -4,6 +4,11 @@ class DallE3 {
   constructor() {
     this.data = {
       id: 'openai/dall-e-3',
+      sizes: [
+        '1024x1024',
+        '1024x1536',
+        '1536x1024',
+      ],
       providers: [{
         id: 'openai',
         model_name: 'dall-e-3',
@@ -11,9 +16,9 @@ class DallE3 {
           type: PRICING_TYPES.CALCULATED,
           calcFunction: this.calculatePrice,
           range: {
-            min: this.calculatePrice('low'),
-            average: this.calculatePrice('medium'),
-            max: this.calculatePrice('high')
+            min: this.calculatePrice('low', '1024x1024'),
+            average: this.calculatePrice('auto', '1024x1024'),
+            max: this.calculatePrice('high', '1536x1024')
           },
         },
         applyQuality: this.applyQuality,
@@ -32,15 +37,29 @@ class DallE3 {
     return this.data
   }
 
-  calculatePrice(quality) {
-    // 1024x1024
-    switch (quality) {
-      case 'high':
-        return 0.08
-      case 'low':
-      case 'medium':
-      default:
-        return 0.04
+  calculatePrice(quality, size) {
+    const isHD = quality === 'high'
+
+    if (isHD) {
+        switch (size) {
+            case '1024x1024':
+                return 0.08
+            case '1024x1536':
+            case '1536x1024':
+                return 0.12
+            default:
+                return 0.08 // Default to 1024x1024 if size is unknown
+        }
+    } else { // Standard quality
+        switch (size) {
+            case '1024x1024':
+                return 0.04
+            case '1024x1536':
+            case '1536x1024':
+                return 0.08
+            default:
+                return 0.04 // Default to 1024x1024 if size is unknown
+        }
     }
   }
 

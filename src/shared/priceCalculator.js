@@ -22,7 +22,7 @@ export function preCalcPrice(modelName, size, quality, providerIndex) {
         case PRICING_TYPES.FIXED:
             return pricing.value
         case PRICING_TYPES.CALCULATED:
-            return pricing.calcFunction(quality)
+            return pricing.calcFunction(quality, size)
         case PRICING_TYPES.POST_GENERATION:
             return pricing.range?.max ?? pricing.value
         default:

@@ -27,6 +27,7 @@ import RunDiffusionPhotoFlux from './run-diffusion/RunDiffusion-Photo-Flux.js'
 import DallE2 from './openai/dall-e-2.js'
 import DallE3 from './openai/dall-e-3.js'
 import GptImage1 from './openai/gpt-image-1.js'
+import GptImage1Mini from './openai/gpt-image-1-mini.js'
 
 import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
@@ -115,6 +116,7 @@ const modelInstances = [
   new DallE2(),
   new DallE3(),
   new GptImage1(),
+  new GptImage1Mini(),
   
   new RecraftV3(),
   new RecraftV3Svg(),

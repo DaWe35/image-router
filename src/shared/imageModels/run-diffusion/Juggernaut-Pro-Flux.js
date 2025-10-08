@@ -4,7 +4,7 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 class JuggernautProFlux {
   constructor() {
     this.data = {
-      id: 'run-diffusion/Juggernaut-Pro-Flux', 
+      id: 'run-diffusion/Juggernaut-Pro-Flux',
       providers: [{
         id: 'runware',
         model_name: 'rundiffusion:130@100',

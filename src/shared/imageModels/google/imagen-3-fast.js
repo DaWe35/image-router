@@ -17,7 +17,14 @@ class Imagen3Fast {
         {
           image: '/model-examples/imagen-3-fast-2025-04-03T15-11-16-597Z.webp'
         }
-      ]
+      ],
+      sizes: [
+        '1024x1024',
+        '896x1280',
+        '1280x896',
+        '768x1408',
+        '1408x768'
+      ],
     }
   }
 

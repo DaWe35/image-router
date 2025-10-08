@@ -5,12 +5,22 @@ class DallE2 {
   constructor() {
     this.data = {
       id: 'openai/dall-e-2',
+      sizes: [
+        '1024x1024',
+        '1024x1536',
+        '1536x1024',
+      ],
       providers: [{
         id: 'openai',
         model_name: 'dall-e-2',
         pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.02,
+          type: PRICING_TYPES.CALCULATED,
+          calcFunction: this.calculatePrice,
+          range: {
+            min: 0.016,
+            average: 0.016,
+            max: 0.02
+          },
         },
         applyQuality: this.applyQuality,
         /* applyImage: this.applyImage,
@@ -28,6 +38,19 @@ class DallE2 {
 
   getData() {
     return this.data
+  }
+
+  calculatePrice(quality, size) {
+    switch (size) {
+      case '1024x1024':
+        return 0.016
+      case '1024x1536':
+        return 0.018
+      case '1536x1024':
+        return 0.02
+      default:
+        return 0.016
+    }
   }
 
   applyQuality(params) {

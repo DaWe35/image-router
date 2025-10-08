@@ -2,35 +2,21 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10 } from '../../../services/imageHelpers.js'
 import { applyImageNanoGPT } from '../../applyImage.js'
 
-class GptImage1 {
+class GptImage1Mini {
   constructor() {
     this.data = {
-      id: 'openai/gpt-image-1',
+      id: 'openai/gpt-image-1-mini',
       providers: [
         {
-          id: 'nanogpt',
-          model_name: 'gpt-image-1',
-          pricing: {
-            type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcNanoGPTDiscounted10,
-            range: {
-              min: 0.011,
-              average: 0.167,
-              max: 0.3
-            },
-          },
-          applyQuality: this.applyQuality,
-          applyImage: applyImageNanoGPT,
-        }, {
           id: 'openai',
-          model_name: 'gpt-image-1',
+          model_name: 'gpt-image-1-mini',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: this.postCalcPrice,
             range: {
-              min: 0.011,
-              average: 0.167,
-              max: 0.3
+              min: 0.005,
+              average: 0.011,
+              max: 0.015
             },
           },
           applyQuality: this.applyQuality,
@@ -38,13 +24,12 @@ class GptImage1 {
           applyMask: this.applyMask,
         }
       ],
-      arena_score: 1164,
-      release_date: '2025-04-23',
-      examples: [
+      release_date: '2025-10-06',
+      /* examples: [
         {
           image: '/model-examples/gpt-image-1-2025-06-15T21-37-41-776Z.webp'
         }
-      ],
+      ], */
       sizes: [
         '1024x1024',
         '1536x1024',
@@ -58,9 +43,9 @@ class GptImage1 {
   }
 
   postCalcPrice(imageResult) {
-      const inputTextPrice = 0.000005
-      const inputImagePrice = 0.00001
-      const outputImagePrice = 0.00004
+      const inputTextPrice = 0.000002
+      const inputImagePrice = 0.0000025
+      const outputImagePrice = 0.000008
 
       const inputTextTokens = imageResult.usage.input_tokens_details.text_tokens
       const inputImageTokens = imageResult.usage.input_tokens_details.image_tokens
@@ -71,11 +56,11 @@ class GptImage1 {
   }
 
   applyQuality(params) {
-    const allowedQualities = ['auto', 'low', 'medium', 'high']
+    const allowedQualities = ['auto', 'low', 'medium']
     if (allowedQualities.includes(params.quality)) {
       params.quality = params.quality
     } else {
-      throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
+      throw new Error(`This 'quality' is not supported for this model. Must be one of: ${allowedQualities.join(', ')}`)
     }
     return params
   }
@@ -93,4 +78,4 @@ class GptImage1 {
   }
 }
 
-export default GptImage1
+export default GptImage1Mini
