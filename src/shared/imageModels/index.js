@@ -85,7 +85,6 @@ import DreaminaV31 from './bytedance/dreamina-3.1.js'
 import QwenImage from './qwen/qwen-image.js'
 import QwenImageEdit from './qwen/qwen-image-edit.js'
 import QwenImageEditPlus from './qwen/qwen-image-edit-plus.js'
-import QwenSnofs from './qwen/qwen-snofs.js'
 
 import Grok2Image from './xAI/grok-2-image.js'
 
@@ -178,7 +177,6 @@ const modelInstances = [
   new QwenImage(),
   new QwenImageEdit(),
   new QwenImageEditPlus(),
-  new QwenSnofs(),
 
   new Grok2Image(),
 ]
