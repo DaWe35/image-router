@@ -123,16 +123,80 @@ app.use('/v1/openai/videos', videoRoutes)
 app.use('/v1/auth', authRoutes)
 
 app.get('/v1/models', (req, res) => {
-    const removeProvider = obj => {
-        return Object.entries(obj).reduce((acc, [key, value]) => {
-            acc[key] = { ...value }
-            return acc
-        }, {})
+    const { type, provider, free, name, sort, limit } = req.query
+
+    let allModels = {
+        ...imageModels,
+        ...videoModels
     }
-    res.json({
-        ...removeProvider(imageModels),
-        ...removeProvider(videoModels)
-    })
+
+    let modelsArray = Object.entries(allModels).map(([id, modelData]) => ({
+        id,
+        ...modelData,
+        provider: id.split('/')[0]
+    }))
+
+    // Filtering
+    if (type) {
+        modelsArray = modelsArray.filter(model => {
+            if (type === 'image') return model.output.includes('image')
+            if (type === 'video') return model.output.includes('video')
+            return true
+        })
+    }
+
+    if (provider) {
+        modelsArray = modelsArray.filter(model => model.provider.toLowerCase().includes(provider.toLowerCase()))
+    }
+
+    if (free) {
+        const isFree = free === 'true'
+        modelsArray = modelsArray.filter(model => {
+            const hasFreeProvider = model.providers.some(p => p.pricing.value === 0)
+            return isFree ? hasFreeProvider : !hasFreeProvider
+        })
+    }
+
+    if (name) {
+        modelsArray = modelsArray.filter(model => model.id.toLowerCase().includes(name.toLowerCase()))
+    }
+
+    // Sorting
+    if (sort) {
+        modelsArray.sort((a, b) => {
+            switch (sort) {
+                case 'name':
+                    return a.id.localeCompare(b.id)
+                case 'provider':
+                    return a.provider.localeCompare(b.provider)
+                case 'arena_score':
+                    return (b.arena_score || 0) - (a.arena_score || 0)
+                case 'price':
+                    const aPrice = a.providers[0]?.pricing.value ?? Infinity
+                    const bPrice = b.providers[0]?.pricing.value ?? Infinity
+                    return aPrice - bPrice
+                case 'date':
+                    return new Date(b.release_date || 0) - new Date(a.release_date || 0)
+                default:
+                    return 0
+            }
+        })
+    }
+
+    // Limiting
+    if (limit) {
+        modelsArray = modelsArray.slice(0, parseInt(limit, 10))
+    }
+
+    // Convert back to object format
+    const result = modelsArray.reduce((acc, model) => {
+        const { id, ...modelData } = model
+        delete modelData.provider // Clean up the added provider field
+        acc[id] = modelData
+        return acc
+    }, {})
+
+    res.json(result)
 })
 
 app.get('/v1/models/:modelId', (req, res) => {
