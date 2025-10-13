@@ -13,6 +13,11 @@ class IdeogramV3Turbo {
         },
       }],
       release_date: '2025-03-26',
+      examples: [
+        {
+          image: '/model-examples/ideogram-v3-turbo-2025-10-13.webp'
+        }
+      ],
     }
   }
 

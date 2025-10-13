@@ -23,7 +23,12 @@ class QwenImageEdit {
         }
       ],
       arena_score: 1092,
-      release_date: '2025-08-18'
+      release_date: '2025-08-18',
+      examples: [
+        {
+          image: '/model-examples/qwen-image-edit-2025-10-13.webp'
+        }
+      ]
 
     }
   }

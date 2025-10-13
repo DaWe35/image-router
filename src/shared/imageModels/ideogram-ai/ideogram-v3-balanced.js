@@ -13,6 +13,11 @@ class IdeogramV3Balanced {
         },
       }],
       release_date: '2025-03-26',
+      examples: [
+        {
+          image: '/model-examples/ideogram-v3-balanced-2025-10-13.webp'
+        }
+      ],
     }
   }
 
