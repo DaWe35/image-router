@@ -899,6 +899,8 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         if (!fetchParams.image) {
             switch (fetchParams.model) {
                 case 'openai:3@1':
+                case 'runware:200@6':
+                case 'runware:201@1':
                     taskPayload.width = 1280
                     taskPayload.height = 720
                     break

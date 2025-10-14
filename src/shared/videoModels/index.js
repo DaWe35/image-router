@@ -9,6 +9,11 @@ import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
 import Kling21Standard from './kwaivgi/kling-2.1-standard.js'
 import Kling21Pro from './kwaivgi/kling-2.1-pro.js'
 import Kling21Master from './kwaivgi/kling-2.1-master.js'
+import Kling21TurboPro from './kwaivgi/kling-2.5-turbo-pro.js'
+
+import Wan22 from './wan-ai/wan-2.2.js'
+import Wan25 from './wan-ai/wan-2.5.js'
+
 import Seedance1Lite from './bytedance/seedance-1-lite.js'
 import Seedance1Pro from './bytedance/seedance-1-pro.js'
 
@@ -30,6 +35,10 @@ const modelInstances = [
   new Kling21Standard(),
   new Kling21Pro(),
   new Kling21Master(),
+  new Kling21TurboPro(),
+
+  new Wan22(),
+  new Wan25(),
 
   new Seedance1Lite(),
   new Seedance1Pro(),
