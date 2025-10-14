@@ -53,7 +53,7 @@ export default class Gemini25Flash {
 
   postCalcPrice(imageResult) {
     // Calculate price based on number of images generated
-    const pricePerImage = 0.0272
+    const pricePerImage = 0.035
     const numberOfImages = imageResult.data ? imageResult.data.length : 1
     return pricePerImage * numberOfImages
   }
