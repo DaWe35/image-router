@@ -713,7 +713,15 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     }
 
     const taskUUID = usageLogId
-    const taskType = fetchParams.model.includes('runware:110@1') ? 'imageBackgroundRemoval' : 'imageInference'
+    let taskType
+    const upscaleModels = ['runware:500@1', 'runware:501@1', 'runware:502@1', 'runware:503@1']
+    if (fetchParams.model.includes('runware:110@1')) {
+        taskType = 'imageBackgroundRemoval'
+    } else if (upscaleModels.includes(fetchParams.model)) {
+        taskType = 'imageUpscale'
+    } else {
+        taskType = 'imageInference'
+    }
 
     const { width, height } = extractWidthHeight(fetchParams.size)
 
@@ -721,19 +729,21 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     const taskPayload = {
         taskType,
         taskUUID,
-        positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
         outputFormat: "WEBP",
-        numberResults: 1,
         includeCost: true
     }
+    if (taskType !== 'imageUpscale') {
+        taskPayload.positivePrompt = fetchParams.prompt
+        taskPayload.numberResults = 1
 
-    if (fetchParams.model.includes('bytedance:4@1')) { // seededit-v3
-        // taskPayload.CFGScale = 0.5 // This is not needed anymore ?
-    } else {
-        taskPayload.width = width || 1024
-        taskPayload.height = height || 1024
+        if (fetchParams.model != 'bytedance:4@1') {
+            taskPayload.width = width || 1024
+            taskPayload.height = height || 1024
+        }
     }
+
+
 
     if (fetchParams.steps) {
         taskPayload.steps = fetchParams.steps

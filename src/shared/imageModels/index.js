@@ -88,6 +88,11 @@ import QwenImageEditPlus from './qwen/qwen-image-edit-plus.js'
 
 import Grok2Image from './xAI/grok-2-image.js'
 
+import SwinIR from './upscale/SwinIR.js'
+import CCSR from './upscale/CCSR.js'
+import SDLatent from './upscale/SD-Latent.js'
+import Clarity from './upscale/Clarity.js'
+
 // Initialize all models
 const modelInstances = [
   new Flux11Pro(),
@@ -179,6 +184,11 @@ const modelInstances = [
   new QwenImageEditPlus(),
 
   new Grok2Image(),
+
+  new SwinIR(),
+  new CCSR(),
+  new SDLatent(),
+  new Clarity(),
 ]
 
 // Create an object with model IDs as keys
