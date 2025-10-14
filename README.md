@@ -116,6 +116,10 @@ Hostname   equals  storage.imagerouter.io
 Set static      Access-Control-Allow-Origin     *
 ```
 
+## Google account registration
+- Enable 2FA before billing
+- Forward email messages to main inbox
+- Generate a new Revolut virtual card for billing
 
 ## Google Vertex AI Setup
 

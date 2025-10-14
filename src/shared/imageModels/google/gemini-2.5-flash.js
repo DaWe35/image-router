@@ -23,7 +23,7 @@ export default class Gemini25Flash {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,
-          value: 0.0272,
+          value: 0.035,
         },
         applyImage: this.applyImageGemini,
       }],
