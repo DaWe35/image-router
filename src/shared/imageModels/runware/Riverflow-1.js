@@ -13,14 +13,14 @@ export default class Riverflow1 {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
-          value: 0.1,
+          value: 0.066,
         },
         applyImage: applyImagesReferences
       }],
       release_date: '2025-10-15',
       examples: [
         {
-          image: '/model-examples/.webp'
+          image: '/model-examples/riverflow-1-2025-10-17T19-51-17-829Z.webp'
         }
       ],
       sizes: [

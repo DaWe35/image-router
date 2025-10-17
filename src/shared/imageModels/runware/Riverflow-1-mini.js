@@ -20,7 +20,7 @@ export default class Riverflow1Mini {
       release_date: '2025-10-15',
       examples: [
         {
-          image: '/model-examples/.webp'
+          image: '/model-examples/riverflow-1-mini-2025-10-17T19-51-39-629Z.webp'
         }
       ],
       sizes: [

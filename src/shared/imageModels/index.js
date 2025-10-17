@@ -170,8 +170,8 @@ const modelInstances = [
   new HiDreamI1Dev(),
   new HiDreamI1Full(),
   new HidreamE11(),
-/*   new Riverflow1(),
-  new Riverflow1Mini(), */
+  new Riverflow1(),
+  new Riverflow1Mini(),
   
   new SeedreamV3(),
   new SeedEditV3(),
