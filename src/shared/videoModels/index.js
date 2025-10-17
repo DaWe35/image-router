@@ -2,6 +2,8 @@ import Veo2 from './google/veo-2.js'
 import Veo2Mock from './google/veo-2-mock.js'
 import Veo3 from './google/veo-3.js'
 import Veo3Fast from './google/veo-3-fast.js'
+import Veo31 from './google/veo-3.1.js'
+import Veo31Fast from './google/veo-3.1-fast.js'
 
 import Sora2 from './openai/sora-2.js'
 
@@ -27,6 +29,8 @@ const modelInstances = [
   new Veo2(),
   new Veo3(),
   new Veo3Fast(),
+  new Veo31(),
+  new Veo31Fast(),
   //new Veo2Mock(),
 
   new Sora2(),

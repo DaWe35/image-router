@@ -103,15 +103,22 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
     const predictUrl = `${baseUrl}/models/${fetchParams.model}:predictLongRunning?key=${providerKey}`
 
+    let personGenerationValue
+    if (fetchParams.model === 'veo-2.0-generate-001') {
+        personGenerationValue = "allow_adult"
+    } else {
+        personGenerationValue = fetchParams.image ? "allow_adult" : "allow_all"
+    }
+
     let bodyPayload = {
         "instances": [{
             "prompt": fetchParams.prompt
         }],
         "parameters": {
             "aspectRatio": "16:9",
-            "personGeneration": "allow_adult",
+            "personGeneration": personGenerationValue,
             "sampleCount": 1,
-            "durationSeconds": 5,
+            "durationSeconds": fetchParams.model === 'veo-2.0-generate-001' ? 5 : 8
         }
     }
 

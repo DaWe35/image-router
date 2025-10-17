@@ -1,36 +1,51 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { applyVertexImage } from '../../applyImage.js'
+import { applyImageSingle, applyVertexImage } from '../../applyImage.js'
 
-class Veo3Fast {
+export default class Veo3Fast {
   constructor() {
     this.data = {
       id: 'google/veo-3-fast',
       providers: [
         {
-          id: 'vertex',
-          model_name: 'veo-3.0-fast-generate-preview',
+          id: 'gemini',
+          model_name: 'veo-3.0-fast-generate-001',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 3.2,
+            value: 1.2,
           },
-          /* applyImage: applyVertexImage */
+          applyImage: applyImageSingle,
+        }
+        /* These have no input image implemented yet
+        {
+          id: 'vertex',
+          model_name: 'veo-3.0-fast-generate-001',
+          pricing: {
+            type: PRICING_TYPES.FIXED,
+            value: 1.2,
+          },
+          // applyImage: applyVertexImage
         }, {
           id: 'replicate',
           model_name: 'google/veo-3-fast',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 3.2,
+            value: 1.2,
           },
         }, {
           id: 'wavespeed',
           model_name: 'google/veo3-fast', // no audio ?
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 3.2,
+            value: 1.2,
           },
-        }
+        } */
       ],
-      release_date: '2025-06-12'
+      release_date: '2025-06-12',
+      examples: [
+        {
+          video: '/model-examples/veo-3-fast.webm'
+        }
+      ]
     }
   }
 
@@ -38,5 +53,3 @@ class Veo3Fast {
     return this.data
   }
 }
-
-export default Veo3Fast
