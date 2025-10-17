@@ -768,6 +768,11 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.seedImage = fetchParams.seedImage
         taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
     }
+    
+    // Sourceful: Riverflow
+    if (fetchParams.inputs_references) {
+        taskPayload.inputs = { references: fetchParams.inputs_references }
+    }
 
     // Inpainting support (mask)
     if (fetchParams.maskImage) {
