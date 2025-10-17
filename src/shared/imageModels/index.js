@@ -72,6 +72,8 @@ import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 import HidreamE11 from './hidream-ai/hidream-e1-1.js'
 import RMBG20 from './runware/RMBG-2.0.js'
 import RMBG20Free from './runware/RMBG-2.0-free.js'
+import Riverflow1 from './runware/Riverflow-1.js'
+import Riverflow1Mini from './runware/Riverflow-1-mini.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
 import SeedEditV3 from './bytedance/seededit-v3.js'
@@ -168,6 +170,8 @@ const modelInstances = [
   new HiDreamI1Dev(),
   new HiDreamI1Full(),
   new HidreamE11(),
+  new Riverflow1(),
+  new Riverflow1Mini(),
   
   new SeedreamV3(),
   new SeedEditV3(),
