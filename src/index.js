@@ -199,7 +199,7 @@ app.get('/v1/models', (req, res) => {
     res.json(result)
 })
 
-app.get('/v1/models/:modelId', (req, res) => {
+app.get('/v1/models/:modelId(.+)', (req, res) => {
     const { modelId } = req.params
     const allModels = { ...imageModels, ...videoModels }
     const model = allModels[modelId]
