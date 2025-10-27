@@ -11,7 +11,6 @@ import FluxKontextDev from './black-forest-labs/flux-kontext-dev.js'
 import FluxKreaDev from './black-forest-labs/flux-krea-dev.js'
 
 import Sd15Dpo from './stabilityai/sd1.5-dpo.js'
-import Sd35Medium from './stabilityai/sd3.5-medium.js'
 import Sd35 from './stabilityai/sd3.5.js'
 import Sdxl from './stabilityai/sdxl.js'
 import SdxlTurbo from './stabilityai/sdxl-turbo.js'
@@ -109,7 +108,6 @@ const modelInstances = [
   new FluxKreaDev(),
   
   new Sd15Dpo(),
-  new Sd35Medium(),
   new Sd35(),
   new Sdxl(),
   new SdxlTurbo(),

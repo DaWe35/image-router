@@ -37,6 +37,9 @@ export function validateImageParams(req) {
   if (model === 'google/gemini-2.5-flash:free') {
     throw new Error("The free trial is over for this model. Please switch to 'google/gemini-2.5-flash' (paid) or use other models instead.")
   }
+  if (model === 'stabilityai/sd3.5-medium') {
+    throw new Error("This model is no longer available. Available alternative 'stabilityai/sd3.5'.")
+  }
   
 
   const modelConfig = imageModels[model]
