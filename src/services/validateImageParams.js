@@ -5,9 +5,8 @@ import { extractWidthHeight } from './imageHelpers.js'
 
 const bodySchema = z.object({
   prompt: z.string({
-    required_error: "'prompt' is a required parameter",
     invalid_type_error: "'prompt' must be a string"
-  }).min(1, { message: "'prompt' is a required parameter" }),
+  }).optional(),
   model: z.string({
     required_error: "'model' is a required parameter",
     invalid_type_error: "'model' must be a string"
