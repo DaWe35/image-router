@@ -61,7 +61,7 @@ export const validateApiKey = async (req, res, next) => {
                         createdAt: { gte: today }
                     }
                 })
-                if (tokenCount >= 3) {
+                if (tokenCount >= 10) {
                     return res.status(429).json({
                         error: { message: 'Daily free limit reached. Deposit any amount to unlock 50 free images/day: https://imagerouter.io/pricing', type: 'rate_limit_error' }
                     })
