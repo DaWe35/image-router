@@ -11,10 +11,15 @@ import FluxKontextDev from './black-forest-labs/flux-kontext-dev.js'
 import FluxKreaDev from './black-forest-labs/flux-krea-dev.js'
 
 import BlurBackground from './bria/Blur-Background.js'
+import BlurBackgroundFree from './bria/Blur-Background-Free.js'
 import Bria32Vector from './bria/Bria-3.2-Vector.js'
+import Bria32VectorFree from './bria/Bria-3.2-Vector-Free.js'
 import Bria32 from './bria/Bria-3.2.js'
+import Bria32Free from './bria/Bria-3.2-Free.js'
 import Enhance from './bria/Enhance.js'
+import EnhanceFree from './bria/Enhance-Free.js'
 import EraseForeground from './bria/Erase-Foreground.js'
+import EraseForegroundFree from './bria/Erase-Foreground-Free.js'
 import Erase from './bria/Erase.js'
 import Expand from './bria/Expand.js'
 import GenFill from './bria/Gen-Fill.js'
@@ -118,10 +123,15 @@ const modelInstances = [
   new FluxKreaDev(),
 
   new BlurBackground(),
+  new BlurBackgroundFree(),
   new Bria32Vector(),
+  new Bria32VectorFree(),
   new Bria32(),
+  new Bria32Free(),
   new Enhance(),
+  new EnhanceFree(),
   new EraseForeground(),
+  new EraseForegroundFree(),
   //new Erase(),
   //new Expand(),
   //new GenFill(),
