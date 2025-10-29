@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { videoModels } from '../shared/videoModels/index.js'
 import { imageModels } from '../shared/imageModels/index.js'
+import { resolveModelAlias } from './modelAliases.js'
 
 const bodySchema = z.object({
   prompt: z.string({
@@ -21,7 +22,10 @@ export function validateVideoParams(req) {
         throw new Error(parseResult.error.errors[0].message)
     }
 
-    const { prompt, model, response_format, size } = parseResult.data
+    let { prompt, model, response_format, size } = parseResult.data
+    
+    // Resolve model alias to real model name (if it's an alias)
+    model = resolveModelAlias(model)
 
     // Validate model parameter and config
     const modelConfig = videoModels[model]

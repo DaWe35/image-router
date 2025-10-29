@@ -10,6 +10,18 @@ import FluxKontextMax from './black-forest-labs/flux-kontext-max.js'
 import FluxKontextDev from './black-forest-labs/flux-kontext-dev.js'
 import FluxKreaDev from './black-forest-labs/flux-krea-dev.js'
 
+import BlurBackground from './bria/Blur-Background.js'
+import Bria32Vector from './bria/Bria-3.2-Vector.js'
+import Bria32 from './bria/Bria-3.2.js'
+import Enhance from './bria/Enhance.js'
+import EraseForeground from './bria/Erase-Foreground.js'
+import Erase from './bria/Erase.js'
+import Expand from './bria/Expand.js'
+import GenFill from './bria/Gen-Fill.js'
+import RemoveBackground from './bria/Remove-Background.js'
+import RemoveBackgroundFree from './bria/Remove-Background-Free.js'
+import ReplaceBackground from './bria/Replace-Background.js'
+
 import Sd15Dpo from './stabilityai/sd1.5-dpo.js'
 import Sd35 from './stabilityai/sd3.5.js'
 import Sdxl from './stabilityai/sdxl.js'
@@ -69,8 +81,6 @@ import HiDreamI1Dev from './hidream-ai/HiDream-I1-Dev.js'
 import HiDreamI1Full from './hidream-ai/HiDream-I1-Full.js'
 import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 import HidreamE11 from './hidream-ai/hidream-e1-1.js'
-import RMBG20 from './runware/RMBG-2.0.js'
-import RMBG20Free from './runware/RMBG-2.0-free.js'
 import Riverflow1 from './runware/Riverflow-1.js'
 import Riverflow1Mini from './runware/Riverflow-1-mini.js'
 
@@ -106,6 +116,18 @@ const modelInstances = [
   new FluxKontextMax(),
   new FluxKontextDev(),
   new FluxKreaDev(),
+
+  new BlurBackground(),
+  new Bria32Vector(),
+  new Bria32(),
+  new Enhance(),
+  new EraseForeground(),
+  //new Erase(),
+  //new Expand(),
+  //new GenFill(),
+  new RemoveBackground(),
+  new RemoveBackgroundFree(),
+  //new ReplaceBackground(),
   
   new Sd15Dpo(),
   new Sd35(),
@@ -162,8 +184,6 @@ const modelInstances = [
   new DreamShaper(),
   new RealisticVision(),
   new RealVisXL(),
-  new RMBG20(),
-  new RMBG20Free(),
   new HiDreamI1Fast(),
   new HiDreamI1Dev(),
   new HiDreamI1Full(),

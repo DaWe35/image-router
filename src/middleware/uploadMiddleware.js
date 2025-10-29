@@ -66,14 +66,19 @@ export const cleanupUploadedFiles = (req, res, next) => {
     // If no files -> nothing to clean up
     if (uploadedFiles.length === 0) return next()
 
+    let cleaned = false
     const deleteFiles = async () => {
+        // Ensure we only clean up once, even if both finish and close fire
+        if (cleaned) return
+        cleaned = true
+
         for (const file of uploadedFiles) {
             if (!file?.path) continue
             try {
                 await fs.unlink(file.path)
             } catch (err) {
                 // Silent fail – tmp cleaners or next reboot will remove leftovers
-                console.error(`Failed to remove temp upload ${file.path}:`, err.message)
+                console.error(`Failed to remove temp upload ${file.path}`, err.message)
             }
         }
     }
@@ -83,4 +88,4 @@ export const cleanupUploadedFiles = (req, res, next) => {
     res.on('close', deleteFiles)
 
     next()
-} 
+}

@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { imageModels } from '../shared/imageModels/index.js'
 import { videoModels } from '../shared/videoModels/index.js'
 import { extractWidthHeight } from './imageHelpers.js'
+import { resolveModelAlias } from './modelAliases.js'
 
 const bodySchema = z.object({
   prompt: z.string({
@@ -27,7 +28,11 @@ export function validateImageParams(req) {
     throw new Error(parseResult.error.errors[0].message)
   }
 
-  const { prompt, model, response_format, quality, size } = parseResult.data
+  let { prompt, model, response_format, quality, size } = parseResult.data
+  
+  // Resolve model alias to real model name (if it's an alias)
+  model = resolveModelAlias(model)
+  
   const files = req.files || {}
 
   if (model === 'google/gemini-2.0-flash-exp:free') {

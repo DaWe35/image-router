@@ -248,26 +248,43 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
     const providerUrl = 'https://api.deepinfra.com/v1/inference/' + fetchParams.model
     const providerKey = process.env.DEEPINFRA_API_KEY
 
-    const body = {
-        prompt: fetchParams.prompt,
-        num_images: 1,
+    // Check if this is an image input request (e.g., background removal)
+    const hasImage = Boolean(fetchParams.image)
+
+    let body
+    const headers = {
+        'Authorization': `Bearer ${providerKey}`
     }
 
-    const { width, height } = extractWidthHeight(fetchParams.size)
-    if (width) body.width = width
-    if (height) body.height = height
+    if (hasImage) {
+        // Use FormData for image inputs
+        body = objectToFormData({
+            image: fetchParams.image,
+            prompt: fetchParams.prompt,
+        })
+        // Don't set Content-Type for FormData - it will be set automatically with boundary
+    } else {
+        // Use JSON for text-to-image generation
+        const bodyObj = {
+            prompt: fetchParams.prompt,
+            num_images: 1,
+        }
 
-    if (fetchParams.num_inference_steps) body.num_inference_steps = fetchParams.num_inference_steps
-    if (fetchParams.steps) body.steps = fetchParams.steps
+        const { width, height } = extractWidthHeight(fetchParams.size)
+        if (width) bodyObj.width = width
+        if (height) bodyObj.height = height
 
+        if (fetchParams.num_inference_steps) bodyObj.num_inference_steps = fetchParams.num_inference_steps
+        if (fetchParams.steps) bodyObj.steps = fetchParams.steps
+
+        body = JSON.stringify(bodyObj)
+        headers['Content-Type'] = 'application/json'
+    }
 
     const response = await fetch(providerUrl, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${providerKey}`
-        },
-        body: JSON.stringify(body)
+        headers,
+        body
     })
 
     if (!response.ok) {
@@ -284,8 +301,8 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
             status: errorResponse?.status || response.status || 500,
             statusText: errorResponse?.statusText || response.statusText || 'Unknown Error',
             error: {
-                message: extractedMessages.join('; ') || 'An unknown error occurred',
-                type: errorResponse.detail[0]?.type || 'Unknown Error'
+                message: extractedMessages.join('; ') || errorResponse?.message || 'An unknown error occurred',
+                type: errorResponse?.detail?.[0]?.type || 'Unknown Error'
             },
             original_response_from_provider: errorResponse
         }
@@ -316,10 +333,19 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
         created: Math.floor(Date.now() / 1000),
         data: (() => {
             if (Array.isArray(data.images)) {
-                return data.images.map(image => ({
-                    b64_json: image,
-                    revised_prompt: null,
-                }))
+                return data.images.map(image => {
+                    // Check if the image is a URL (new behavior) or base64 (old behavior)
+                    if (typeof image === 'string' && (image.startsWith('http://') || image.startsWith('https://'))) {
+                        return {
+                            url: image,
+                            revised_prompt: null,
+                        }
+                    }
+                    return {
+                        b64_json: image,
+                        revised_prompt: null,
+                    }
+                })
             }
             if (Array.isArray(data.image_urls)) {
                 return data.image_urls.map(url => ({
