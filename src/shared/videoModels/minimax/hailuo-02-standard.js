@@ -27,7 +27,7 @@ class Hailuo02Standard {
             type: PRICING_TYPES.FIXED,
             value: 0.28, // price per video in USD
           },
-          applyImage: this.applyImage,
+          applyImage: this.applyImageWaveSpeed,
         }
       ],
       release_date: '2025-06-18',
@@ -43,11 +43,11 @@ class Hailuo02Standard {
     return this.data
   }
 
-    async applyImage(params) {
-      params.image = await processSingleFile(params.files.image, 'datauri')
-      delete params.files.image
-      return params
-    }
+  async applyImageWaveSpeed(params) {
+    params.image = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+  }
 }
 
 export default Hailuo02Standard 

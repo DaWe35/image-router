@@ -16,6 +16,7 @@ import Bria32Vector from './bria/Bria-3.2-Vector.js'
 import Bria32VectorFree from './bria/Bria-3.2-Vector-Free.js'
 import Bria32 from './bria/Bria-3.2.js'
 import Bria32Free from './bria/Bria-3.2-Free.js'
+import BriaFibo from './bria/Bria-Fibo.js'
 import Enhance from './bria/Enhance.js'
 import EnhanceFree from './bria/Enhance-Free.js'
 import EraseForeground from './bria/Erase-Foreground.js'
@@ -128,6 +129,7 @@ const modelInstances = [
   new Bria32VectorFree(),
   new Bria32(),
   new Bria32Free(),
+  new BriaFibo(),
   new Enhance(),
   new EnhanceFree(),
   new EraseForeground(),

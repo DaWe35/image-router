@@ -862,11 +862,15 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
 
     // Build the Runware task payload
     let duration
-    switch (true) {
-        case fetchParams.model.includes('openai:3@1'):
+    switch (fetchParams.model) {
+        case 'openai:3@1':
             duration = 4
             break
-        case fetchParams.model.includes('minimax:3@1'):
+        case 'minimax:3@1':
+        case 'minimax:4@1':
+        case 'minimax:4@2':
+        case 'lightricks:2@0':
+        case 'lightricks:2@1':
             duration = 6
             break
         default:
@@ -916,12 +920,20 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                     taskPayload.height = 704
                     break
                 case 'bytedance:2@1':
+                case 'bytedance:2@2':
                     taskPayload.width = 1920
                     taskPayload.height = 1088
                     break
                 case 'minimax:3@1':
+                case 'minimax:4@1':
+                case 'minimax:4@2':
                     taskPayload.width = 1366
                     taskPayload.height = 768
+                    break
+                case 'lightricks:2@0':
+                case 'lightricks:2@1':
+                    taskPayload.width = 1920
+                    taskPayload.height = 1080
                     break
             }
         }

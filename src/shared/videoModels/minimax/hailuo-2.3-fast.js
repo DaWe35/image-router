@@ -2,39 +2,40 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Kling25TurboPro {
+export default class Hailuo23Fast {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-2.5-turbo-pro',
+      id: 'minimax/hailuo-2.3-fast',
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:6@1',
+          model_name: 'minimax:4@2',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.35,
+            range: {
+              min: 0.19,
+              average: 0.19,
+              max: 0.33,
+            },
           },
           applyImage: applyImageRunwareVideo,
         }
       ],
-      arena_score: 1241,
-      release_date: '2025-09-23',
-      examples: [
+      release_date: '2025-10-28',
+      /* examples: [
         {
-          video: '/model-examples/kling-2.5-turbo-pro-2025-10-14T14-38-16-722Z.webm'
+          video: '/model-examples/hailuo-02-standard-2025-06-24T15-24-10-877Z.webm'
         }
+      ], */
+      sizes: [
+        '1366x768',
+        '1920x1080'
       ]
     }
   }
 
   getData() {
     return this.data
-  }
-
-  async applyImage(params) {
-    params.start_image = await processSingleFile(params.files.image, 'datauri')
-    delete params.files.image
-    return params
   }
 }

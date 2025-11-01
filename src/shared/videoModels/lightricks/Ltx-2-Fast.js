@@ -2,39 +2,41 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Kling25TurboPro {
+export default class Ltx2Fast {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-2.5-turbo-pro',
+      id: 'lightricks/ltx-2-fast',
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:6@1',
+          model_name: 'lightricks:2@1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.35,
+            range: {
+              min: 0.24,
+              average: 0.24,
+              max: 0.96,
+            },
           },
           applyImage: applyImageRunwareVideo,
         }
       ],
-      arena_score: 1241,
-      release_date: '2025-09-23',
+      release_date: '2025-10-23',
       examples: [
         {
-          video: '/model-examples/kling-2.5-turbo-pro-2025-10-14T14-38-16-722Z.webm'
+          video: '/model-examples/ltx-2-fast-2025-11-01T23-44-35-081Z.webm'
         }
+      ],
+      sizes: [
+        '1920x1080',
+        '2560x1440',
+        '3840x2160'
       ]
     }
   }
 
   getData() {
     return this.data
-  }
-
-  async applyImage(params) {
-    params.start_image = await processSingleFile(params.files.image, 'datauri')
-    delete params.files.image
-    return params
   }
 }

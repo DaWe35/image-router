@@ -12,7 +12,7 @@ class Hailuo02Pro {
           type: PRICING_TYPES.FIXED,
           value: 0.49, // price per video in USD
         },
-        applyImage: this.applyImage,
+        applyImage: this.applyImageWaveSpeed,
       }],
       arena_score: 1322,
       release_date: '2025-06-18',
@@ -28,7 +28,7 @@ class Hailuo02Pro {
     return this.data
   }
 
-  async applyImage(params) {
+  async applyImageWaveSpeed(params) {
     params.image = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
