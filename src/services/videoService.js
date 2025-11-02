@@ -905,6 +905,10 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                 taskPayload.width = 1920
                 taskPayload.height = 1080
                 break
+            case 'minimax:4@2':
+                taskPayload.width = 1366
+                taskPayload.height = 768
+                break
         }
 
         if (!fetchParams.image) {
@@ -926,7 +930,6 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                     break
                 case 'minimax:3@1':
                 case 'minimax:4@1':
-                case 'minimax:4@2':
                     taskPayload.width = 1366
                     taskPayload.height = 768
                     break
