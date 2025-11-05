@@ -31,6 +31,11 @@ export const validateApiKey = async (req, res, next) => {
                     }
                 }
             })
+            if (!key) {
+                return res.status(401).json({
+                    error: { message: 'Invalid API key', type: 'unauthorized' }
+                })
+            }
             key.apiKeyTempJwt = false
         } else if (apiKeyString.length >= 100) { // JWT token validation
             const jwtResult = validateTempToken(apiKeyString)
