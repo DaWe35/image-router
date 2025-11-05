@@ -58,7 +58,6 @@ export function createGenerationHandler({ validateParams, generateFn }) {
           return
         }
 
-        console.error('Generation error:', error)
         const errorResponse = {
           error: {
             message: error.message || 'Failed to generate',

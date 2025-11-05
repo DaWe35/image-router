@@ -17,8 +17,7 @@ export const validateApiKey = async (req, res, next) => {
         let key = null
         const apiKeyString = authHeader.slice(7).trim() // Remove 'Bearer ' prefix and trim whitespace
 
-        if (apiKeyString.length === 64) {
-            // API key validation
+        if (apiKeyString.length === 64) { // API key validation
             key = await prisma.APIKey.findUnique({
                 where: { key: apiKeyString },
                 select: {
@@ -33,7 +32,7 @@ export const validateApiKey = async (req, res, next) => {
                 }
             })
             key.apiKeyTempJwt = false
-        } else if (apiKeyString.length >= 100) { // JWT token validation, could be temp-login or anon
+        } else if (apiKeyString.length >= 100) { // JWT token validation
             const jwtResult = validateTempToken(apiKeyString)
             if (!jwtResult) {
                 return res.status(401).json({
@@ -41,48 +40,7 @@ export const validateApiKey = async (req, res, next) => {
                 })
             }
 
-            // Anonymous token path
-            if (jwtResult.anonIp) {
-                const proxyCount = Number(process.env.PROXY_COUNT || 0)
-                const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
-                if (clientIp !== jwtResult.anonIp) {
-                    return res.status(403).json({
-                        error: { message: 'Anon token IP mismatch: ' + clientIp + ' !== ' + jwtResult.anonIp, type: 'unauthorized' }
-                    })
-                }
-
-                // Check if token already used
-                const today = new Date()
-                today.setHours(0,0,0,0)
-                const tokenCount = await prisma.APIUsage.count({
-                    where: {
-                        apiKeyTempJwt: true,
-                        ip: clientIp,
-                        createdAt: { gte: today }
-                    }
-                })
-                if (tokenCount >= 10) {
-                    return res.status(429).json({
-                        error: { message: 'Daily free limit reached. Deposit any amount to unlock 50 free images/day: https://imagerouter.io/pricing', type: 'rate_limit_error' }
-                    })
-                }
-
-                // Ensure we have a shared anon user row
-                const anonUser = await prisma.user.upsert({
-                    where: { id: 'anon_user' },
-                    update: {},
-                    create: { id: 'anon_user', credits: 0 }
-                })
-
-                key = {
-                    id: null,
-                    apiKeyTempJwt: true,
-                    isActive: true,
-                    isAnon: true,
-                    user: anonUser
-                }
-            } else if (jwtResult.userId) {
-                // existing temp-login path
+            if (jwtResult.userId && jwtResult.userId !== 'anon_user') { // Users
                 const user = await prisma.user.findUnique({
                     where: { id: jwtResult.userId },
                     select: {
@@ -98,20 +56,36 @@ export const validateApiKey = async (req, res, next) => {
                         }
                     })
                 }
-
                 key = {
                     id: null,
                     apiKeyTempJwt: true,
                     isActive: true,
                     user: user
                 }
-            } else {
-                return res.status(401).json({
-                    error: {
-                        message: `Invalid JWT token format`,
-                        type: 'unauthorized'
-                    }
+            } else { // Guests
+                // Create guest user if not exists
+                const guestUser = await prisma.user.upsert({
+                    where: { id: 'anon_user' },
+                    update: {},
+                    create: { id: 'anon_user', credits: 0 }
                 })
+                key = {
+                    id: null,
+                    apiKeyTempJwt: true,
+                    isActive: true,
+                    user: guestUser
+                }
+            }
+
+            if (key.user.credits <= 0) {
+                // Strict IP check for free and guest users
+                const proxyCount = Number(process.env.PROXY_COUNT || 0)
+                const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
+                if (clientIp !== jwtResult.jwtGeneratedWithIp) {
+                    return res.status(403).json({
+                        error: { message: 'Guest token IP mismatch: ' + clientIp + ' !== ' + jwtResult.jwtGeneratedWithIp, type: 'unauthorized' }
+                    })
+                }
             }
         } else {
             return res.status(401).json({

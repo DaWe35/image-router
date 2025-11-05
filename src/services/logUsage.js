@@ -30,13 +30,6 @@ export async function preLogUsage(params, apiKey, req, providerIndex) {
         throw new Error('API key is not found, please contact support')
     }
 
-    // Check if anon token and enforce free model & metadata
-    const isAnon = apiKey.isAnon === true
-
-    if (isAnon && prePriceInt !== 0) {
-        throw new Error('Anon tokens are only valid for free-tier models')
-    }
-
     // Get client IP
     const clientIp = process.env.PROXY_COUNT > 0 ? req?.headers['cf-connecting-ip'] : req?.ip
 
