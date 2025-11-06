@@ -118,8 +118,9 @@ Set static      Access-Control-Allow-Origin     *
 
 ## Google account registration
 - Enable 2FA before billing
+- Add recovery phone and email addresses
 - Forward email messages to main inbox
-- Generate a new Revolut virtual card for billing
+- Generate a new virtual card for billing
 
 ## Google Vertex AI Setup
 
@@ -143,7 +144,7 @@ GOOGLE_SERVICE_ACCOUNT_KEY=ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsC...
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create or select a project
 3. Enable the "Vertex AI API"
-4. Go to "IAM & Admin" > "Service Accounts"
+4. Go to Credentials > Create credential > Service Account
 5. Create a new service account with "Vertex AI User" role
 6. Create a JSON key for this service account
 7. Convert the JSON to base64: `cat service-account.json | base64 -w 0`
