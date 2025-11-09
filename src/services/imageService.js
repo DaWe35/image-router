@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
-import { objectToFormData, getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
+import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions } from './imageHelpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 import { selectProvider } from '../utils/providerSelector.js'
@@ -749,7 +749,6 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskType = 'imageInference'
     }
 
-    const { width, height } = extractWidthHeight(fetchParams.size)
 
     // Build the Runware task payload
     const taskPayload = {
@@ -759,17 +758,6 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         outputFormat: "WEBP",
         includeCost: true
     }
-    if (taskType !== 'imageUpscale') {
-        taskPayload.positivePrompt = fetchParams.prompt
-        taskPayload.numberResults = 1
-
-        if (fetchParams.model != 'bytedance:4@1') {
-            taskPayload.width = width || 1024
-            taskPayload.height = height || 1024
-        }
-    }
-
-
 
     if (fetchParams.steps) {
         taskPayload.steps = fetchParams.steps
@@ -777,7 +765,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
 
     // Image-to-image support
 
-    // FLUX Kontext
+    // FLUX Kontext and Qwen Image Edit
     if (fetchParams.referenceImages) {
         taskPayload.referenceImages = Array.isArray(fetchParams.referenceImages) 
             ? fetchParams.referenceImages 
@@ -803,6 +791,25 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     // Inpainting support (mask)
     if (fetchParams.maskImage) {
         taskPayload.maskImage = fetchParams.maskImage
+    }
+
+    // Set positivePrompt, numberResults, and size
+    if (taskType !== 'imageUpscale') {
+        taskPayload.positivePrompt = fetchParams.prompt
+        taskPayload.numberResults = 1
+        
+        const { width, height } = extractWidthHeight(fetchParams.size)
+        if (fetchParams.model === 'runware:108@20' && !width) { // make qwen image edit preserve aspect ratio
+            const dimensions = await calculateRunwareDimensions(
+                taskPayload.referenceImages[0],
+                { minPixels: 1024, maxPixels: 1048576, minDimension: 128, maxDimension: 2048 }
+            )
+            taskPayload.width = dimensions.width
+            taskPayload.height = dimensions.height
+        } else if (fetchParams.model != 'bytedance:4@1') {
+            taskPayload.width = width || 1024
+            taskPayload.height = height || 1024
+        }
     }
 
     const response = await fetch(providerUrl, {

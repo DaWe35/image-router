@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
+import { applyReferenceImages } from '../../applyImage.js'
 
 class QwenImageEdit {
   constructor() {
@@ -19,7 +20,7 @@ class QwenImageEdit {
             }
           },
           applyQuality: this.applyQualityRunware,
-          applyImage: this.applyImageRunware
+          applyImage: applyReferenceImages
         }
       ],
       arena_score: 1092,
@@ -31,11 +32,6 @@ class QwenImageEdit {
       ]
 
     }
-  }
-
-  async applyImageRunware(params) {
-    params.referenceImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
-    return params
   }
 
   applyQualityRunware(params) {

@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import sharp from 'sharp';
 
 // Helper function to convert an object to FormData
 export function objectToFormData(obj) {
@@ -27,6 +28,111 @@ export function objectToFormData(obj) {
     })
     
     return formData
+}
+
+// Function to calculate image dimensions for Runware models
+export async function calculateRunwareDimensions(imageFile, options = {}) {
+    const { 
+        minPixels, 
+        maxPixels, 
+        minDimension, 
+        maxDimension 
+    } = options;
+    
+    let image;
+
+    if (typeof imageFile === 'string' && imageFile.startsWith('data:image')) {
+        // Handle data URL
+        const base64Data = imageFile.split(',')[1];
+        const buffer = Buffer.from(base64Data, 'base64');
+        image = sharp(buffer);
+    } else if (Buffer.isBuffer(imageFile)) {
+        // Handle Buffer
+        image = sharp(imageFile);
+    } else if (imageFile && typeof imageFile.arrayBuffer === 'function') { // Blob-like
+        // Handle Blob
+        const arrayBuffer = await imageFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        image = sharp(buffer);
+    } else if (imageFile && imageFile.path) {
+        // Handle file object from multer
+        image = sharp(imageFile.path);
+    } else {
+        throw new Error('Unsupported image format provided to calculateRunwareDimensions');
+    }
+    
+    const metadata = await image.metadata();
+    const { width, height } = metadata;
+
+    const aspectRatio = width / height;
+    let newWidth = width;
+    let newHeight = height;
+
+    if (maxDimension !== undefined) {
+        if (width > height) {
+            newWidth = Math.min(maxDimension, width);
+            newHeight = Math.round(newWidth / aspectRatio);
+        } else {
+            newHeight = Math.min(maxDimension, height);
+            newWidth = Math.round(newHeight / aspectRatio);
+        }
+    }
+
+    // Clamp to minimum size
+    if (minDimension !== undefined) {
+        if (newWidth < minDimension) {
+            newWidth = minDimension;
+            newHeight = Math.round(newWidth / aspectRatio);
+        }
+        if (newHeight < minDimension) {
+            newHeight = minDimension;
+            newWidth = Math.round(newHeight * aspectRatio);
+        }
+    }
+    
+    // Adjust for pixel constraints before rounding
+    let totalPixels = newWidth * newHeight;
+    if (maxPixels !== undefined && totalPixels > maxPixels) {
+        const scaleFactor = Math.sqrt(maxPixels / totalPixels);
+        newWidth = Math.floor(newWidth * scaleFactor);
+        newHeight = Math.floor(newHeight * scaleFactor);
+    }
+    if (minPixels !== undefined && totalPixels < minPixels) {
+        const scaleFactor = Math.sqrt(minPixels / totalPixels);
+        newWidth = Math.ceil(newWidth * scaleFactor);
+        newHeight = Math.ceil(newHeight * scaleFactor);
+    }
+
+    // Adjust width to be a multiple of 32
+    newWidth = Math.round(newWidth / 32) * 32;
+
+    // Recalculate height to maintain aspect ratio after width adjustment
+    newHeight = Math.round(newWidth / aspectRatio);
+
+    // Adjust height to be a multiple of 32 as well
+    newHeight = Math.round(newHeight / 32) * 32;
+
+    // After rounding, the total pixels might exceed maxPixels. Adjust if necessary.
+    while (maxPixels !== undefined && newWidth * newHeight > maxPixels) {
+        if (newWidth > newHeight) {
+            newWidth -= 32;
+            newHeight = Math.round(newWidth / aspectRatio);
+            newHeight = Math.round(newHeight / 32) * 32;
+        } else {
+            newHeight -= 32;
+            newWidth = Math.round(newHeight * aspectRatio);
+            newWidth = Math.round(newWidth / 32) * 32;
+        }
+    }
+
+    // Final check to ensure dimensions are within bounds
+    if (maxDimension !== undefined) {
+        if (newWidth > maxDimension) newWidth = maxDimension;
+        if (newHeight > maxDimension) newHeight = maxDimension;
+    }
+
+
+    return { width: newWidth, height: newHeight };
 }
 
 // Utility function to process image files
