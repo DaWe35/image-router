@@ -1,6 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcSimple } from '../../../services/imageHelpers.js'
-import { applyImageSingle } from '../../applyImage.js'
+import { postCalcSimple, processSingleFile } from '../../../services/imageHelpers.js'
 
 export default class BriaFibo {
   constructor() {
@@ -15,7 +14,7 @@ export default class BriaFibo {
             postCalcFunction: postCalcSimple,
             value: 0.04,
           },
-          applyImage: applyImageSingle,
+          applyImage: this.applyImageFibo,
           applyQuality: this.applyQuality,
         }
       ],
@@ -38,6 +37,12 @@ export default class BriaFibo {
       ]
     }
   }
+
+  async applyImageFibo(params) {
+    params.inputs_image = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+}
 
   applyQuality(params) {
     const qualitySteps = {

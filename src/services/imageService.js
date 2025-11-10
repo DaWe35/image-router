@@ -788,6 +788,11 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.inputs = { references: fetchParams.inputs_references }
     }
 
+    // Bria Fibo
+    if (fetchParams.inputs_image) {
+        taskPayload.inputs = { image: fetchParams.inputs_image }
+    }
+
     // Inpainting support (mask)
     if (fetchParams.maskImage) {
         taskPayload.maskImage = fetchParams.maskImage
