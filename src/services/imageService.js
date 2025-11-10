@@ -832,7 +832,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         } else if (!isEdit || fetchParams.model === 'sourceful:1@0' || fetchParams.model === 'sourceful:1@1') { // default 1024 for text to image nd for Riverflow models
             taskPayload.width = width || 1024
             taskPayload.height = height || 1024
-        } else if (isEdit) { // no default 1024 for image to image
+        } else if (isEdit) { // no default 1024 for image to image. Aspect Ratio preserved automatically.
             if (width) taskPayload.width = width
             if (height) taskPayload.height = height
         } 
