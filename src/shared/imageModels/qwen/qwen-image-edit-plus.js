@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
-import { applyReferenceImages } from '../../applyImage.js'
+import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
 class QwenImageEditPlus {
   constructor() {
@@ -15,7 +15,7 @@ class QwenImageEditPlus {
             postCalcFunction: postCalcSimple,
             value: 0.0083
           },
-          applyImage: applyReferenceImages
+          applyImage: this.applyImageQwenImageEditPlus
         }
       ],
       arena_score: 1092,
@@ -27,6 +27,20 @@ class QwenImageEditPlus {
       ]
 
     }
+  }
+  
+  async applyImageQwenImageEditPlus(params) {
+    params.referenceImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+    if (!params.size || params.size === 'auto') {
+      const dimensions = await calculateRunwareDimensions(
+        params.referenceImages[0],
+        { minPixels: undefined, maxPixels: undefined, minDimension: 512, maxDimension: 2048, pixelStep: 16 }
+      )
+      params.size = `${dimensions.width}x${dimensions.height}`
+    }
+    
+    delete params.files.image
+    return params
   }
 
   getData() {

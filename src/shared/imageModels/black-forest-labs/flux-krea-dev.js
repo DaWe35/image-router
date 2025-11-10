@@ -1,6 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
+import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
 class FluxKreaDev {
   constructor() {
@@ -34,6 +35,15 @@ class FluxKreaDev {
   async applyImage(params) {
     params.seedImage = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
+
+    if (!params.size || params.size === 'auto') {
+      const dimensions = await calculateRunwareDimensions(
+        params.seedImage,
+        { minPixels: undefined, maxPixels: undefined, minDimension: 128, maxDimension: 2048, pixelStep: 64 }
+      )
+      params.size = `${dimensions.width}x${dimensions.height}`
+    }
+
     return params
   }
 

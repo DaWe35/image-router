@@ -1,6 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles, postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
 import { applyImageNanoGPT } from '../../applyImage.js'
+import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
 export default class SeedreamV4 {
   constructor() {
@@ -58,6 +59,16 @@ export default class SeedreamV4 {
 
   async applyImageRunware(params) {
     params.referenceImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+    delete params.files.image
+
+    if (!params.size || params.size === 'auto') {
+      const dimensions = await calculateRunwareDimensions(
+        params.referenceImages[0],
+        { minPixels: 921600, maxPixels: 16777216, minDimension: 256, maxDimension: 16383, pixelStep: 1 }
+      )
+      params.size = `${dimensions.width}x${dimensions.height}`
+    }
+    
     return params
   }
 

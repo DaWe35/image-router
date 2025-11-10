@@ -801,41 +801,13 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         const { width, height } = extractWidthHeight(fetchParams.size)
         const isEdit = fetchParams.referenceImages || fetchParams.inputs_references || fetchParams.inputImage || fetchParams.seedImage
 
-        if (fetchParams.model === 'runware:108@20' && !width) { // make Qwen Image Edit preserve aspect ratio
-            const dimensions = await calculateRunwareDimensions(
-                taskPayload.referenceImages[0],
-                { minPixels: 1024, maxPixels: 1048576, minDimension: 128, maxDimension: 2048, pixelStep: 32 }
-            )
-            taskPayload.width = dimensions.width
-            taskPayload.height = dimensions.height
-        } else if (fetchParams.model === 'bytedance:5@0' && !width) { // make Seedream 4 preserve aspect ratio
-            const dimensions = await calculateRunwareDimensions(
-                taskPayload.referenceImages[0],
-                { minPixels: 921600, maxPixels: 16777216, minDimension: 256, maxDimension: 16383, pixelStep: 1 }
-            )
-            taskPayload.width = dimensions.width
-            taskPayload.height = dimensions.height
-        } else if (fetchParams.model === 'runware:108@22' && !width) { // make Qwen Image Edit Plus preserve aspect ratio
-            const dimensions = await calculateRunwareDimensions(
-                taskPayload.referenceImages[0],
-                { minPixels: undefined, maxPixels: undefined, minDimension: 512, maxDimension: 2048, pixelStep: 16 }
-            )
-            taskPayload.width = dimensions.width
-            taskPayload.height = dimensions.height
-        } else if ((fetchParams.model === 'runware:107@1' || fetchParams.model === 'runware:5@1') && !width) { // make DD3 and Flux Krea Dev preserve aspect ratio
-            const dimensions = await calculateRunwareDimensions(
-                fetchParams.seedImage,
-                { minPixels: undefined, maxPixels: undefined, minDimension: 128, maxDimension: 2048, pixelStep: 64 }
-            )
-            taskPayload.width = dimensions.width
-            taskPayload.height = dimensions.height
-        } else if (!isEdit) { // default 1024 for text to image, if size is not defined in model or params
+        if (!isEdit) { // default 1024 for text to image, if size is not defined in model or params
             taskPayload.width = width || 1024
             taskPayload.height = height || 1024
         } else { // no default 1024 for image to image. Aspect Ratio preserved automatically.
             if (width) taskPayload.width = width
             if (height) taskPayload.height = height
-        } 
+        }
     }
 
     const response = await fetch(providerUrl, {
