@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { applyImageSingle, applyImagesReferences1024x1024 } from '../../applyImage.js'
+import { applyImageSingle, applyReferenceImages1024x1024 } from '../../applyImage.js'
 
 class FluxKontextPro {
   constructor() {
@@ -13,7 +13,7 @@ class FluxKontextPro {
             type: PRICING_TYPES.FIXED,
             value: 0.04,
           },
-          applyImage: applyImagesReferences1024x1024,
+          applyImage: applyReferenceImages1024x1024,
         }, {
           id: 'replicate',
           model_name: 'black-forest-labs/flux-kontext-pro',
