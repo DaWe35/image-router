@@ -20,9 +20,12 @@ export async function applySingleInputImage(params) {
     return params
 }
 
-export async function applyImagesReferences(params) {
+export async function applyImagesReferences1024x1024(params) {
     params.inputs_references = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     delete params.files.image
+    if (!params.size || params.size === 'auto') {
+        params.size = '1024x1024'
+    }
     return params
 }
 

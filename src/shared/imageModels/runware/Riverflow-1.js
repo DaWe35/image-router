@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
-import { applyImagesReferences } from '../../applyImage.js'
+import { applyImagesReferences1024x1024 } from '../../applyImage.js'
 
 
 export default class Riverflow1 {
@@ -15,7 +15,7 @@ export default class Riverflow1 {
           postCalcFunction: postCalcSimple,
           value: 0.066,
         },
-        applyImage: applyImagesReferences
+        applyImage: applyImagesReferences1024x1024
       }],
       release_date: '2025-10-15',
       examples: [

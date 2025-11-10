@@ -822,17 +822,17 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
             )
             taskPayload.width = dimensions.width
             taskPayload.height = dimensions.height
-        } else if (fetchParams.model === 'runware:107@1' && !width) { // make Flux Krea Dev preserve aspect ratio
+        } else if ((fetchParams.model === 'runware:107@1' || fetchParams.model === 'runware:5@1') && !width) { // make DD3 and Flux Krea Dev preserve aspect ratio
             const dimensions = await calculateRunwareDimensions(
                 fetchParams.seedImage,
                 { minPixels: undefined, maxPixels: undefined, minDimension: 128, maxDimension: 2048, pixelStep: 64 }
             )
             taskPayload.width = dimensions.width
             taskPayload.height = dimensions.height
-        } else if (!isEdit || fetchParams.model === 'sourceful:1@0' || fetchParams.model === 'sourceful:1@1') { // default 1024 for text to image nd for Riverflow models
+        } else if (!isEdit) { // default 1024 for text to image, if size is not defined in model or params
             taskPayload.width = width || 1024
             taskPayload.height = height || 1024
-        } else if (isEdit) { // no default 1024 for image to image. Aspect Ratio preserved automatically.
+        } else { // no default 1024 for image to image. Aspect Ratio preserved automatically.
             if (width) taskPayload.width = width
             if (height) taskPayload.height = height
         } 
