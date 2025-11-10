@@ -110,6 +110,8 @@ import CCSR from './upscale/CCSR.js'
 import SDLatent from './upscale/SD-Latent.js'
 import Clarity from './upscale/Clarity.js'
 
+import HunyuanImage3 from './tencent/hunyuan-image-3.js'
+
 // Initialize all models
 const modelInstances = [
   new Flux11Pro(),
@@ -223,6 +225,8 @@ const modelInstances = [
   new CCSR(),
   new SDLatent(),
   new Clarity(),
+
+  new HunyuanImage3(),
 ]
 
 // Create an object with model IDs as keys
