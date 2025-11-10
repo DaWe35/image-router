@@ -36,7 +36,8 @@ export async function calculateRunwareDimensions(imageFile, options = {}) {
         minPixels, 
         maxPixels, 
         minDimension, 
-        maxDimension 
+        maxDimension,
+        pixelStep = 1
     } = options;
     
     let image;
@@ -103,32 +104,62 @@ export async function calculateRunwareDimensions(imageFile, options = {}) {
         newHeight = Math.ceil(newHeight * scaleFactor);
     }
 
-    // Adjust width to be a multiple of 32
-    newWidth = Math.round(newWidth / 32) * 32;
+    // Adjust dimensions to be multiples of pixelStep while preserving aspect ratio
+    const originalWidth = newWidth;
+    const originalHeight = newHeight;
 
-    // Recalculate height to maintain aspect ratio after width adjustment
-    newHeight = Math.round(newWidth / aspectRatio);
+    // Option 1: adjust width and derive height
+    const w1 = Math.round(originalWidth / pixelStep) * pixelStep;
+    const h1 = Math.round(w1 / aspectRatio);
+    const h1_rounded = Math.round(h1 / pixelStep) * pixelStep;
 
-    // Adjust height to be a multiple of 32 as well
-    newHeight = Math.round(newHeight / 32) * 32;
+    // Option 2: adjust height and derive width
+    const h2 = Math.round(originalHeight / pixelStep) * pixelStep;
+    const w2 = Math.round(h2 * aspectRatio);
+    const w2_rounded = Math.round(w2 / pixelStep) * pixelStep;
+
+    // Compare total pixel deviation from original
+    const deviation1 = Math.abs(w1 * h1_rounded - originalWidth * originalHeight);
+    const deviation2 = Math.abs(w2_rounded * h2 - originalWidth * originalHeight);
+
+    if (deviation1 <= deviation2) {
+        newWidth = w1;
+        newHeight = h1_rounded;
+    } else {
+        newWidth = w2_rounded;
+        newHeight = h2;
+    }
 
     // After rounding, the total pixels might exceed maxPixels. Adjust if necessary.
     while (maxPixels !== undefined && newWidth * newHeight > maxPixels) {
         if (newWidth > newHeight) {
-            newWidth -= 32;
+            newWidth -= pixelStep;
             newHeight = Math.round(newWidth / aspectRatio);
-            newHeight = Math.round(newHeight / 32) * 32;
+            newHeight = Math.round(newHeight / pixelStep) * pixelStep;
         } else {
-            newHeight -= 32;
+            newHeight -= pixelStep;
             newWidth = Math.round(newHeight * aspectRatio);
-            newWidth = Math.round(newWidth / 32) * 32;
+            newWidth = Math.round(newWidth / pixelStep) * pixelStep;
         }
     }
 
     // Final check to ensure dimensions are within bounds
     if (maxDimension !== undefined) {
-        if (newWidth > maxDimension) newWidth = maxDimension;
-        if (newHeight > maxDimension) newHeight = maxDimension;
+        if (newWidth > maxDimension || newHeight > maxDimension) {
+            if (aspectRatio > 1) { // Landscape
+                if (newWidth > maxDimension) {
+                    newWidth = Math.round(maxDimension / pixelStep) * pixelStep;
+                    newHeight = Math.round(newWidth / aspectRatio);
+                    newHeight = Math.round(newHeight / pixelStep) * pixelStep;
+                }
+            } else { // Portrait or square
+                if (newHeight > maxDimension) {
+                    newHeight = Math.round(maxDimension / pixelStep) * pixelStep;
+                    newWidth = Math.round(newHeight * aspectRatio);
+                    newWidth = Math.round(newWidth / pixelStep) * pixelStep;
+                }
+            }
+        }
     }
 
 
