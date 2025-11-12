@@ -8,6 +8,12 @@ export async function applyImageSingle(params) {
     return params
 }
 
+export async function applyImageSingleDataURI(params) {
+    params.image = await processSingleFile(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+}
+
 export async function applyReferenceImages(params) {
     params.referenceImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     delete params.files.image

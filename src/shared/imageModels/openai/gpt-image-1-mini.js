@@ -8,6 +8,20 @@ class GptImage1Mini {
       id: 'openai/gpt-image-1-mini',
       providers: [
         {
+          id: 'nanogpt',
+          model_name: 'gpt-image-1-mini',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcNanoGPTDiscounted10,
+            range: {
+              min: 0.005,
+              average: 0.011,
+              max: 0.015
+            },
+          },
+          applyQuality: this.applyQuality,
+          applyImage: applyImageNanoGPT,
+        }, {
           id: 'openai',
           model_name: 'gpt-image-1-mini',
           pricing: {

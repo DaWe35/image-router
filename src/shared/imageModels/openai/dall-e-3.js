@@ -16,9 +16,10 @@ class DallE3 {
           type: PRICING_TYPES.CALCULATED,
           calcFunction: this.calculatePrice,
           range: {
-            min: this.calculatePrice('low', '1024x1024'),
-            average: this.calculatePrice('auto', '1024x1024'),
-            max: this.calculatePrice('high', '1536x1024')
+            min: this.calculatePrice({'quality': 'low', 'size': '1024x1024'}),
+            average: this.calculatePrice({'quality': 'auto', 'size': '1024x1024'}),
+            average: this.calculatePrice({'quality': 'auto', 'size': '1024x1024'}),
+            max: this.calculatePrice({'quality': 'high', 'size': '1536x1024'})
           },
         },
         applyQuality: this.applyQuality,
@@ -37,11 +38,11 @@ class DallE3 {
     return this.data
   }
 
-  calculatePrice(quality, size) {
-    const isHD = quality === 'high'
+  calculatePrice(params) {
+    const isHD = params.quality === 'high'
 
     if (isHD) {
-        switch (size) {
+        switch (params.size) {
             case '1024x1024':
                 return 0.08
             case '1024x1536':
@@ -51,7 +52,7 @@ class DallE3 {
                 return 0.08 // Default to 1024x1024 if size is unknown
         }
     } else { // Standard quality
-        switch (size) {
+        switch (params.size) {
             case '1024x1024':
                 return 0.04
             case '1024x1536':

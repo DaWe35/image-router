@@ -10,7 +10,7 @@ import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/p
 export async function preLogUsage(params, apiKey, req, providerIndex) {
     const modelConfig = models[params.model]
 
-    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality, providerIndex)
+    const prePriceUsd = preCalcPrice(params, providerIndex)
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
     
     // Check if the user has enough credits
@@ -93,10 +93,10 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
 
 
 export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, providerIndex) {
-    const prePriceUsd = preCalcPrice(params.model, params.size, params.quality, providerIndex)
+    const prePriceUsd = preCalcPrice(params, providerIndex)
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
 
-    const postPriceUsd = postCalcPrice(params.model, params.size, params.quality, imageResult, providerIndex)
+    const postPriceUsd = postCalcPrice(params, imageResult, providerIndex)
     const postPriceInt = convertPriceToDbFormat(postPriceUsd)
 
     // Extract URLs from the result

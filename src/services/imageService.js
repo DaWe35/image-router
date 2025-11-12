@@ -375,12 +375,13 @@ async function generateReplicate({ fetchParams, userId, usageLogId }) {
         prompt: fetchParams.prompt
     }
 
-    // Add input_image if available (for image editing models like flux-kontext-max)
+    // Add image if available
     if (fetchParams.image) {
-        const arrayBuffer = await fetchParams.image.blob.arrayBuffer()
-        const base64Data = Buffer.from(arrayBuffer).toString('base64')
-        input.input_image = 'data:application/octet-stream;base64,' + base64Data
-        input.aspect_ratio = 'match_input_image'
+        input.image = fetchParams.image
+    }
+    
+    if (fetchParams.reference_images) {
+        input.reference_images = fetchParams.reference_images
     }
 
     const createRes = await fetch(providerUrl, {

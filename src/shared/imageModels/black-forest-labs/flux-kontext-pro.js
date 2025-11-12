@@ -14,15 +14,15 @@ class FluxKontextPro {
             value: 0.04,
           },
           applyImage: applyReferenceImages1024x1024,
-        }, {
+        }, /* {
           id: 'replicate',
           model_name: 'black-forest-labs/flux-kontext-pro',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0.04,
           },
-          applyImage: applyImageSingle,
-        }
+          applyImage: applyImageSingle, // applyImage broken, needs to be fixed
+        } */
       ],
       arena_score: 1098,
       release_date: '2025-05-29',

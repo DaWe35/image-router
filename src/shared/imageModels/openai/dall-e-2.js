@@ -40,8 +40,8 @@ class DallE2 {
     return this.data
   }
 
-  calculatePrice(quality, size) {
-    switch (size) {
+  calculatePrice(params) {
+    switch (params.size) {
       case '1024x1024':
         return 0.016
       case '1024x1536':

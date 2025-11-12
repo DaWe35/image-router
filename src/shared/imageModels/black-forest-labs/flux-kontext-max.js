@@ -14,15 +14,15 @@ class FluxKontextMax {
             value: 0.08,
           },
           applyImage: applyReferenceImages1024x1024,
-        }, {
+        }, /* {
           id: 'replicate',
           model_name: 'black-forest-labs/flux-kontext-max',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0.08,
           },
-          applyImage: applyImageSingle,
-        }
+          applyImage: applyImageSingle, // applyImage broken, needs to be fixed
+        } */
       ],
       arena_score: 1128,
       release_date: '2025-05-29',

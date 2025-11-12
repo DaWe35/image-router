@@ -50,12 +50,16 @@ import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
 import RecraftVectorize from './recraft-ai/recraft-vectorize.js'
 
+import Reve1 from './reve/reve-1.js'
+
 import IdeogramV2a from './ideogram-ai/ideogram-v2a.js'
 import IdeogramV2aTurbo from './ideogram-ai/ideogram-v2a-turbo.js'
 import IdeogramV3Balanced from './ideogram-ai/ideogram-v3-balanced.js'
 import IdeogramV3Turbo from './ideogram-ai/ideogram-v3-turbo.js'
 import IdeogramV3Quality from './ideogram-ai/ideogram-v3-quality.js'
 import IdeogramV3 from './ideogram-ai/ideogram-v3.js'
+
+import LucidOrigin from './leonardo/lucid-origin.js'
 
 import Imagen3 from './google/imagen-3.js'
 import Imagen3Fast from './google/imagen-3-fast.js'
@@ -165,12 +169,16 @@ const modelInstances = [
   new RecraftV3Svg(),
   new RecraftVectorize(),
   
+  new Reve1(),
+  
   new IdeogramV2a(),
   new IdeogramV2aTurbo(),
   new IdeogramV3Balanced(),
   new IdeogramV3Turbo(),
   new IdeogramV3Quality(),
   new IdeogramV3(),
+
+  new LucidOrigin(),
 
   new Imagen3(),
   new Imagen3Fast(),

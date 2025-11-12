@@ -29,7 +29,7 @@ export function selectProvider(providers, requestParams = {}) {
   let desiredProviderId = providers[0].id;
 
   // Special-case selection for GPT-Image-1
-  if (modelId === 'openai/gpt-image-1') {
+  if (modelId === 'openai/gpt-image-1' || modelId === 'openai/gpt-image-1-mini') {
     // If an input image is provided we need the OpenAI provider (supports edits),
     // otherwise we prefer NanoGPT which is cheaper for pure text-to-image.
     desiredProviderId = hasInputImage ? 'openai' : 'nanogpt';

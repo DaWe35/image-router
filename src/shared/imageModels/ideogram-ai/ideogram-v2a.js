@@ -11,9 +11,9 @@ class IdeogramV2a {
           type: PRICING_TYPES.CALCULATED,
           calcFunction: this.calculatePrice,
           range: {
-            min: this.calculatePrice('low'),
-            average: this.calculatePrice('medium'),
-            max: this.calculatePrice('high')
+            min: this.calculatePrice({'quality': 'low'}),
+            average: this.calculatePrice({'quality': 'medium'}),
+            max: this.calculatePrice({'quality': 'high'})
           }
         },
         applyQuality: this.applyQuality
@@ -39,8 +39,8 @@ class IdeogramV2a {
     return params
   }
 
-  calculatePrice(quality) {
-    if (quality === 'low') return 0.025
+  calculatePrice(params) {
+    if (params.quality === 'low') return 0.025
     return 0.04
   }
 }
