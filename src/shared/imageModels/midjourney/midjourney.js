@@ -20,11 +20,11 @@ export default class Midjourney {
       ],
       release_date: '2025-06-17',
       arena_score: 1049,
-      /* examples: [
+      examples: [
         {
-          image: '/model-examples/seedream-3-2025-06-16T17-59-52-679Z.webp'
+          image: '/model-examples/midjourney-7.webp'
         }
-      ] */
+      ]
     }
   }
 

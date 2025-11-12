@@ -14,12 +14,12 @@ export default class Ghibli {
         },
         applyImage: applyImageSingleDataURI,
       }],
-      /* release_date: '2025-06-29',
+      /* release_date: '2025-06-29', */
       examples: [
         {
-          image: '/model-examples/pasaranax:443821@1957537.webp'
+          image: '/model-examples/ghibli.webp'
         }
-      ] */
+      ]
     }
   }
 

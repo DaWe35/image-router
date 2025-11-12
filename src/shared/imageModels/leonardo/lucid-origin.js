@@ -25,11 +25,11 @@ export default class LucidOrigin {
         }
       ],
       release_date: '2025-08-05',
-      /* examples: [
+      examples: [
         {
-          image: '/model-examples/hunyuan-image-3.webp'
+          image: '/model-examples/lucid-origin.webp'
         }
-      ], */
+      ],
     }
   }
 
