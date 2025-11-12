@@ -78,12 +78,15 @@ import Gemini25Flash from './google/gemini-2.5-flash.js'
 import Photon from './luma/photon.js'
 import PhotonFlash from './luma/photon-flash.js'
 
+import Midjourney from './midjourney/midjourney.js'
+
 import Image01 from './minimax/image-01.js'
 
 import TestImage from './test/test-image.js'
 
 import CyberRealisticPony from './runware/CyberRealistic-Pony.js'
 import DreamShaper from './runware/DreamShaper.js'
+import Ghibli from './runware/Ghibli.js'
 import RealisticVision from './runware/Realistic-Vision.js'
 import RealVisXL from './runware/RealVisXL.js'
 import HiDreamI1Fast from './hidream-ai/HiDream-I1-Fast.js'
@@ -198,12 +201,15 @@ const modelInstances = [
   new Photon(),
   new PhotonFlash(),
   
+  new Midjourney(),
+  
   new Image01(),
 
   new TestImage(),
 
   new CyberRealisticPony(),
   new DreamShaper(),
+  new Ghibli(),
   new RealisticVision(),
   new RealVisXL(),
   new HiDreamI1Fast(),

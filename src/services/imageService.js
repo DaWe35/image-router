@@ -61,6 +61,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
       nanogpt: generateNanoGPT,
       replicate: generateReplicate,
       runware: generateRunware,
+      wavespeed: generateWavespeed,
       test: generateTest,
       vertex: generateVertex
     }
@@ -240,6 +241,69 @@ async function generateNanoGPT({ fetchParams, userId }) {
     }
 
     const data = await response.json()
+
+    // If this is an async Midjourney task, we need to poll for the result
+    if (data.task_id && data.status === 'submitted') {
+        const statusCheckUrl = 'https://nano-gpt.com/api/check-midjourney-status'
+        const maxAttempts = 120 // ~10 minutes @ 5s interval
+        const delay = 5000
+        let attempts = 0
+        let lastStatusPayload = data
+
+        while (attempts < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, delay))
+
+            const pollRes = await fetch(statusCheckUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': providerKey
+                },
+                body: JSON.stringify({ task_id: data.task_id })
+            })
+
+            lastStatusPayload = await pollRes.json()
+
+            if (!pollRes.ok) {
+                console.error("NanoGPT polling error: " + JSON.stringify(lastStatusPayload))
+            }
+            
+            if (lastStatusPayload.status === 'SUCCESS') {
+                return {
+                    created: Math.floor(Date.now() / 1000),
+                    data: [{
+                        url: lastStatusPayload.imageUrl,
+                        revised_prompt: null,
+                    }],
+                    cost: data.cost,
+                }
+            }
+
+            if (lastStatusPayload.status === 'FAILED') {
+                return {
+                    error: {
+                        message: lastStatusPayload.failReason || 'Generation failed',
+                        type: 'generation_failed',
+                        original_response_from_provider: lastStatusPayload
+                    },
+                    cost: data.cost
+                }
+            }
+
+            attempts++
+        }
+
+        // Timeout
+        return {
+            error: {
+                message: 'Prediction timed out on Midjourney – please try again later',
+                type: 'timeout_error',
+                original_response_from_provider: lastStatusPayload
+            },
+            cost: data.cost
+        }
+    }
+
     return data
 }
 
@@ -1020,6 +1084,86 @@ async function generateFal({ fetchParams }) {
         })),
         seed: resultData.seed,
         original_response_from_provider: resultData
+    }
+}
+
+// Wavespeed API call
+async function generateWavespeed({ fetchParams }) {
+    const providerUrl = `https://api.wavespeed.ai/api/v3/${fetchParams.model}`
+    const providerKey = process.env.WAVESPEED_API_KEY
+
+    if (!providerKey) {
+        throw new Error('WAVESPEED_API_KEY environment variable is required for wavespeed provider')
+    }
+
+    const bodyPayload = {
+        "output_format": "webp",
+        "enable_base64_output": false,
+        "enable_sync_mode": true,
+        prompt: fetchParams.prompt
+    }
+
+    if (fetchParams.image) {
+        bodyPayload.image = fetchParams.image
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify(bodyPayload)
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        const providerMessage = result.message || result.error || 'wavespeed request failed'
+        throw {
+            status: response.status,
+            errorResponse: {
+                status: response.status,
+                statusText: response.statusText,
+                error: {
+                    message: providerMessage,
+                    type: 'wavespeed_error'
+                },
+                original_response_from_provider: result
+            }
+        }
+    }
+
+    const data = result.data
+    
+    if (data.status === "failed") {
+        return {
+            error: {
+                message: data.error || 'Generation failed',
+                type: 'failed',
+                original_response_from_provider: result
+            }
+        }
+    }
+
+    if (data.status !== "completed") {
+        return {
+            error: {
+                message: 'Sync mode request did not complete successfully. Status: ' + data.status,
+                type: 'wavespeed_sync_error',
+                original_response_from_provider: result
+            }
+        }
+    }
+
+    const imageUrls = data.outputs
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: imageUrls.map(url => ({
+            url,
+            revised_prompt: null,
+        })),
     }
 }
 

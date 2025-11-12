@@ -1,26 +1,25 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { applyImageSingleDataURI } from '../../applyImage.js'
 
-export default class Hailuo02Pro {
+export default class Ghibli {
   constructor() {
     this.data = {
-      id: 'minimax/hailuo-02-pro',
+      id: 'wavespeed/ghibli',
       providers: [{
         id: 'wavespeed',
-        model_name: 'minimax/hailuo-02/pro',
+        model_name: 'wavespeed-ai/ghibli',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.49, // price per video in USD
+          value: 0.005,
         },
         applyImage: applyImageSingleDataURI,
       }],
-      arena_score: 1322,
-      release_date: '2025-06-18',
+      /* release_date: '2025-06-29',
       examples: [
         {
-          video: '/model-examples/hailuo-02-pro-2025-06-24T18-11-17-158Z.webm'
+          image: '/model-examples/pasaranax:443821@1957537.webp'
         }
-    ]
+      ] */
     }
   }
 
