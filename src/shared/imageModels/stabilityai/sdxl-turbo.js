@@ -12,7 +12,7 @@ class SdxlTurbo {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.0002,
+            value: 0.0002
           },
           applyQuality: this.applyQuality
         }, {
@@ -21,25 +21,20 @@ class SdxlTurbo {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.0006,
-          },
+            value: 0.0006
+          }
         },
         /* {
           name: 'replicate',
           providerModelId: 'stability-ai/stable-diffusion-3.5-large-turbo',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.04,
+            value: 0.04
           }
         } */
     ],
       arena_score: 1031,
-      release_date: '2024-10-22',
-      examples: [
-        {
-          image: '/model-examples/sdxl-turbo.webp'
-        }
-      ]
+      release_date: '2024-10-22'
     }
   }
 
@@ -47,7 +42,7 @@ class SdxlTurbo {
     const qualitySteps = {
       low: 2,
       medium: 5,
-      high: 10,
+      high: 10
     }
     params.num_inference_steps = qualitySteps[params.quality] ?? qualitySteps['medium']
     delete params.quality

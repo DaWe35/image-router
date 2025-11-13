@@ -21,12 +21,7 @@ class Sdxl {
           applyQuality: this.applyQuality
         }
     ],
-      release_date: '2023-07-25',
-      examples: [
-        {
-          image: '/model-examples/sdxl-2025-06-15T16-05-42-225Z.webp'
-        }
-      ]
+      release_date: '2023-07-25'
     }
   }
 

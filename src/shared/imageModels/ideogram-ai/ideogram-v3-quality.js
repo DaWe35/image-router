@@ -10,14 +10,10 @@ class IdeogramV3Quality {
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.1
-        },
+        }
       }],
       release_date: '2025-03-26',
-      examples: [
-        {
-          image: '/model-examples/ideogram-v3-quality-2025-10-13.webp'
-        }
-      ],
+      
     }
   }
 

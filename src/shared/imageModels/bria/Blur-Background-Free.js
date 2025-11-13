@@ -17,12 +17,7 @@ export default class BlurBackgroundFree {
           applyImage: applyImageSingle
         }
       ],
-      //release_date: '0000-00-00',
-      examples: [
-        {
-          image: '/model-examples/blur-background-2025-10-29T18-47-12-530Z.webp'
-        }
-      ]
+      //release_date: '0000-00-00'
     }
   }
 

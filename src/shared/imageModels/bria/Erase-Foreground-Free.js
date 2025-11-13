@@ -17,12 +17,7 @@ export default class EraseForegroundFree {
           applyImage: applyImageSingle
         }
       ],
-      //release_date: '0000-00-00',
-      examples: [
-        {
-          image: '/model-examples/erase-foreground-2025-10-29T18-47-10-825Z.webp'
-        }
-      ]
+      //release_date: '0000-00-00'
     }
   }
 

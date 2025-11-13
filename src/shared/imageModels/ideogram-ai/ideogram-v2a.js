@@ -19,12 +19,7 @@ class IdeogramV2a {
         applyQuality: this.applyQuality
       }],
       arena_score: 1004,
-      release_date: '2025-02-27',
-      examples: [
-        {
-          image: '/model-examples/ideogram-v2a-2025-04-03T15-10-14-620Z.webp'
-        }
-      ]
+      release_date: '2025-02-27'
     }
   }
 

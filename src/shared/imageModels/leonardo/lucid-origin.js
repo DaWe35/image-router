@@ -24,12 +24,7 @@ export default class LucidOrigin {
           applyQuality: this.applyQuality,
         }
       ],
-      release_date: '2025-08-05',
-      examples: [
-        {
-          image: '/model-examples/lucid-origin.webp'
-        }
-      ],
+      release_date: '2025-08-05'
     }
   }
 

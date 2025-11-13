@@ -16,19 +16,14 @@ export default class Seedance1ProFast {
             range: {
               min: 0.0315,
               average: 0.1602,
-              max: 0.7,
-            },
+              max: 0.7
+            }
           },
-          applyImage: applyImageRunwareVideo,
+          applyImage: applyImageRunwareVideo
         }
     ],
       arena_score: 1347,
       release_date: '2025-10-24',
-      examples: [
-        {
-          video: '/model-examples/seedance-1-pro-fast-2025-11-01T23-14-50-440Z.webm'
-        }
-      ],
      sizes: [
       // 480p
       '864x480',

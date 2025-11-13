@@ -11,17 +11,13 @@ class FluxPro {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
-          value: 0.05,
+          value: 0.05
         },
         applyQuality: this.applyQuality
       }],
       arena_score: 1069,
-      release_date: '2024-08-01',
-      examples: [
-        {
-          image: '/model-examples/FLUX-pro-2025-04-03T14-14-55-833Z.webp'
-        }
-      ]
+      release_date: '2024-08-01'
+      
     }
   }
 

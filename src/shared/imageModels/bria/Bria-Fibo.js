@@ -19,11 +19,6 @@ export default class BriaFibo {
         }
       ],
       release_date: '2025-10-29',
-      examples: [
-        {
-          image: '/model-examples/bria-fibo-2025-11-01T23-14-49-468Z-compressed.webp'
-        }
-      ],
       sizes: [
         '1024x1024',
         '1152x896',

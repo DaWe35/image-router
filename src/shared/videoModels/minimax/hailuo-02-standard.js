@@ -16,10 +16,10 @@ class Hailuo02Standard {
             range: {
               min: 0.231,
               average: 0.231,
-              max: 0.431,
-            },
+              max: 0.431
+            }
           },
-          applyImage: applyImageRunwareVideo,
+          applyImage: applyImageRunwareVideo
         }, {
           id: 'wavespeed',
           model_name: 'minimax/hailuo-02/standard',
@@ -27,15 +27,10 @@ class Hailuo02Standard {
             type: PRICING_TYPES.FIXED,
             value: 0.28, // price per video in USD
           },
-          applyImage: this.applyImageWaveSpeed,
+          applyImage: this.applyImageWaveSpeed
         }
       ],
-      release_date: '2025-06-18',
-      examples: [
-        {
-          video: '/model-examples/hailuo-02-standard-2025-06-24T15-24-10-877Z.webm'
-        }
-      ]
+      release_date: '2025-06-18'
     }
   }
 

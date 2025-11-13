@@ -23,12 +23,8 @@ class FluxKontextPro {
           applyQuality: this.applyQuality
         }
       ],
-      release_date: '2025-06-26',
-      examples: [
-        {
-          image: '/model-examples/flux-kontext-dev-2025-06-26T20-32-46-915Z.webp'
-        }
-      ]
+      release_date: '2025-06-26'
+      
     }
   }
 

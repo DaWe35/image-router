@@ -12,16 +12,11 @@ class Sora2 {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
-          value: 0.4,
+          value: 0.4
         },
-        applyImage: applyImageRunwareVideo,
+        applyImage: applyImageRunwareVideo
       }],
-      release_date: '2025-09-30',
-      examples: [
-        {
-          video: '/model-examples/Sora-2-2025-10-08T20-46-57-089Z.webm'
-        }
-      ]
+      release_date: '2025-09-30'
     }
   }
 

@@ -9,16 +9,12 @@ class Imagen4Ultra {
         model_name: 'imagen-4.0-ultra-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.06,
+          value: 0.06
         }
       }],
       release_date: '2025-08-14',
       arena_score: 1159,
-      examples: [
-        {
-          image: '/model-examples/imagen-4-ultra-2025-10-08T20-54-28-146Z.webp'
-        }
-      ],
+      ,
       sizes: [
         '1024x1024',
         '896x1280',
@@ -30,7 +26,7 @@ class Imagen4Ultra {
         '2560x1792',
         '1536x2816',
         '2816x1536'
-      ],
+      ]
     }
   }
 

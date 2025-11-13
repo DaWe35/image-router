@@ -13,18 +13,13 @@ export default class Kling25TurboPro {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.35,
+            value: 0.35
           },
-          applyImage: applyImageRunwareVideo,
+          applyImage: applyImageRunwareVideo
         }
       ],
       arena_score: 1241,
-      release_date: '2025-09-23',
-      examples: [
-        {
-          video: '/model-examples/kling-2.5-turbo-pro-2025-10-14T14-38-16-722Z.webm'
-        }
-      ]
+      release_date: '2025-09-23'
     }
   }
 

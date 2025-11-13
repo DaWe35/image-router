@@ -23,11 +23,6 @@ export default class Ltx2Fast {
         }
       ],
       release_date: '2025-10-23',
-      examples: [
-        {
-          video: '/model-examples/ltx-2-fast-2025-11-01T23-44-35-081Z.webm'
-        }
-      ],
       sizes: [
         '1920x1080',
         '2560x1440',

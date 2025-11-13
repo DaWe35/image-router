@@ -13,9 +13,9 @@ class Kling16Standard {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.1848,
+            value: 0.1848
           },
-          applyImage: applyImageRunwareVideo,
+          applyImage: applyImageRunwareVideo
         }, {
           id: 'replicate',
           model_name: 'kwaivgi/kling-v1.6-standard',
@@ -23,16 +23,11 @@ class Kling16Standard {
             type: PRICING_TYPES.FIXED,
             value: 0.25, // price per video on Replicate
           },
-          applyImage: this.applyImage,
+          applyImage: this.applyImage
         }
       ],
       arena_score: 1025,
-      release_date: '2024-12-19',
-      examples: [
-        {
-          video: '/model-examples/kling-1.6-standard.webm'
-        }
-      ]
+      release_date: '2024-12-19'
     }
   }
 

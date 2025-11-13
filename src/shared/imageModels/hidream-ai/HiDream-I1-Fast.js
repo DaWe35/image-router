@@ -20,10 +20,7 @@ class HiDreamI1Fast {
         applyQuality: this.applyQuality
       }],
       arena_score: 1050,
-      release_date: '2025-04-28',
-      examples: [{
-        image: '/model-examples/HiDream-I1-Fast-2025-06-15T21-29-53-614Z.webp'
-      }]
+      release_date: '2025-04-28'
     }
   }
 

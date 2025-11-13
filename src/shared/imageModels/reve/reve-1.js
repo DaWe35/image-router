@@ -24,11 +24,6 @@ export default class Reve1 {
       ],
       arena_score: 1090,
       /* release_date: '2025-08-05', */
-      examples: [
-        {
-          image: '/model-examples/reve-1.webp'
-        }
-      ],
     }
   }
 

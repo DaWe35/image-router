@@ -19,12 +19,7 @@ class JuggernautFlux {
         },
         applyQuality: this.applyQuality
       }],
-      release_date: '2025-03-05',
-      examples: [
-        {
-          image: '/model-examples/Juggernaut-Flux-2025-04-03T14-15-04-136Z.webp'
-        }
-      ]
+      release_date: '2025-03-05'
     }
   }
 

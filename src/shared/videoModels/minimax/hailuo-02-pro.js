@@ -15,12 +15,7 @@ export default class Hailuo02Pro {
         applyImage: applyImageSingleDataURI,
       }],
       arena_score: 1322,
-      release_date: '2025-06-18',
-      examples: [
-        {
-          video: '/model-examples/hailuo-02-pro-2025-06-24T18-11-17-158Z.webm'
-        }
-    ]
+      release_date: '2025-06-18'
     }
   }
 

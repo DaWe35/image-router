@@ -10,14 +10,9 @@ class IdeogramV2aTurbo {
         pricing: {
           type: PRICING_TYPES.FIXED,
           value: 0.025
-        },
+        }
       }],
       release_date: '2025-02-27',
-      examples: [
-        {
-          image: '/model-examples/ideogram-v2a-turbo-2025-10-13.webp'
-        }
-      ],
     }
   }
 

@@ -10,16 +10,11 @@ class HiDreamI1FullFree {
         model_name: 'hidream',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0,
+          value: 0
         },
         applyImage: this.applyImage
       }],
-      release_date: '2025-04-28',
-      examples: [
-        {
-          image: '/model-examples/HiDream-I1-Full-2025-06-15T21-31-49-649Z.webp'
-        }
-      ]
+      release_date: '2025-04-28'
     }
   }
 

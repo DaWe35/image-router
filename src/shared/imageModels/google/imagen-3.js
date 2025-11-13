@@ -10,31 +10,27 @@ class Imagen3 {
           model_name: 'imagen-3.0-generate-002',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.03,
+            value: 0.03
           }
         }, {
           id: 'vertex',
           model_name: 'imagen-3.0-generate-002',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.04,
+            value: 0.04
           }
         }
       ],
       arena_score: 1092,
       release_date: '2024-12-16',
-      examples: [
-        {
-          image: '/model-examples/imagen-3-2025-04-03T15-11-15-706Z.webp'
-        }
-      ],
+      ,
       sizes: [
         '1024x1024',
         '896x1280',
         '1280x896',
         '768x1408',
         '1408x768'
-      ],
+      ]
     }
   }
 

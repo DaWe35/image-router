@@ -16,12 +16,7 @@ export default class Bria32Free {
           }
         }
       ],
-      //release_date: '0000-00-00',
-      examples: [
-        {
-          image: '/model-examples/bria-3.2-2025-10-29T18-47-14-240Z.webp'
-        }
-      ]
+      //release_date: '0000-00-00'
     }
   }
 

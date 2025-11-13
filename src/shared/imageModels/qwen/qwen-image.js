@@ -32,12 +32,7 @@ class QwenImage {
         }
       ],
       arena_score: 1073,
-      release_date: '2025-08-01',
-      examples: [
-        {
-          image: '/model-examples/qwen-image-2025-08-07T13-00-25-337Z.webp'
-        }
-      ]
+      release_date: '2025-08-01'
     }
   }
 

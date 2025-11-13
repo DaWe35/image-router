@@ -27,12 +27,7 @@ class DallE2 {
         applyMask: this.applyMask */
       }],
       arena_score: 695,
-      release_date: '2022-04-6',
-      examples: [
-        {
-          image: '/model-examples/dall-e-2.webp'
-        }
-      ]
+      release_date: '2022-04-6'
     }
   }
 

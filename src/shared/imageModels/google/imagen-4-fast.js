@@ -9,16 +9,12 @@ class Imagen4Fast {
         model_name: 'imagen-4.0-fast-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.02,
+          value: 0.02
         }
       }],
       release_date: '2025-08-14',
       arena_score: 1079,
-      examples: [
-        {
-          image: '/model-examples/imagen-4-fast-2025-10-08T20-54-28-954Z.webp'
-        }
-      ],
+      ,
       sizes: [
         '1024x1024',
         '896x1280',

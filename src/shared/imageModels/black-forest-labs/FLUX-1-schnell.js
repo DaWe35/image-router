@@ -20,12 +20,8 @@ class Flux1Schnell {
         applyQuality: this.applyQuality
       }],
       arena_score: 1000,
-      release_date: '2024-08-01',
-      examples: [
-        {
-          image: '/model-examples/flux-schnell-4-steps.webp'
-        }
-      ]
+      release_date: '2024-08-01'
+      
     }
   }
 

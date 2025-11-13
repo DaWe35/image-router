@@ -16,12 +16,7 @@ class TestVideo {
         applyMask: this.applyMask,
       }],
       arena_score: 0,
-      release_date: '2025-05-04',
-      examples: [
-        {
-          video: 'https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/videoModels/test/big_buck_bunny_720p_1mb.mp4'
-        }
-      ]
+      release_date: '2025-05-04'
     }
   }
 

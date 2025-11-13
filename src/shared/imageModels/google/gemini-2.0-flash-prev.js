@@ -14,17 +14,13 @@ class Gemini20FlashPrev {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,
-          value: 0.039,
+          value: 0.039
         },
-        applyImage: geminiInstance.applyImage,
+        applyImage: geminiInstance.applyImage
       }],
       arena_score: 980,
-      release_date: '2025-05-07',
-      examples: [
-        {
-          image: '/model-examples/gemini-2.0-flash-prev-2025-05-13T11-25-55-222Z.webp'
-        }
-      ]
+      release_date: '2025-05-07'
+      
     }
   }
 

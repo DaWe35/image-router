@@ -9,17 +9,13 @@ class Flux1SchnellFree {
         model_name: 'black-forest-labs/FLUX-1-schnell',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0,
+          value: 0
         },
         applyQuality: this.applyQuality
       }],
       arena_score: 1000,
-      release_date: '2024-08-01',
-      examples: [
-        {
-          image: '/model-examples/FLUX-1-schnell.webp'
-        }
-      ]
+      release_date: '2024-08-01'
+      
     }
   }
 

@@ -39,11 +39,6 @@ class GptImage1Mini {
         }
       ],
       release_date: '2025-10-06',
-      examples: [
-        {
-          image: '/model-examples/gpt-image-1-mini-2025-10-08T20-54-25-310Z.webp'
-        }
-      ],
       sizes: [
         '1024x1024',
         '1536x1024',

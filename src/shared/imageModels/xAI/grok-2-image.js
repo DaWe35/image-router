@@ -13,12 +13,7 @@ class Grok2Image {
         }
       }],
       arena_score: 929,
-      release_date: '2024-12-12',
-      examples: [
-        {
-          image: '/model-examples/grok-2-image-2025-08-12T09-11-22-200Z.webp'
-        }
-      ]
+      release_date: '2024-12-12'
     }
   }
 
@@ -28,5 +23,4 @@ class Grok2Image {
 }
 
 export default Grok2Image
-
 

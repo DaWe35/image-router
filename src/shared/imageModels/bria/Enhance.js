@@ -19,12 +19,7 @@ export default class Enhance {
           applyImage: applyImageSingle
         }
       ],
-      //release_date: '0000-00-00',
-      examples: [
-        {
-          image: '/model-examples/enhance-2025-10-29T18-47-11-660Z.webp'
-        }
-      ]
+      //release_date: '0000-00-00'
     }
   }
 

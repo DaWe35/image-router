@@ -9,13 +9,11 @@ class Imagen4Fast0606 {
         model_name: 'imagen-4.0-fast-generate-preview-06-06',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.02,
+          value: 0.02
         }
       }],
-      release_date: '2025-06-06',
-      examples: [{
-        image: '/model-examples/imagen-4-fast-06-06-2025-06-14T20-58-35-827Z.webp',
-      }]
+      release_date: '2025-06-06'
+      
     }
   }
 

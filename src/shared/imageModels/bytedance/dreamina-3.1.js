@@ -12,12 +12,8 @@ class DreaminaV31 {
           value: 0.03
         }
       }],
-      release_date: '2025-08-01',
-      examples: [
-        {
-          image: '/model-examples/dreamina-3.1-2025-08-07T12-08-35-605Z.webp'
-        }
-      ]
+      release_date: '2025-08-01'
+      
     }
   }
 

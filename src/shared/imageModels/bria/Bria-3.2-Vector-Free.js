@@ -16,12 +16,7 @@ export default class Bria32VectorFree {
           }
         }
       ],
-      //release_date: '0000-00-00',
-      examples: [
-        {
-          image: '/model-examples/bria-3.2-vector-2025-10-29T18-47-15-940Z.svg'
-        }
-      ]
+      //release_date: '0000-00-00'
     }
   }
 

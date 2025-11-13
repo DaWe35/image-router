@@ -21,12 +21,7 @@ class Sd15Dpo {
           applyQuality: this.applyQuality
         }
     ],
-      release_date: '2022-10-20',
-      examples: [
-        {
-          image: '/model-examples/sd1.5-dpo-2025-06-15T16-14-50-412Z.webp'
-        }
-      ]
+      release_date: '2022-10-20'
     }
   }
 

@@ -19,10 +19,7 @@ class RealVisXL {
         },
         applyQuality: this.applyQuality
       }],
-      release_date: '2025-02-26',
-      examples: [{
-        image: '/model-examples/RealVisXL-2025-06-15T21-45-25-442Z.webp'
-      }]
+      release_date: '2025-02-26'
     }
   }
 

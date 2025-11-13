@@ -20,11 +20,6 @@ class JuggernautXL {
         applyQuality: this.applyQuality
       }],
       release_date: '2024-08-29',
-      examples: [
-        {
-          image: '/model-examples/Juggernaut-XL-2025-10-13.webp'
-        }
-      ],
     }
   }
 

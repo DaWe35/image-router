@@ -14,12 +14,8 @@ class InfiniteYou {
         },
         applyImage: this.applyImage
       }],
-      release_date: '2025-03-21',
-      examples: [
-        {
-          image: '/model-examples/InfiniteYou-2025-06-23T10-38-20-558Z.webp'
-        }
-      ]
+      release_date: '2025-03-21'
+      
     }
   }
 

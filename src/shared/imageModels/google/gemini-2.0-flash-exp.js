@@ -11,17 +11,13 @@ class Gemini20FlashExp {
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: this.postCalcPrice,
-          value: 0.039,
+          value: 0.039
         },
-        applyImage: this.applyImage,
+        applyImage: this.applyImage
       }],
       arena_score: 962,
-      release_date: '2025-03-12',
-      examples: [
-        {
-          image: '/model-examples/gemini-2.0-flash-exp_free-2025-05-13T11-23-59-032Z.webp'
-        }
-      ]
+      release_date: '2025-03-12'
+      
     }
   }
 

@@ -19,12 +19,7 @@ class CyberRealisticPony {
         },
         applyQuality: this.applyQuality
       }],
-      release_date: '2025-06-29',
-      examples: [
-        {
-          image: '/model-examples/pasaranax:443821@1957537.webp'
-        }
-      ]
+      release_date: '2025-06-29'
     }
   }
 

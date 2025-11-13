@@ -15,11 +15,6 @@ export default class Ghibli {
         applyImage: applyImageSingleDataURI,
       }],
       /* release_date: '2025-06-29', */
-      examples: [
-        {
-          image: '/model-examples/ghibli.webp'
-        }
-      ]
     }
   }
 

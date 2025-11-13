@@ -14,12 +14,7 @@ class HidreamE11 {
         },
         applyImage: applyFalImage
       }],
-      release_date: '2025-06-16',
-      examples: [
-        {
-          image: '/model-examples/HiDream-E1-1-2025-10-13.webp'
-        }
-      ]
+      release_date: '2025-06-16'
     }
   }
 

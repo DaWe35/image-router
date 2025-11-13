@@ -18,11 +18,6 @@ export default class Riverflow1Mini {
         applyImage: applyImagesReferences1024x1024
       }],
       release_date: '2025-10-15',
-      examples: [
-        {
-          image: '/model-examples/riverflow-1-mini-2025-10-17T19-51-39-629Z.webp'
-        }
-      ],
       sizes: [
         '1024x1024',
         '1152x864',

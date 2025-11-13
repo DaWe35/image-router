@@ -26,12 +26,7 @@ export default class HunyuanImage3 {
           },
         }
       ],
-      release_date: '2025-09-28',
-      examples: [
-        {
-          image: '/model-examples/hunyuan-image-3.webp'
-        }
-      ],
+      release_date: '2025-09-28'
     }
   }
 

@@ -26,11 +26,6 @@ class FluxKontextPro {
       ],
       arena_score: 1098,
       release_date: '2025-05-29',
-      examples: [
-        {
-          image: '/model-examples/flux-1-kontext-pro-2025-05-30T19-06-27-208Z.webp'
-        }
-      ],
       sizes: [
         '1568x672',
         '1392x752',

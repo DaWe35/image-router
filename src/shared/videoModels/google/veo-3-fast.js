@@ -11,9 +11,9 @@ export default class Veo3Fast {
           model_name: 'veo-3.0-fast-generate-001',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 1.2,
+            value: 1.2
           },
-          applyImage: applyImageSingle,
+          applyImage: applyImageSingle
         }
         /* These have no input image implemented yet
         {
@@ -21,7 +21,7 @@ export default class Veo3Fast {
           model_name: 'veo-3.0-fast-generate-001',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 1.2,
+            value: 1.2
           },
           // applyImage: applyVertexImage
         }, {
@@ -29,23 +29,18 @@ export default class Veo3Fast {
           model_name: 'google/veo-3-fast',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 1.2,
-          },
+            value: 1.2
+          }
         }, {
           id: 'wavespeed',
           model_name: 'google/veo3-fast', // no audio ?
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 1.2,
-          },
+            value: 1.2
+          }
         } */
       ],
-      release_date: '2025-06-12',
-      examples: [
-        {
-          video: '/model-examples/veo-3-fast.webm'
-        }
-      ]
+      release_date: '2025-06-12'
     }
   }
 

@@ -26,11 +26,6 @@ class FluxKontextMax {
       ],
       arena_score: 1128,
       release_date: '2025-05-29',
-      examples: [
-        {
-          image: '/model-examples/flux-1-kontext-max.webp'
-        }
-      ],
       sizes: [
         '1568x672',
         '1392x752',

@@ -12,12 +12,7 @@ class IdeogramV3Balanced {
           value: 0.07
         },
       }],
-      release_date: '2025-03-26',
-      examples: [
-        {
-          image: '/model-examples/ideogram-v3-balanced-2025-10-13.webp'
-        }
-      ],
+      release_date: '2025-03-26'
     }
   }
 

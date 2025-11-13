@@ -16,12 +16,7 @@ class Veo2 {
         applyImage: applyImageSingle,
       }],
       arena_score: 1115,
-      release_date: '2024-12-16',
-      examples: [
-        {
-          video: '/model-examples/veo-2-2025-05-27T22-57-10-794Z.webm'
-        }
-      ]
+      release_date: '2024-12-16'
     }
   }
 

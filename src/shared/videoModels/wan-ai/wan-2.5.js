@@ -13,18 +13,13 @@ class Wan25 {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.473,
+            value: 0.473
           },
-          applyImage: applyImageRunwareVideo,
+          applyImage: applyImageRunwareVideo
         }
       ],
       arena_score: 1190,
-      release_date: '2025-09-24',
-      examples: [
-        {
-          video: '/model-examples/wan-2.5-2025-10-14T15-04-21-122Z.webm'
-        }
-      ]
+      release_date: '2025-09-24'
     }
   }
 

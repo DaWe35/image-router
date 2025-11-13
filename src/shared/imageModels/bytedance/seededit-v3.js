@@ -28,12 +28,7 @@ class SeedEditV3 {
           applyImage: applyFalImage
         }
       ],
-      release_date: '2025-07-06',
-      examples: [
-        {
-          image: '/model-examples/seededit-3-2025-10-13.webp'
-        }
-      ]
+      release_date: '2025-07-06'
     }
   }
 

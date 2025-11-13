@@ -19,10 +19,7 @@ class DreamShaper {
         },
         applyQuality: this.applyQuality
       }],
-      release_date: '2023-07-29',
-      examples: [{
-        image: '/model-examples/DreamShaper-2025-06-15T21-45-26-399Z.webp'
-      }]
+      release_date: '2023-07-29'
     }
   }
 

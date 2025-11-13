@@ -30,11 +30,6 @@ export default class SeedreamV4 {
       ],
       release_date: '2025-09-09',
       arena_score: 1227,
-      examples: [
-        {
-          image: '/model-examples/seedream-4-2025-09-10T09-26-01-864Z.webp'
-        }
-      ],
       sizes: [
         '1024x1024',
         '2048x2048',

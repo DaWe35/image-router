@@ -19,10 +19,7 @@ class HiDreamI1Full {
         },
         applyQuality: this.applyQuality
       }],
-      release_date: '2025-04-28',
-      examples: [{
-        image: '/model-examples/HiDream-I1-Full-2025-06-15T21-31-49-649Z.webp'
-      }]
+      release_date: '2025-04-28'
     }
   }
 

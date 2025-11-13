@@ -9,15 +9,11 @@ class Imagen4Ultra0520 {
         model_name: 'imagen-4.0-ultra-generate-exp-05-20',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.08,
+          value: 0.08
         }
       }],
-      release_date: '2025-05-20',
-      examples: [
-        {
-          image: '/model-examples/imagen-4-ultra-2025-05-24T20-51-35-162Z.webp'
-        }
-      ]
+      release_date: '2025-05-20'
+      
     }
   }
 

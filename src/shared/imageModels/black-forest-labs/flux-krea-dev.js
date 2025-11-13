@@ -19,12 +19,7 @@ class FluxKreaDev {
         applyMask: this.applyMask,
         applyQuality: this.applyQuality
       }],
-      release_date: '2024-07-31',
-      examples: [
-        {
-          image: '/model-examples/flux-krea-dev.webp'
-        }
-      ]
+      release_date: '2024-07-31'
     }
   }
 

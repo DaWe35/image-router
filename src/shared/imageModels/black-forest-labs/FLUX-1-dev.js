@@ -20,12 +20,7 @@ class Flux1Dev {
         applyQuality: this.applyQuality
       }],
       arena_score: 1046,
-      release_date: '2024-08-01',
-      examples: [
-        {
-          image: '/model-examples/FLUX-1-dev.webp'
-        }
-      ]
+      release_date: '2024-08-01'
     }
   }
 

@@ -9,16 +9,11 @@ class Imagen4 {
         model_name: 'imagen-4.0-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.04,
+          value: 0.04
         }
       }],
       release_date: '2025-08-14',
       arena_score: 1159,
-      examples: [
-        {
-          image: '/model-examples/imagen-4-2025-10-08T20-54-27-306Z.webp'
-        }
-      ],
       sizes: [
         '1024x1024',
         '896x1280',

@@ -16,12 +16,7 @@ class TestImage {
         applyMask: this.applyMask,
       }],
       arena_score: 0,
-      release_date: '2025-05-04',
-      examples: [
-        {
-          image: '/model-examples/test.webp'
-        }
-      ]
+      release_date: '2025-05-04'
     }
   }
 

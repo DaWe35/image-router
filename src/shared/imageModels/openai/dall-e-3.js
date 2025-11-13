@@ -25,12 +25,7 @@ class DallE3 {
         applyQuality: this.applyQuality,
       }],
       arena_score: 937,
-      release_date: '2023-10-20',
-      examples: [
-        {
-          image: '/model-examples/dall-e-3.webp'
-        }
-      ]
+      release_date: '2023-10-20'
     }
   }
 

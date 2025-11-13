@@ -10,17 +10,12 @@ class RecraftV3 {
         model_name: 'fal-ai/recraft/v3/text-to-image',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.04,
+          value: 0.04
         },
         applyImage: applyFalImage
       }],
       arena_score: 1114,
-      release_date: '2024-10-30',
-      examples: [
-        {
-          image: '/model-examples/recraft-v3-2025-04-03T15-09-40-800Z.webp'
-        }
-      ]
+      release_date: '2024-10-30'
     }
   }
 

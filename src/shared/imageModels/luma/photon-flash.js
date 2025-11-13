@@ -9,16 +9,12 @@ class PhotonFlash {
         model_name: 'luma/photon-flash',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.01,
+          value: 0.01
         }
       }],
       arena_score: 964,
-      release_date: '2024-12-03',
-      examples: [
-        {
-          image: '/model-examples/photon-flash-2025-04-03T14-22-54-572Z.webp'
-        }
-      ]
+      release_date: '2024-12-03'
+      
     }
   }
 

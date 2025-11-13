@@ -14,17 +14,13 @@ export default class ReplaceBackground {
             /* type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple, */
             type: PRICING_TYPES.FIXED,
-            value: 0.0005,
+            value: 0.0005
           },
           applyImage: applyImageSingle
         }
       ],
       /* release_date: '0000-00-00',
-      examples: [
-        {
-          image: '/model-examples/RMBG-2.0-2025-07-12T14-12-11-026Z.webp'
-        }
-      ] */
+       */
     }
   }
 

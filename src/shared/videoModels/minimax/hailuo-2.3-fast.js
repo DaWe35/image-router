@@ -23,11 +23,6 @@ export default class Hailuo23Fast {
         }
       ],
       release_date: '2025-10-28',
-      examples: [
-        {
-          video: '/model-examples/hailuo-2.3-fast-2025-11-02T19-10-41-637Z.webm'
-        }
-      ],
       sizes: [
         '1366x768',
         '1920x1080'

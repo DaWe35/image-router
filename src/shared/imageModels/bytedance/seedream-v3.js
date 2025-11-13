@@ -13,16 +13,16 @@ export default class SeedreamV3 {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcNanoGPTDiscounted5,
-            value: 0.03,
+            value: 0.03
           },
-          applyImage: applyImageNanoGPT,
+          applyImage: applyImageNanoGPT
         }, {
           id: 'runware',
           model_name: 'bytedance:3@1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.03,
+            value: 0.03
           },
           applyImage: this.applyImageRunware
         }, {
@@ -30,18 +30,14 @@ export default class SeedreamV3 {
           model_name: 'fal-ai/bytedance/seedream/v3/text-to-image',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.03,
+            value: 0.03
           },
           applyImage: this.applyImageFal
         }
       ],
       release_date: '2025-04-16',
-      arena_score: 1156,
-      examples: [
-        {
-          image: '/model-examples/seedream-3-2025-06-16T17-59-52-679Z.webp'
-        }
-      ]
+      arena_score: 1156
+      
     }
   }
 

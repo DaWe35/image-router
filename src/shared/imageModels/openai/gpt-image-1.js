@@ -40,11 +40,6 @@ class GptImage1 {
       ],
       arena_score: 1164,
       release_date: '2025-04-23',
-      examples: [
-        {
-          image: '/model-examples/gpt-image-1-2025-06-15T21-37-41-776Z.webp'
-        }
-      ],
       sizes: [
         '1024x1024',
         '1536x1024',

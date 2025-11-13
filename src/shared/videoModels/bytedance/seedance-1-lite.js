@@ -16,26 +16,21 @@ class Seedance1Lite {
             range: {
               min: 0.0680,
               average: 0.144,
-              max: 0.144,
-            },
+              max: 0.144
+            }
           },
-          applyImage: applyImageRunwareVideo,
+          applyImage: applyImageRunwareVideo
         }, {
           id: 'wavespeed',
           model_name: 'bytedance/seedance-v1-lite-t2v-720p',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.16,
+            value: 0.16
           },
-          applyImage: this.applyImageWaveSpeed,
+          applyImage: this.applyImageWaveSpeed
         }
       ],
-      release_date: '2025-06-16',
-      examples: [
-        {
-          video: '/model-examples/seedance-1-2025-06-16T19-01-20-528Z.webm'
-        }
-      ]
+      release_date: '2025-06-16'
     }
   }
 

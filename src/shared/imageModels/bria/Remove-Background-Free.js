@@ -25,12 +25,7 @@ export default class RemoveBackgroundFree {
           applyImage: applySingleInputImage
         }
       ],
-      release_date: '2024-10-30',
-      examples: [
-        {
-          image: '/model-examples/RMBG-2.0-2025-07-12T14-12-11-026Z.webp'
-        }
-      ]
+      release_date: '2024-10-30'
     }
   }
 
