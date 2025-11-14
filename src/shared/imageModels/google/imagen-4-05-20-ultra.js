@@ -13,7 +13,6 @@ class Imagen4Ultra0520 {
         }
       }],
       release_date: '2025-05-20'
-      
     }
   }
 

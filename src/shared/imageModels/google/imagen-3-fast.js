@@ -13,7 +13,6 @@ class Imagen3Fast {
         }
       }],
       release_date: '2024-12-16',
-      ,
       sizes: [
         '1024x1024',
         '896x1280',
