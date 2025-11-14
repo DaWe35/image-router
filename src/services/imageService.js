@@ -666,7 +666,145 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
     }
 }
 
+async function generateVertexGemini({ fetchParams, userId }) {
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
+    const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
+    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+
+    if (!projectId) {
+        throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required for Vertex AI')
+    }
+
+    if (!serviceAccountKey) {
+        throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required for Vertex AI (base64 encoded service account JSON)')
+    }
+
+    // Parse the service account key
+    let serviceAccount
+    try {
+        const keyJson = Buffer.from(serviceAccountKey, 'base64').toString('utf-8')
+        serviceAccount = JSON.parse(keyJson)
+    } catch (error) {
+        throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_KEY format. Must be base64 encoded JSON.')
+    }
+
+    // Get access token using service account
+    const { GoogleAuth } = await import('google-auth-library')
+    const auth = new GoogleAuth({
+        credentials: serviceAccount,
+        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    })
+    const authClient = await auth.getClient()
+    const accessToken = await authClient.getAccessToken()
+
+    if (!accessToken?.token) {
+        throw new Error('Failed to get Google Cloud access token')
+    }
+
+    const providerUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${fetchParams.model}:generateContent`
+
+    const parts = [{ text: fetchParams.prompt }]
+
+    // Handle image inputs if they exist
+    if (fetchParams.imagesData) {
+        for (const imageData of fetchParams.imagesData) {
+            const mimeType = imageData.startsWith('data:') ? imageData.substring(5, imageData.indexOf(';')) : 'image/png';
+            const base64Data = imageData.replace(/^data:[^;]+;base64,/, '');
+            parts.unshift({
+                inlineData: {
+                    mimeType: mimeType,
+                    data: base64Data
+                }
+            });
+        }
+    }
+
+    const requestBody = {
+        contents: {
+            role: "USER",
+            parts: parts,
+        },
+        generation_config: {
+            response_modalities: ["IMAGE"],
+            image_config: {},
+        },
+        safetySettings: [
+            { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_ONLY_HIGH" },
+            { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH" },
+            { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_ONLY_HIGH" },
+            { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "OFF" }
+        ],
+    };
+
+    if (fetchParams.size) {
+        const sizeToAspectRatio = {
+            '1024x1024': '1:1',
+            '832x1248': '2:3',
+            '1248x832': '3:2',
+            '864x1184': '3:4',
+            '1184x864': '4:3',
+            '896x1152': '4:5',
+            '1152x896': '5:4',
+            '768x1344': '9:16',
+            '1344x768': '16:9',
+            '1536x672': '21:9',
+        };
+        const aspectRatio = sizeToAspectRatio[fetchParams.size]
+        
+        if (aspectRatio) {
+            requestBody.generation_config.image_config.aspect_ratio = aspectRatio
+        }
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        throw {
+            status: response.status,
+            errorResponse
+        }
+    }
+    
+    const data = await response.json()
+
+    // Convert Vertex AI Gemini response to our standard format
+    const convertedData = {
+        created: Math.floor(new Date().getTime() / 1000),
+        data: [],
+        original_response_from_provider: data
+    }
+
+    if (data.candidates && data.candidates.length > 0) {
+        for (const candidate of data.candidates) {
+            if (candidate.content && candidate.content.parts) {
+                for (const part of candidate.content.parts) {
+                    if (part.inlineData && part.inlineData.data) {
+                        convertedData.data.push({
+                            revised_prompt: null,
+                            b64_json: part.inlineData.data
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    return convertedData
+}
+
 async function generateVertex({ fetchParams, userId }) {
+    if (fetchParams.model.includes('gemini')) {
+        return await generateVertexGemini({ fetchParams, userId })
+    }
+
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
     const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
     const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY

@@ -18,6 +18,14 @@ export default class Gemini25Flash {
         '1536x672',
       ],
       providers: [{
+        id: 'vertex',
+        model_name: 'gemini-2.5-flash-image',
+        pricing: {
+          type: PRICING_TYPES.FIXED,
+          value: 0.035,
+        },
+        applyImage: this.applyImageVertex
+      }, {
         id: 'gemini',
         model_name: 'gemini-2.5-flash-image',
         pricing: {
@@ -28,12 +36,22 @@ export default class Gemini25Flash {
         applyImage: this.applyImageGemini,
       }],
       arena_score: 1167,
-      release_date: '2025-08-26'
+      release_date: '2025-10-02'
     }
   }
 
   getData() {
     return this.data
+  }
+
+  async applyImageVertex(params) {
+    // Process single or multiple image files
+    const processedImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+    
+    // Store the images for use in the API call
+    params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
+    
+    return params
   }
 
   async applyImageGemini(params) {
