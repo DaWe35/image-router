@@ -17,24 +17,26 @@ export default class Gemini25Flash {
         '1344x768',
         '1536x672',
       ],
-      providers: [{
-        id: 'vertex',
-        model_name: 'gemini-2.5-flash-image',
-        pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.035,
-        },
-        applyImage: this.applyImageVertex
-      }, {
-        id: 'gemini',
-        model_name: 'gemini-2.5-flash-image',
-        pricing: {
-          type: PRICING_TYPES.POST_GENERATION,
-          postCalcFunction: this.postCalcPrice,
-          value: 0.035,
-        },
-        applyImage: this.applyImageGemini,
-      }],
+      providers: [
+        {
+          id: 'gemini',
+          model_name: 'gemini-2.5-flash-image',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: this.postCalcPrice,
+            value: 0.035,
+          },
+          applyImage: this.applyImageGemini,
+        }, {
+          id: 'vertex',
+          model_name: 'gemini-2.5-flash-image',
+          pricing: {
+            type: PRICING_TYPES.FIXED,
+            value: 0.035,
+          },
+          applyImage: this.applyImageVertex
+        }
+      ],
       arena_score: 1167,
       release_date: '2025-10-02'
     }
