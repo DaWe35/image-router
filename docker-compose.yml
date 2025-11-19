@@ -4,11 +4,11 @@ services:
     image: node:20-bookworm
     restart: unless-stopped
     working_dir: /app
+    init: true
     command: >
       sh -c '
-        apt-get update && apt-get install -y tini &&
         npm install &&
-        exec tini -- npm start
+        npm start
       '
     volumes:
       - .:/app
