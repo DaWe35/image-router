@@ -7,7 +7,7 @@ import { resolveModelAlias } from './modelAliases.js'
 const bodySchema = z.object({
   prompt: z.string({
     invalid_type_error: "'prompt' must be a string"
-  }).optional(),
+  }).max(10000, { message: "'prompt' must be 10,000 characters or less. Please contact ImageRouter support if you need a higher limit." }).optional(),
   model: z.string({
     required_error: "'model' is a required parameter",
     invalid_type_error: "'model' must be a string"

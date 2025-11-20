@@ -84,6 +84,14 @@ export default class Gemini3Pro {
       inputCost = inputImageCount * inputImagePrice
     }
 
+    // Input character pricing: $2 per 1 million characters
+    const inputCharacterPricePerMillion = 2.0
+    if (params && params.prompt) {
+      const characterCount = params.prompt.length
+      const inputCharacterCost = (characterCount / 1_000_000) * inputCharacterPricePerMillion
+      inputCost += inputCharacterCost
+    }
+
     // Output pricing
     const outputImagePrice1K2K = 0.134
     const outputImagePrice4K = 0.24
