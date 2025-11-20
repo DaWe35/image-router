@@ -9,6 +9,90 @@ import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 import { selectProvider } from '../utils/providerSelector.js'
 
+// Gemini size mappings - shared between generateGemini and generateVertexGemini
+const sizeToAspectRatio = {
+    // Gemini 2.5 Flash sizes
+    '1024x1024': '1:1',
+    '832x1248': '2:3',
+    '1248x832': '3:2',
+    '864x1184': '3:4',
+    '1184x864': '4:3',
+    '896x1152': '4:5',
+    '1152x896': '5:4',
+    '768x1344': '9:16',
+    '1344x768': '16:9',
+    '1536x672': '21:9',
+    // Gemini 3 Pro 1K sizes
+    '848x1264': '2:3',
+    '1264x848': '3:2',
+    '896x1200': '3:4',
+    '1200x896': '4:3',
+    '928x1152': '4:5',
+    '1152x928': '5:4',
+    '768x1376': '9:16',
+    '1376x768': '16:9',
+    '1584x672': '21:9',
+    // Gemini 3 Pro 2K sizes
+    '2048x2048': '1:1',
+    '1696x2528': '2:3',
+    '2528x1696': '3:2',
+    '1792x2400': '3:4',
+    '2400x1792': '4:3',
+    '1856x2304': '4:5',
+    '2304x1856': '5:4',
+    '1536x2752': '9:16',
+    '2752x1536': '16:9',
+    '3168x1344': '21:9',
+    // Gemini 3 Pro 4K sizes
+    '4096x4096': '1:1',
+    '3392x5056': '2:3',
+    '5056x3392': '3:2',
+    '3584x4800': '3:4',
+    '4800x3584': '4:3',
+    '3712x4608': '4:5',
+    '4608x3712': '5:4',
+    '3072x5504': '9:16',
+    '5504x3072': '16:9',
+    '6336x2688': '21:9',
+};
+
+// Map size to imageSize for Gemini 3 Pro (1K, 2K, 4K)
+const sizeToImageSize = {
+    // 1K resolution
+    '1024x1024': '1K',
+    '848x1264': '1K',
+    '1264x848': '1K',
+    '896x1200': '1K',
+    '1200x896': '1K',
+    '928x1152': '1K',
+    '1152x928': '1K',
+    '768x1376': '1K',
+    '1376x768': '1K',
+    '1584x672': '1K',
+    // 2K resolution
+    '2048x2048': '2K',
+    '1696x2528': '2K',
+    '2528x1696': '2K',
+    '1792x2400': '2K',
+    '2400x1792': '2K',
+    '1856x2304': '2K',
+    '2304x1856': '2K',
+    '1536x2752': '2K',
+    '2752x1536': '2K',
+    '3168x1344': '2K',
+    // 4K resolution
+    '4096x4096': '4K',
+    '3392x5056': '4K',
+    '5056x3392': '4K',
+    '3584x4800': '4K',
+    '4800x3584': '4K',
+    '3712x4608': '4K',
+    '4608x3712': '4K',
+    '3072x5504': '4K',
+    '5504x3072': '4K',
+    '6336x2688': '4K',
+};
+
 export async function generateImage(fetchParams, userId, res, usageLogId, providerIndex) {
     const startTime = Date.now()
     const modelConfig = imageModels[fetchParams.model]
@@ -536,19 +620,6 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
         }
     }
 
-    const sizeToAspectRatio = {
-        '1024x1024': '1:1',
-        '832x1248': '2:3',
-        '1248x832': '3:2',
-        '864x1184': '3:4',
-        '1184x864': '4:3',
-        '896x1152': '4:5',
-        '1152x896': '5:4',
-        '768x1344': '9:16',
-        '1344x768': '16:9',
-        '1536x672': '21:9',
-    };
-
     const generationConfig = {
         responseModalities: ["Text", "Image"],
     };
@@ -559,6 +630,14 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
             generationConfig.imageConfig = {
                 aspectRatio: aspectRatio
             };
+            
+            // For Gemini 3 Pro, also add imageSize
+            if (fetchParams.model === 'gemini-3-pro-image-preview') {
+                const imageSize = sizeToImageSize[fetchParams.size];
+                if (imageSize) {
+                    generationConfig.imageConfig.imageSize = imageSize;
+                }
+            }
         }
     }
 
@@ -737,22 +816,18 @@ async function generateVertexGemini({ fetchParams, userId }) {
     };
 
     if (fetchParams.size) {
-        const sizeToAspectRatio = {
-            '1024x1024': '1:1',
-            '832x1248': '2:3',
-            '1248x832': '3:2',
-            '864x1184': '3:4',
-            '1184x864': '4:3',
-            '896x1152': '4:5',
-            '1152x896': '5:4',
-            '768x1344': '9:16',
-            '1344x768': '16:9',
-            '1536x672': '21:9',
-        };
         const aspectRatio = sizeToAspectRatio[fetchParams.size]
         
         if (aspectRatio) {
             requestBody.generation_config.image_config.aspect_ratio = aspectRatio
+            
+            // For Gemini 3 Pro, also add imageSize
+            if (fetchParams.model === 'gemini-3-pro-image-preview') {
+                const imageSize = sizeToImageSize[fetchParams.size]
+                if (imageSize) {
+                    requestBody.generation_config.image_config.image_size = imageSize
+                }
+            }
         }
     }
 
