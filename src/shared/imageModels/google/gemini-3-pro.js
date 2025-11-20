@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, sizeToImageSize } from '../../../services/imageHelpers.js'
 
 export default class Gemini3Pro {
   constructor() {
@@ -47,7 +47,11 @@ export default class Gemini3Pro {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: this.postCalcPrice,
-            value: 0.134,
+            range: {
+              min: 0.134,
+              average: 0.134,
+              max: 0.24
+            },
           },
           applyImage: this.applyImageGemini,
         }
@@ -71,10 +75,30 @@ export default class Gemini3Pro {
     return params
   }
 
-  postCalcPrice(imageResult) {
-    // Calculate price based on number of images generated
-    const pricePerImage = 0.134
+  postCalcPrice(imageResult, params) {
+    // Input pricing
+    const inputImagePrice = 0.0011
+    let inputCost = 0
+    if (params && params.files && params.files.image) {
+      const inputImageCount = Array.isArray(params.files.image) ? params.files.image.length : 1
+      inputCost = inputImageCount * inputImagePrice
+    }
+
+    // Output pricing
+    const outputImagePrice1K2K = 0.134
+    const outputImagePrice4K = 0.24
+
+    let outputCost = 0
     const numberOfImages = imageResult.data ? imageResult.data.length : 1
-    return pricePerImage * numberOfImages
+
+    // Determine size
+    const size = params.size
+    const imageSize = sizeToImageSize[size] || '1K' // Default to 1K if unknown
+
+    const pricePerOutputImage = imageSize === '4K' ? outputImagePrice4K : outputImagePrice1K2K
+
+    outputCost = numberOfImages * pricePerOutputImage
+
+    return inputCost + outputCost
   }
 }

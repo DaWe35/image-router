@@ -36,7 +36,7 @@ export function postCalcPrice(params, imageResult, providerIndex) {
     const pricing = modelConfig.providers[providerIndex].pricing
 
     if (pricing.type === PRICING_TYPES.POST_GENERATION) {
-        return pricing.postCalcFunction(imageResult)
+        return pricing.postCalcFunction(imageResult, params)
     }
 
     // Default to pre-calculated price

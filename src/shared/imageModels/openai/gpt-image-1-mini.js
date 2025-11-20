@@ -51,7 +51,7 @@ class GptImage1Mini {
     return this.data
   }
 
-  postCalcPrice(imageResult) {
+  postCalcPrice(imageResult, params) {
       const inputTextPrice = 0.000002
       const inputImagePrice = 0.0000025
       const outputImagePrice = 0.000008
