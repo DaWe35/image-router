@@ -43,6 +43,12 @@ docker compose up
 
 The API will be available at `http://localhost:4000`
 
+## Restarting the Service
+
+```bash
+docker compose build && docker compose down && docker compose up -d
+```
+
 ## Running Tests
 
 To run tests inside the Docker container:
