@@ -51,7 +51,8 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         res.write(JSON.stringify(generationResult))
         res.end()
       } catch (error) {
-        console.error(error.stack)
+        console.error('generationHandler error:')
+        console.error(error)
         // If the error is already in the correct format, forward it as-is
         if (error?.errorResponse) {
           res.write(JSON.stringify(error.errorResponse))
