@@ -9,7 +9,7 @@ export default class IllustriousXL {
       id: 'onomaai/illustrious-xl',
       providers: [{
         id: 'runware',
-        model_name: 'x:42@889818',
+        model_name: 'civitai:1369089@1546777',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,

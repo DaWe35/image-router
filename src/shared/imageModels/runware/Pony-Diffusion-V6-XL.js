@@ -9,7 +9,7 @@ export default class PonyDiffusionV6XL {
       id: 'purplesmartai/pony-diffusion-v6-xl',
       providers: [{
         id: 'runware',
-        model_name: 'runware:34@1',
+        model_name: 'civitai:257749@290640',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
