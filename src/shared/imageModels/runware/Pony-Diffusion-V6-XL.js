@@ -3,13 +3,13 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
-export default class RealVisXL {
+export default class PonyDiffusionV6XL {
   constructor() {
     this.data = {
-      id: 'SG161222/RealVisXL',
+      id: 'purplesmartai/pony-diffusion-v6-xl',
       providers: [{
         id: 'runware',
-        model_name: 'civitai:139562@798204',
+        model_name: 'runware:34@1',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
@@ -23,8 +23,19 @@ export default class RealVisXL {
         applyMask: this.applyMask,
         applyQuality: this.applyQuality
       }],
-      release_date: '2025-02-26'
+      release_date: '2024-01-08'
     }
+  }
+
+  applyQuality(params) {
+    const qualitySteps = {
+      low: 15,
+      medium: 25,
+      high: 50
+    }
+    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   async applyImage(params) {
@@ -45,17 +56,6 @@ export default class RealVisXL {
   async applyMask(params) {
     params.maskImage = await processSingleFile(params.files.mask, 'datauri')
     delete params.files.mask
-    return params
-  }
-
-  applyQuality(params) {
-    const qualitySteps = {
-      low: 15,
-      medium: 25,
-      high: 50
-    }
-    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
-    delete params.quality
     return params
   }
 

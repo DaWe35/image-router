@@ -86,6 +86,8 @@ import TestImage from './test/test-image.js'
 import CyberRealisticPony from './runware/CyberRealistic-Pony.js'
 import DreamShaper from './runware/DreamShaper.js'
 import Ghibli from './runware/Ghibli.js'
+import IllustriousXL from './runware/Illustrious-XL.js'
+import PonyDiffusionV6XL from './runware/Pony-Diffusion-V6-XL.js'
 import RealisticVision from './runware/Realistic-Vision.js'
 import RealVisXL from './runware/RealVisXL.js'
 import HiDreamI1Fast from './hidream-ai/HiDream-I1-Fast.js'
@@ -208,6 +210,8 @@ const modelInstances = [
   new CyberRealisticPony(),
   new DreamShaper(),
   new Ghibli(),
+  new IllustriousXL(),
+  new PonyDiffusionV6XL(),
   new RealisticVision(),
   new RealVisXL(),
   new HiDreamI1Fast(),

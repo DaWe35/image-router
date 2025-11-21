@@ -38,7 +38,7 @@ class FluxKreaDev {
       )
       params.size = `${dimensions.width}x${dimensions.height}`
     }
-
+    
     return params
   }
 
