@@ -202,6 +202,7 @@ async function generateOpenAI({ fetchParams, userId }) {
 }
 
 // OpenAI format API call
+// Does not support output_format
 async function generateNanoGPT({ fetchParams, userId }) {
     const providerUrl = 'https://nano-gpt.com/v1/images/generations'
     const providerKey = process.env.NANO_GPT_API_KEY
@@ -1058,6 +1059,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
 }
 
 // Fal.ai Queue API call
+// output_format is usually not supported, so it wasn't implemented here.
 async function generateFal({ fetchParams }) {
     const baseUrl = 'https://queue.fal.run'
     const providerKey = process.env.FAL_API_KEY
@@ -1301,6 +1303,7 @@ async function generateWavespeed({ fetchParams }) {
 }
 
 // Chutes HiDream API call
+// output_format is not supported
 async function generateChutes({ fetchParams }) {
     // Detect if we are sending an input image. The InfiniteYou variant expects the field "id_image_b64",
     // whereas HiDream uses "image_b64". Treat either as an edit request for payload purposes.
