@@ -162,6 +162,9 @@ async function generateOpenAI({ fetchParams, userId }) {
         n: 1,
     }
     if (fetchParams.model === 'gpt-image-1') fetchBody.moderation = 'low'
+    if (fetchParams.output_format) {
+        fetchBody.output_format = fetchParams.output_format
+    }
     if (isEdit) {
         fetchBody.image = fetchParams.image
         fetchBody.mask = fetchParams.mask
@@ -950,7 +953,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskType,
         taskUUID,
         model: fetchParams.model,
-        outputFormat: "WEBP",
+        outputFormat: fetchParams.output_format ? fetchParams.output_format.toUpperCase() : "WEBP",
         includeCost: true
     }
 
@@ -1227,7 +1230,7 @@ async function generateWavespeed({ fetchParams }) {
     }
 
     const bodyPayload = {
-        "output_format": "webp",
+        "output_format": fetchParams.output_format || "webp",
         "enable_base64_output": false,
         "enable_sync_mode": true,
         prompt: fetchParams.prompt

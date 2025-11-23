@@ -19,6 +19,17 @@ const bodySchema = z.object({
     .default('auto')
     .refine(val => val === 'auto' || /^\d+x\d+$/.test(val), {
       message: "'size' must be 'auto' or in the format 'WIDTHxHEIGHT' (e.g. '1024x768')"
+    }),
+  output_format: z.string()
+    .optional()
+    .transform(val => {
+      if (!val) return undefined
+      const normalized = val.toLowerCase()
+      // Map 'jpg' to 'jpeg' for consistency
+      return normalized === 'jpg' ? 'jpeg' : normalized
+    })
+    .refine(val => !val || ['png', 'jpeg', 'webp'].includes(val), {
+      message: "'output_format' must be one of: 'png', 'jpeg' (or 'jpg'), 'webp'"
     })
 })
 
@@ -28,7 +39,7 @@ export function validateImageParams(req) {
     throw new Error(parseResult.error.errors[0].message)
   }
 
-  let { prompt, model, response_format, quality, size } = parseResult.data
+  let { prompt, model, response_format, quality, size, output_format } = parseResult.data
   
   // Resolve model alias to real model name (if it's an alias)
   model = resolveModelAlias(model)
@@ -74,7 +85,7 @@ export function validateImageParams(req) {
     validFiles.mask = Array.isArray(files.mask) ? files.mask[0] : files.mask
   }
 
-  return { prompt, model, response_format, quality, size, files: validFiles }
+  return { prompt, model, response_format, quality, size, output_format, files: validFiles }
 }
 
 export const imageRequestSchema = bodySchema
