@@ -109,6 +109,7 @@ import ChromaFree from './lodestones/chroma-free.js'
 import DreaminaV31 from './bytedance/dreamina-3.1.js'
 
 import QwenImage from './qwen/qwen-image.js'
+import QwenImageFree from './qwen/qwen-image-free.js'
 import QwenImageEdit from './qwen/qwen-image-edit.js'
 import QwenImageEditPlus from './qwen/qwen-image-edit-plus.js'
 
@@ -234,6 +235,7 @@ const modelInstances = [
   new DreaminaV31(),
 
   new QwenImage(),
+  new QwenImageFree(),
   new QwenImageEdit(),
   new QwenImageEditPlus(),
 

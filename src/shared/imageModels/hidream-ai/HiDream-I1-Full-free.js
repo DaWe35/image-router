@@ -12,7 +12,7 @@ class HiDreamI1FullFree {
           type: PRICING_TYPES.FIXED,
           value: 0
         },
-        applyImage: this.applyImage
+        // applyImage: this.applyImage // Chutes remove the edit model?
       }],
       release_date: '2025-04-28'
     }

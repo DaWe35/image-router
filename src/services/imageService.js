@@ -1312,9 +1312,15 @@ async function generateChutes({ fetchParams }) {
 
     const subdomain = fetchParams.model
 
-    const providerUrl = hasImage && subdomain === 'hidream'
-        ? `https://chutes-${subdomain}-edit.chutes.ai/generate`
-        : `https://chutes-${subdomain}.chutes.ai/generate`
+    // Special handling for qwen-image model
+    let providerUrl
+    if (fetchParams.model === 'qwen-image') {
+        providerUrl = 'https://image.chutes.ai/generate'
+    } else {
+        providerUrl = hasImage && subdomain === 'hidream'
+            ? `https://chutes-${subdomain}-edit.chutes.ai/generate`
+            : `https://chutes-${subdomain}.chutes.ai/generate`
+    }
 
     const providerKey = process.env.CHUTES_API_TOKEN
 
@@ -1323,6 +1329,11 @@ async function generateChutes({ fetchParams }) {
     }
 
     const bodyPayload = { prompt: fetchParams.prompt }
+
+    // For qwen-image model, add model field to body
+    if (fetchParams.model === 'qwen-image') {
+        bodyPayload.model = 'qwen-image'
+    }
 
     // Attach the appropriate base64 field, stripping the data URI prefix if present.
     if (fetchParams.image_b64) {
