@@ -964,6 +964,11 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
 
     // Image-to-image support
 
+    // FLUX 2
+    if (fetchParams.inputs_referenceImages) {
+        taskPayload.inputs = { referenceImages: fetchParams.inputs_referenceImages }
+    }
+
     // FLUX Kontext and Qwen Image Edit
     if (fetchParams.referenceImages) {
         taskPayload.referenceImages = Array.isArray(fetchParams.referenceImages) 

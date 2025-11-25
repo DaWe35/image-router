@@ -44,6 +44,12 @@ export async function applyImagesReferences1024x1024(params) {
     return params
 }
 
+export async function applyInputImagesReferences(params) {
+    params.inputs_referenceImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+    delete params.files.image
+    return params
+}
+
 export async function applyFalImage(params) {
     params.image_url = await processSingleFile(params.files.image, 'datauri')
     // Determine the correct model path – if an image_url is provided switch to image-to-image variant

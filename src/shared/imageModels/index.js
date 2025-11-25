@@ -9,6 +9,9 @@ import FluxKontextPro from './black-forest-labs/flux-kontext-pro.js'
 import FluxKontextMax from './black-forest-labs/flux-kontext-max.js'
 import FluxKontextDev from './black-forest-labs/flux-kontext-dev.js'
 import FluxKreaDev from './black-forest-labs/flux-krea-dev.js'
+import Flux2Dev from './black-forest-labs/FLUX-2-dev.js'
+import Flux2Pro from './black-forest-labs/FLUX-2-pro.js'
+import Flux2Flex from './black-forest-labs/FLUX-2-flex.js'
 
 import BlurBackground from './bria/Blur-Background.js'
 import BlurBackgroundFree from './bria/Blur-Background-Free.js'
@@ -98,6 +101,7 @@ import HiDreamI1Free from './hidream-ai/HiDream-I1-Full-free.js'
 import HidreamE11 from './hidream-ai/hidream-e1-1.js'
 import Riverflow1 from './runware/Riverflow-1.js'
 import Riverflow1Mini from './runware/Riverflow-1-mini.js'
+import ImagineArt15 from './runware/imagineart-1.5.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
 import SeedEditV3 from './bytedance/seededit-v3.js'
@@ -134,6 +138,9 @@ const modelInstances = [
   new FluxKontextMax(),
   new FluxKontextDev(),
   new FluxKreaDev(),
+  new Flux2Dev(),
+  new Flux2Pro(),
+  new Flux2Flex(),
 
   new BlurBackground(),
   new BlurBackgroundFree(),
@@ -223,6 +230,7 @@ const modelInstances = [
   new HidreamE11(),
   new Riverflow1(),
   new Riverflow1Mini(),
+  new ImagineArt15(),
   
   new SeedreamV3(),
   new SeedEditV3(),
