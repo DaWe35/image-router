@@ -658,7 +658,7 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
                 status: 406,
                 statusText: 'No image generated',
                 error: {
-                    message: textResponse || 'No image or text found in response',
+                    message: textResponse || data?.candidates?.[0]?.finishMessage || 'No image or text found in response',
                     type: 'No image generated'
                 },
                 original_response_from_provider: data
