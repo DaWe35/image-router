@@ -63,6 +63,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
       replicate: generateReplicate,
       runware: generateRunware,
       wavespeed: generateWavespeed,
+      cloudflare: generateCloudflare,
       test: generateTest,
       vertex: generateVertex
     }
@@ -1569,5 +1570,147 @@ async function generateOpenRouter({ fetchParams, userId }) {
             revised_prompt: null,
             original_response_from_provider: data
         }))
+    }
+}
+
+// Cloudflare Workers AI image generation API call
+async function generateCloudflare({ fetchParams }) {
+    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID
+    const apiToken = process.env.CLOUDFLARE_API_KEY
+
+    if (!accountId) {
+        throw new Error('CLOUDFLARE_ACCOUNT_ID environment variable is missing for Cloudflare provider')
+    }
+
+    if (!apiToken) {
+        throw new Error('CLOUDFLARE_API_KEY environment variable is missing for Cloudflare provider')
+    }
+
+    if (!fetchParams.model) {
+        throw new Error('Model identifier is missing for Cloudflare provider')
+    }
+
+    const providerUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${fetchParams.model}`
+
+    const bodyPayload = {
+        prompt: fetchParams.prompt
+    }
+
+    if (fetchParams.steps) {
+        bodyPayload.steps = fetchParams.steps
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bodyPayload)
+    })
+
+    if (!response.ok) {
+        const rawError = await response.text()
+        let parsedError
+        try {
+            parsedError = rawError ? JSON.parse(rawError) : null
+        } catch {
+            parsedError = null
+        }
+
+        const status = response.status
+        const statusText = response.statusText
+
+        const message =
+            parsedError?.errors?.[0]?.message ||
+            parsedError?.message ||
+            rawError ||
+            'Cloudflare image generation failed'
+
+        const type =
+            parsedError?.errors?.[0]?.code ||
+            parsedError?.error ||
+            'cloudflare_error'
+
+        throw {
+            status,
+            errorResponse: {
+                status,
+                statusText,
+                error: {
+                    message,
+                    type
+                },
+                original_response_from_provider: parsedError ?? rawError
+            }
+        }
+    }
+
+    const contentType = response.headers.get('content-type') || ''
+
+    if (contentType.startsWith('image/')) {
+        const buffer = Buffer.from(await response.arrayBuffer())
+        const b64 = buffer.toString('base64')
+
+        return {
+            created: Math.floor(Date.now() / 1000),
+            data: [{
+                b64_json: b64,
+                revised_prompt: null
+            }]
+        }
+    }
+
+    const rawBody = await response.text()
+    let data
+    try {
+        data = rawBody ? JSON.parse(rawBody) : null
+    } catch {
+        data = null
+    }
+
+    if (!data) {
+        throw {
+            status: 502,
+            errorResponse: {
+                status: 502,
+                statusText: 'Invalid JSON response from Cloudflare provider',
+                error: {
+                    message: 'Provider returned a non-JSON success response',
+                    type: 'invalid_response'
+                },
+                original_response_from_provider: rawBody
+            }
+        }
+    }
+
+    // Cloudflare returns { "image": "base64_string" } format
+    const imageField = data.image || data.result?.image
+
+    if (imageField && typeof imageField === 'string') {
+        // Remove data URI prefix if present
+        const b64 = imageField.replace(/^data:[^;]+;base64,/, '')
+
+        return {
+            created: Math.floor(Date.now() / 1000),
+            data: [{
+                b64_json: b64,
+                revised_prompt: null,
+                original_response_from_provider: data
+            }]
+        }
+    }
+
+    throw {
+        status: 406,
+        errorResponse: {
+            status: 406,
+            statusText: 'No image generated',
+            error: {
+                message: 'No image data found in Cloudflare response',
+                type: 'No image generated'
+            },
+            original_response_from_provider: data
+        }
     }
 }
