@@ -1,3 +1,21 @@
+// In-memory rate limiter for Together AI provider
+// Allows 1 request every 10 seconds
+const togetherRateLimiter = {
+  lastRequestTime: 0,
+  minIntervalMs: 10 * 1000, // 10 seconds
+
+  // Check if we can make another request (at least 10 seconds since last request)
+  canRequest() {
+    const now = Date.now()
+    return now - this.lastRequestTime >= this.minIntervalMs
+  },
+
+  // Record a request
+  recordRequest() {
+    this.lastRequestTime = Date.now()
+  }
+}
+
 /**
  * Utility to select a provider from the available list.
  *
@@ -27,6 +45,25 @@ export function selectProvider(providers, requestParams = {}) {
 
   // Determine desired provider ID under special-case rules
   let desiredProviderId = providers[0].id;
+
+  // Special-case selection for FLUX-1-schnell:free
+  // Use Together AI if at least 10 seconds have passed since last request, otherwise fallback to DeepInfra
+  if (modelId === 'black-forest-labs/FLUX-1-schnell:free') {
+    const hasTogether = providers.some(p => p.id === 'together')
+    const hasDeepInfra = providers.some(p => p.id === 'deepinfra')
+    
+    if (hasTogether && hasDeepInfra) {
+      // Check if at least 10 seconds have passed since the last Together request
+      if (togetherRateLimiter.canRequest()) {
+        // Record the request and use Together
+        togetherRateLimiter.recordRequest()
+        desiredProviderId = 'together'
+      } else {
+        // Rate limit active (less than 10 seconds since last request), use DeepInfra
+        desiredProviderId = 'deepinfra'
+      }
+    }
+  }
 
   // Special-case selection for GPT-Image-1
   if (modelId === 'openai/gpt-image-1' || modelId === 'openai/gpt-image-1-mini') {

@@ -62,6 +62,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
       nanogpt: generateNanoGPT,
       replicate: generateReplicate,
       runware: generateRunware,
+      together: generateTogether,
       wavespeed: generateWavespeed,
       test: generateTest,
       vertex: generateVertex
@@ -981,7 +982,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.inputImage = fetchParams.inputImage
     }
     
-    // SD3
+    // SD3, SDXL-turbo
     if (fetchParams.seedImage) {
         taskPayload.seedImage = fetchParams.seedImage
         taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
@@ -1060,6 +1061,63 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
             //original_response_from_provider: data
         }],
         cost: taskResult.cost
+    }
+}
+
+// Together AI API call
+async function generateTogether({ fetchParams, userId }) {
+    const providerUrl = 'https://api.together.xyz/v1/images/generations'
+    const providerKey = process.env.TOGETHER_API_KEY
+
+    if (!providerKey) {
+        throw new Error('TOGETHER_API_KEY environment variable is required for Together AI provider')
+    }
+
+    const { width, height } = extractWidthHeight(fetchParams.size)
+
+    const bodyPayload = {
+        model: fetchParams.model,
+        prompt: fetchParams.prompt,
+        disable_safety_checker: true
+    }
+
+    if (width) bodyPayload.width = width
+    if (height) bodyPayload.height = height
+    if (fetchParams.steps) bodyPayload.steps = fetchParams.steps
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
+        },
+        body: JSON.stringify(bodyPayload)
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        const formattedError = {
+            status: response.status,
+            statusText: response.statusText,
+            error: {
+                message: data?.error?.message || data?.message || 'Together AI generation failed',
+                type: data?.error?.type || 'together_error'
+            },
+            original_response_from_provider: data
+        }
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
+    }
+
+    return {
+        created: Math.floor(Date.now() / 1000),
+        data: (data.data || []).map(item => ({
+            url: item.url,
+            revised_prompt: null
+        }))
     }
 }
 
