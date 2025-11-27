@@ -14,9 +14,9 @@ class FluxKontextPro {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.01,
+              min: 0.0073,
               average: 0.0105,
-              max: 0.007
+              max: 0.0214
             }
           },
           applyImage: applyReferenceImages,
