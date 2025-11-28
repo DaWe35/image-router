@@ -24,7 +24,6 @@ class FluxKontextPro {
         }
       ],
       release_date: '2025-06-26'
-      
     }
   }
 

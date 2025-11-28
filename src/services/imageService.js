@@ -1295,7 +1295,6 @@ async function generateWavespeed({ fetchParams }) {
     }
 
     const bodyPayload = {
-        "output_format": fetchParams.output_format || "webp",
         "enable_base64_output": false,
         "enable_sync_mode": true,
         prompt: fetchParams.prompt
@@ -1305,6 +1304,17 @@ async function generateWavespeed({ fetchParams }) {
         bodyPayload.image = fetchParams.image
     }
 
+    if (fetchParams.model !== 'bytedance/dreamina-v3.1/text-to-image') {
+        bodyPayload.output_format = fetchParams.output_format || "webp"
+    }
+
+    if (fetchParams.model === 'bytedance/dreamina-v3.1/text-to-image') {
+        bodyPayload.enable_prompt_expansion = true
+        const { width, height } = extractWidthHeight(fetchParams.size)
+        if (width && height) bodyPayload.size = `${width}*${height}`
+    }
+
+    console.log('bodyPayload', bodyPayload)
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {

@@ -8,15 +8,6 @@ export default class SeedreamV3 {
       id: 'bytedance/seedream-3',
       providers: [
         {
-          id: 'nanogpt',
-          model_name: 'seedream-v3',
-          pricing: {
-            type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcNanoGPTDiscounted5,
-            value: 0.03
-          },
-          applyImage: applyImageNanoGPT
-        }, {
           id: 'runware',
           model_name: 'bytedance:3@1',
           pricing: {
@@ -25,6 +16,15 @@ export default class SeedreamV3 {
             value: 0.03
           },
           applyImage: this.applyImageRunware
+        }, {
+          id: 'nanogpt',
+          model_name: 'seedream-v3',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcNanoGPTDiscounted5,
+            value: 0.03
+          },
+          applyImage: applyImageNanoGPT
         }, {
           id: 'fal',
           model_name: 'fal-ai/bytedance/seedream/v3/text-to-image',

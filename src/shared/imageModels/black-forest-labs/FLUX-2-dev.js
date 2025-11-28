@@ -13,9 +13,9 @@ export default class Flux2Dev {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
           range: {
-            min: 0.012,
-            average: 0.016,
-            max: 0.1396
+            min: 0.0045,
+            average: 0.0109,
+            max: 0.0275
           }
         },
         applyImage: applyInputImagesReferences,

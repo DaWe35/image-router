@@ -9,7 +9,7 @@ class Imagen4Ultra {
         model_name: 'imagen-4.0-ultra-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.06
+          value: 0.058
         }
       }],
       release_date: '2025-08-14',

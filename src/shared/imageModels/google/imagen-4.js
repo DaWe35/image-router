@@ -9,7 +9,7 @@ class Imagen4 {
         model_name: 'imagen-4.0-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.04
+          value: 0.037
         }
       }],
       release_date: '2025-08-14',
