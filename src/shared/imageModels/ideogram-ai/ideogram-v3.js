@@ -37,10 +37,10 @@ class IdeogramV3 {
   }
 
   calculatePrice(params) {
-    if (params.quality === 'low') return 0.04
-    if (params.quality === 'medium') return 0.07
-    if (params.quality === 'high') return 0.1
-    return 0.07
+    if (params.quality === 'low') return 0.03
+    if (params.quality === 'medium') return 0.06
+    if (params.quality === 'high') return 0.09
+    return 0.06
   }
 }
 

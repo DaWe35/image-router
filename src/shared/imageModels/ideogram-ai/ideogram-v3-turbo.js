@@ -9,7 +9,7 @@ class IdeogramV3Turbo {
         model_name: 'ideogram-ai/ideogram-v3-turbo',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.04
+          value: 0.03
         }
       }],
       release_date: '2025-03-26',

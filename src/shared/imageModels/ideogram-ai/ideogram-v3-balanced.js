@@ -9,7 +9,7 @@ class IdeogramV3Balanced {
         model_name: 'ideogram-ai/ideogram-v3-balanced',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.07
+          value: 0.06
         },
       }],
       release_date: '2025-03-26'

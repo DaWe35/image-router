@@ -9,7 +9,7 @@ class IdeogramV3Quality {
         model_name: 'ideogram-ai/ideogram-v3-quality',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.1
+          value: 0.09
         }
       }],
       release_date: '2025-03-26',
