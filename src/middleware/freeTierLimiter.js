@@ -9,6 +9,19 @@ export const freeTierLimiter = async (req, res, next) => {
     return next()
   }
 
+  // :free models are only available for funded accounts or captcha-verified users (JWT tokens)
+  const hasCredits = (res.locals.key?.user?.credits ?? 0) > 0
+  const isJwtToken = res.locals.key?.apiKeyTempJwt === true
+
+  if (!hasCredits && !isJwtToken) {
+    return res.status(403).json({
+      error: {
+        message: 'Free models are available on ImageRouter.io website and for funded accounts. More info: https://imagerouter.io/pricing',
+        type: 'access_denied'
+      }
+    })
+  }
+
   const userId = res.locals.key.user.id
   const proxyCount = Number(process.env.PROXY_COUNT || 0)
   const clientIp = proxyCount > 0 ? req.headers['cf-connecting-ip'] : req.ip
@@ -30,7 +43,6 @@ export const freeTierLimiter = async (req, res, next) => {
       prisma.APIUsage.count({ where: { ...whereCommon, ip: clientIp } })
     ])
 
-    const hasCredits = (res.locals.key?.user?.credits ?? 0) > 0
     const dailyFreeLimit = hasCredits ? 50 : 10
 
     if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
