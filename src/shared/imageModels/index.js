@@ -118,6 +118,7 @@ import QwenImage from './qwen/qwen-image.js'
 import QwenImageFree from './qwen/qwen-image-free.js'
 import QwenImageEdit from './qwen/qwen-image-edit.js'
 import QwenImageEditPlus from './qwen/qwen-image-edit-plus.js'
+import Ovis7B from './qwen/ovis-7b.js'
 
 import Grok2Image from './xAI/grok-2-image.js'
 
@@ -224,8 +225,8 @@ const modelInstances = [
   new CyberRealisticPony(),
   new DreamShaper(),
   new Ghibli(),
-  //new IllustriousXL(),
-  //new PonyDiffusionV6XL(),
+  new IllustriousXL(),
+  new PonyDiffusionV6XL(),
   new RealisticVision(),
   new RealVisXL(),
   new HiDreamI1Fast(),
@@ -250,6 +251,7 @@ const modelInstances = [
   new QwenImageFree(),
   new QwenImageEdit(),
   new QwenImageEditPlus(),
+  new Ovis7B(),
 
   new Grok2Image(),
 
