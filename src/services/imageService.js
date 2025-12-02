@@ -437,22 +437,43 @@ async function generateDeepInfra({ fetchParams, userId, usageLogId }) {
 
 // Replicate format API call
 async function generateReplicate({ fetchParams, userId, usageLogId }) {
-    const providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
+    let providerUrl = `https://api.replicate.com/v1/models/${fetchParams.model}/predictions`
     const providerKey = process.env.REPLICATE_API_KEY
 
     // Build the input object starting with the prompt
-    const input = {
-        prompt: fetchParams.prompt
+    const BodyPayload = {
+        input: {
+            prompt: fetchParams.prompt
+        }
     }
 
     // Add image if available
     if (fetchParams.image) {
-        input.image = fetchParams.image
+        BodyPayload.input.image = fetchParams.image
     }
     
     if (fetchParams.reference_images) {
-        input.reference_images = fetchParams.reference_images
+        BodyPayload.input.reference_images = fetchParams.reference_images
     }
+    
+    if (fetchParams.output_format) {
+        BodyPayload.input.output_format = fetchParams.output_format === 'jpeg' ? 'jpg' : fetchParams.output_format
+    }
+
+    if (fetchParams.num_inference_steps) {
+        BodyPayload.input.num_inference_steps = fetchParams.num_inference_steps
+    }
+    if (fetchParams.size) {
+        const { width, height } = extractWidthHeight(fetchParams.size)
+        if (width) BodyPayload.input.width = width
+        if (height) BodyPayload.input.height = height
+    }
+
+    if (fetchParams.model.includes(':')) { // This is a versioned model
+        providerUrl = 'https://api.replicate.com/v1/predictions'
+        BodyPayload.version = fetchParams.model
+    }
+
 
     const createRes = await fetch(providerUrl, {
         method: 'POST',
@@ -461,7 +482,7 @@ async function generateReplicate({ fetchParams, userId, usageLogId }) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${providerKey}`
         },
-        body: JSON.stringify({ input })
+        body: JSON.stringify(BodyPayload)
     })
 
     let data = await createRes.json()
@@ -507,7 +528,8 @@ async function generateReplicate({ fetchParams, userId, usageLogId }) {
             url,
             revised_prompt: null,
             original_response_from_provider: data
-        }))
+        })),
+        replicate_predict_time: data.metrics.predict_time
     }
 }
 
@@ -1132,7 +1154,8 @@ async function generateFal({ fetchParams }) {
     }
 
     const bodyPayload = {
-        prompt: fetchParams.prompt
+        prompt: fetchParams.prompt,
+        enable_safety_checker: false,
     }
 
     if (fetchParams.image_url) {
@@ -1141,6 +1164,20 @@ async function generateFal({ fetchParams }) {
 
     if (fetchParams.num_inference_steps) {
         bodyPayload.num_inference_steps = fetchParams.num_inference_steps
+    }
+
+    if (fetchParams.size) {
+        const { width, height } = extractWidthHeight(fetchParams.size)
+        if (width && height) {
+            bodyPayload.image_size = {
+                width: width,
+                height: height
+            }
+        }
+    }
+
+    if (fetchParams.output_format) {
+        bodyPayload.output_format = fetchParams.output_format
     }
 
     const submitResponse = await fetch(`${baseUrl}/${fetchParams.model}`, {
