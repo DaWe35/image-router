@@ -592,41 +592,53 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
         "generationConfig": generationConfig
     };
 
-    const response = await fetch(providerUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-        agent
-    })
-
-    // Safely parse body (fallback to text for non-JSON errors)
-    const rawBody = await response.text()
+    let response
+    let rawBody
     let data
-    try {
-        data = rawBody ? JSON.parse(rawBody) : null
-    } catch (_) {
-        data = null
-    }
 
-    if (!response.ok) {
-        const formattedError = {
-            status: data?.error?.code || response.status,
-            statusText: data?.error?.status || response.statusText,
-            error: {
-                message: data?.error?.message || (rawBody || 'Request failed'),
-                type: data?.error?.status || 'Unknown Error'
+    for (let attempt = 1; attempt <= 2; attempt++) {
+        response = await fetch(providerUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             },
-            original_response_from_provider: data ?? rawBody
+            body: JSON.stringify(body),
+            agent
+        })
+
+        // Safely parse body (fallback to text for non-JSON errors)
+        rawBody = await response.text()
+        try {
+            data = rawBody ? JSON.parse(rawBody) : null
+        } catch (_) {
+            data = null
         }
-        if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
-            formattedError.error.message = 'This model hit a global rate limit. Please try again.'
+
+        if (!response.ok) {
+            const formattedError = {
+                status: data?.error?.code || response.status,
+                statusText: data?.error?.status || response.statusText,
+                error: {
+                    message: data?.error?.message || (rawBody || 'Request failed'),
+                    type: data?.error?.status || 'Unknown Error'
+                },
+                original_response_from_provider: data ?? rawBody
+            }
+
+            if (formattedError.error.message === "The model is overloaded. Please try again later." && attempt < 2) {
+                await new Promise(resolve => setTimeout(resolve, 30000))
+                continue
+            }
+
+            if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
+                formattedError.error.message = 'This model hit a global rate limit. Please try again.'
+            }
+            throw {
+                status: response.status,
+                errorResponse: formattedError
+            }
         }
-        throw {
-            status: response.status,
-            errorResponse: formattedError
-        }
+        break
     }
 
     if (!data) {
