@@ -1,10 +1,25 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 
 export default class ZImageTurbo {
   constructor() {
     this.data = {
       id: 'Tongyi-MAI/Z-Image-Turbo',
       providers: [
+        {
+          id: 'runware',
+          model_name: 'runware:z-image@turbo',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.0006,
+              average: 0.0019,
+              max: 0.0115
+            }
+          },
+          applyQuality: this.applyQualityRunware
+        },
         {
           id: 'replicate',
           model_name: 'prunaai/z-image-turbo:7ea16386290ff5977c7812e66e462d7ec3954d8e007a8cd18ded3e7d41f5d7cf',
@@ -31,6 +46,17 @@ export default class ZImageTurbo {
       ],
       release_date: '2025-11-25'
     }
+  }
+
+  applyQualityRunware(params) {
+    const qualitySteps = {
+      low: 4,
+      medium: 8,
+      high: 16
+    }
+    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
+    delete params.quality
+    return params
   }
 
   applyQualityReplicate(params) {
