@@ -109,6 +109,7 @@ import ImagineArt15 from './runware/imagineart-1.5.js'
 import SeedreamV3 from './bytedance/seedream-v3.js'
 import SeedEditV3 from './bytedance/seededit-v3.js'
 import SeedreamV4 from './bytedance/seedream-v4.js'
+import SeedreamV45 from './bytedance/seedream-v4.5.js'
 import InfiniteYou from './bytedance/infiniteyou.js'
 import InfiniteYouFree from './bytedance/infiniteyou-free.js'
 import Chroma from './lodestones/chroma.js'
@@ -242,6 +243,7 @@ const modelInstances = [
   new SeedreamV3(),
   new SeedEditV3(),
   new SeedreamV4(),
+  new SeedreamV45(),
   new HiDreamI1Free(),
   new Chroma(),
   new ChromaFree(),
