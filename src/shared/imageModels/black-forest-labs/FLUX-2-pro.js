@@ -22,7 +22,8 @@ export default class Flux2Pro {
           applyImage: applyInputImagesReferences,
         }
       ],
-      release_date: '2025-11-25'
+      release_date: '2025-11-25',
+      arena_score: 1201,
     }
   }
 

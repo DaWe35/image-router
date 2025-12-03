@@ -14,7 +14,8 @@ export default class ImagineArt15 {
           value: 0.01
         }
       }],
-      release_date: '2025-11-14'
+      release_date: '2025-11-14',
+      arena_score: 1154,
     }
   }
 

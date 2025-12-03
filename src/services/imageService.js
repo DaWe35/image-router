@@ -1046,8 +1046,10 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         const isEdit = fetchParams.referenceImages || fetchParams.inputs_references || fetchParams.inputImage || fetchParams.seedImage
 
         if (!isEdit) { // default 1024 for text to image, if size is not defined in model or params
-            taskPayload.width = width || 1024
-            taskPayload.height = height || 1024
+            // Default size for bytedance:seedream@4.5 is 2048x2048
+            const defaultSize = fetchParams.model === 'bytedance:seedream@4.5' ? 2048 : 1024
+            taskPayload.width = width || defaultSize
+            taskPayload.height = height || defaultSize
         } else { // no default 1024 for image to image. Aspect Ratio preserved automatically.
             if (width) taskPayload.width = width
             if (height) taskPayload.height = height

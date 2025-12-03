@@ -20,9 +20,8 @@ export default class SeedreamV4 {
         }
       ],
       release_date: '2025-12-03',
-      arena_score: 1250,
+      arena_score: 1220,
       sizes: [
-        '1024x1024',
         '2048x2048',
         '2304x1728',
         '1728x2304',
@@ -50,7 +49,7 @@ export default class SeedreamV4 {
     if (!params.size || params.size === 'auto') {
       const dimensions = await calculateRunwareDimensions(
         params.referenceImages[0],
-        { minPixels: 921600, maxPixels: 16777216, minDimension: 256, maxDimension: 16383, pixelStep: 1 }
+        { minPixels: 3686400, maxPixels: 16777216, minDimension: 256, maxDimension: 16383, pixelStep: 1 }
       )
       params.size = `${dimensions.width}x${dimensions.height}`
     }

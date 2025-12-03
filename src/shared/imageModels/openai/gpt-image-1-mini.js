@@ -39,6 +39,7 @@ class GptImage1Mini {
         }
       ],
       release_date: '2025-10-06',
+      arena_score: 1065,
       sizes: [
         '1024x1024',
         '1536x1024',

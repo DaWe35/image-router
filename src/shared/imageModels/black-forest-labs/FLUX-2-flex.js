@@ -11,7 +11,7 @@ export default class Flux2Flex {
           id: 'runware',
           model_name: 'bfl:6@1',
           pricing: {
-            type: PRICING_TYPEwS.POST_GENERATION,
+            type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
               min: 0.06,
@@ -22,7 +22,8 @@ export default class Flux2Flex {
           applyImage: applyInputImagesReferences,
         }
       ],
-      release_date: '2025-11-25'
+      release_date: '2025-11-25',
+      arena_score: 1184,
     }
   }
 

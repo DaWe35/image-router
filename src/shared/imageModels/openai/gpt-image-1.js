@@ -38,7 +38,7 @@ class GptImage1 {
           applyMask: this.applyMask,
         }
       ],
-      arena_score: 1164,
+      arena_score: 1105,
       release_date: '2025-04-23',
       sizes: [
         '1024x1024',
