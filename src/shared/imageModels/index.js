@@ -87,6 +87,7 @@ import Image01 from './minimax/image-01.js'
 import TestImage from './test/test-image.js'
 
 import ZImageTurbo from './tongyi-mai/Z-Image-Turbo.js'
+import ZImageTurboFree from './tongyi-mai/Z-Image-Turbo-FREE.js'
 
 import AnimagineXL from './runware/Animagine.js'
 import CyberRealisticPony from './runware/CyberRealistic-Pony.js'
@@ -220,6 +221,7 @@ const modelInstances = [
   new TestImage(),
 
   new ZImageTurbo(),
+  new ZImageTurboFree(),
 
   new AnimagineXL(),
   new CyberRealisticPony(),
