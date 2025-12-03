@@ -19,7 +19,7 @@ export default class SeedreamV4 {
           applyImage: this.applyImageRunware
         }
       ],
-      release_date: '2025-09-09',
+      release_date: '2025-12-03',
       arena_score: 1250,
       sizes: [
         '1024x1024',
