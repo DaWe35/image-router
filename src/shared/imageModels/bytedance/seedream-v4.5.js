@@ -14,7 +14,7 @@ export default class SeedreamV4 {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.03,
+            value: 0.04,
           },
           applyImage: this.applyImageRunware
         }
