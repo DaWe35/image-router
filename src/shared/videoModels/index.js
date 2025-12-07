@@ -10,6 +10,8 @@ import Ltx2Fast from './lightricks/Ltx-2-Fast.js'
 
 import Sora2 from './openai/sora-2.js'
 
+import HunyuanVideo15 from './tencent/hunyuan-video-1.5.js'
+
 import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
 import Kling21Standard from './kwaivgi/kling-2.1-standard.js'
 import Kling21Pro from './kwaivgi/kling-2.1-pro.js'
@@ -58,6 +60,8 @@ const modelInstances = [
   new Seedance1Lite(),
   new Seedance1Pro(),
   new Seedance1ProFast(),
+
+  new HunyuanVideo15(),
 
   new Hailuo02Standard(),
   new Hailuo02Pro(),
