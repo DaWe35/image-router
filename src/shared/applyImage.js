@@ -8,6 +8,17 @@ export async function applyImageSingle(params) {
     return params
 }
 
+export async function applyImageSingleBase64(params) {
+    const file = Array.isArray(params.files.image) ? params.files.image[0] : params.files.image
+    const base64 = await processSingleFile(params.files.image, 'base64')
+    params.image = {
+        base64,
+        mimeType: file.mimetype || 'image/png'
+    }
+    delete params.files.image
+    return params
+}
+
 export async function applyImageSingleDataURI(params) {
     params.image = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image

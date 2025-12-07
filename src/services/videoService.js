@@ -124,7 +124,8 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
 
     if (fetchParams.image) {
         bodyPayload.instances[0].image = {
-            "bytesBase64Encoded": fetchParams.image
+            "bytesBase64Encoded": fetchParams.image.base64,
+            "mimeType": fetchParams.image.mimeType
         }
     }
 
@@ -217,7 +218,7 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
             return {
                 created: Math.floor(new Date().getTime() / 1000),
                 data: generatedSamples.map(sample => ({
-                    url: `${process.env.API_URL}/proxy/video?url=${encodeURIComponent(sample.video.uri)}&model=${encodeURIComponent(fetchParams.model)}`,
+                    url: `${sample.video.uri}&key=${providerKey}`,
                     revised_prompt: null
                 }))
             }
@@ -281,9 +282,10 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     }
 
     // I dont think this is working
-    /*  if (fetchParams.image) {
+    /* if (fetchParams.image) {
         requestBody.instances[0].image = {
-            "bytesBase64Encoded": fetchParams.image
+            "bytesBase64Encoded": fetchParams.image.base64,
+            "mimeType": fetchParams.image.mimeType
         }
     } */
 
@@ -492,7 +494,7 @@ async function generateGeminiMockVideo({ fetchParams, userId, usageLogId }) {
         return {
             created: Math.floor(new Date().getTime() / 1000),
             data: generatedSamples.map(sample => ({
-                url: `${process.env.API_URL}/proxy/video?url=${encodeURIComponent(sample.video.uri)}&model=${encodeURIComponent(fetchParams.model)}`,
+                url: `${sample.video.uri}&key=${getGeminiApiKey(fetchParams.model)}`,
                 revised_prompt: null
             }))
         }

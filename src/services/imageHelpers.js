@@ -145,6 +145,8 @@ export async function processSingleFile(file, format = 'blob') {
         const mimeType = file.mimetype || 'image/png'
         const base64 = buffer.toString('base64')
         return `data:${mimeType};base64,${base64}`
+    } else if (format === 'base64') {
+        return buffer.toString('base64')
     } else {
         throw new Error(`Invalid image processing format '${format}'`)
     }

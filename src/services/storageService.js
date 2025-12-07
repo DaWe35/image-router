@@ -136,7 +136,7 @@ class StorageService {
         }
     }
 
-    async processContent(content, responseFormat = 'url', usageLogId) {
+    async processContent(content, responseFormat = 'url', usageLogId, defaultContentType = 'image/png') {
         if (!this.isEnabled()) {
             return content
         }
@@ -167,7 +167,7 @@ class StorageService {
             let uploadResult
 
             if (content.url) {
-                const contentType = this.detectContentType(content.url)
+                const contentType = this.detectContentType(content.url, defaultContentType)
                 const needBuffer = responseFormat === 'b64_json'
                 uploadResult = await this.downloadAndUpload(content.url, contentType, usageLogId, needBuffer)
             } else if (content.b64_json) {  
@@ -196,12 +196,16 @@ class StorageService {
             }
         } catch (error) {
             console.error('Content processing error:', error)
-            // Return original content as fallback
+            // Return original content as fallback, but strip sensitive keys from Google URLs
+            if (typeof content.url === 'string' && content.url.includes('key=')) {
+                 const safeUrl = content.url.replace(/key=[^&]+/, 'key=REDACTED');
+                 return { ...content, url: safeUrl };
+            }
             return content
         }
     }
 
-    detectContentType(url) {
+    detectContentType(url, defaultType = 'image/png') {
         const urlLower = url.toLowerCase()
         
         // Video formats
@@ -219,7 +223,7 @@ class StorageService {
         
         // Fallback based on context
         if (urlLower.includes('video')) return 'video/mp4'
-        return 'image/png'
+        return defaultType
     }
 
     detectContentTypeFromBase64(base64Data) {
@@ -243,7 +247,7 @@ class StorageService {
         const processedData = await Promise.all(
             result.data.map(async (item, index) => {
                 const itemUsageLogId = result.data.length > 1 ? `${usageLogId}-${index}` : usageLogId
-                return await this.processContent(item, responseFormat, itemUsageLogId)
+                return await this.processContent(item, responseFormat, itemUsageLogId, 'image/png')
             })
         )
 
@@ -259,7 +263,7 @@ class StorageService {
         const processedData = await Promise.all(
             result.data.map(async (item, index) => {
                 const itemUsageLogId = result.data.length > 1 ? `${usageLogId}-${index}` : usageLogId
-                return await this.processContent(item, responseFormat, itemUsageLogId)
+                return await this.processContent(item, responseFormat, itemUsageLogId, 'video/mp4')
             })
         )
 

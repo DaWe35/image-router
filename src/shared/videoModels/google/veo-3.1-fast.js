@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { applyImageSingle } from '../../applyImage.js'
+import { applyImageSingleBase64 } from '../../applyImage.js'
 
 export default class Veo31Fast {
   constructor() {
@@ -13,7 +13,7 @@ export default class Veo31Fast {
             type: PRICING_TYPES.FIXED,
             value: 1.2
           },
-          applyImage: applyImageSingle
+          applyImage: applyImageSingleBase64
         }
       ],
       release_date: '2025-10-15'

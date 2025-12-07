@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
-import { applyImageSingle } from '../../applyImage.js'
+import { applyImageSingleBase64 } from '../../applyImage.js'
 
 class Veo2 {
   constructor() {
@@ -13,7 +13,7 @@ class Veo2 {
           type: PRICING_TYPES.FIXED,
           value: 1.75,
         },
-        applyImage: applyImageSingle,
+        applyImage: applyImageSingleBase64,
       }],
       arena_score: 1115,
       release_date: '2024-12-16'

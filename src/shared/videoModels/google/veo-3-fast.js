@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { applyImageSingle, applyVertexImage } from '../../applyImage.js'
+import { applyImageSingleBase64, applyVertexImage } from '../../applyImage.js'
 
 export default class Veo3Fast {
   constructor() {
@@ -13,7 +13,7 @@ export default class Veo3Fast {
             type: PRICING_TYPES.FIXED,
             value: 1.2
           },
-          applyImage: applyImageSingle
+          applyImage: applyImageSingleBase64
         }
         /* These have no input image implemented yet
         {

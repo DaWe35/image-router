@@ -218,63 +218,6 @@ app.get('/v1/models/:modelId(.+)', (req, res) => {
     }
 })
 
-// Video proxy endpoint to serve videos without exposing API keys
-app.get('/proxy/video', async (req, res) => {
-    try {
-        const { url, model } = req.query
-        
-        if (!url || !model) {
-            return res.status(400).json({
-                error: {
-                    message: 'Missing required parameters: url and model',
-                    type: 'invalid_request'
-                }
-            })
-        }
-
-        // Validate that the url matches the allowed endpoint pattern
-        const allowedPattern = /^https:\/\/generativelanguage\.googleapis\.com\/v1beta\/files\/[^:]+:download\?alt=media$/
-        if (!allowedPattern.test(url)) {
-            return res.status(400).json({
-                error: {
-                    message: 'Invalid URL provided. Only URLs matching the allowed endpoint are permitted.',
-                    type: 'invalid_url'
-                }
-            })
-        }
-
-        // Get the appropriate API key for the model
-        const providerKey = getGeminiApiKey(model)
-        
-        // Fetch the video with the API key
-        const videoResponse = await fetch(`${url}&key=${providerKey}`)
-        
-        if (!videoResponse.ok) {
-            return res.status(videoResponse.status).json({
-                error: {
-                    message: 'Failed to fetch video',
-                    type: 'video_fetch_error'
-                }
-            })
-        }
-
-        // Set appropriate headers
-        res.setHeader('Content-Type', videoResponse.headers.get('content-type') || 'video/mp4')
-        res.setHeader('Content-Length', videoResponse.headers.get('content-length'))
-        
-        // Stream the video content
-        videoResponse.body.pipe(res)
-        
-    } catch (error) {
-        console.error('Video proxy error:', error)
-        res.status(500).json({
-            error: {
-                message: 'Internal server error while fetching video',
-                type: 'internal_error'
-            }
-        })
-    }
-})
 
 // Timeout test endpoint
 app.get('/timeout-test',
