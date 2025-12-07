@@ -39,7 +39,7 @@ class Seedance1Lite {
   }
 
   async applyImageWaveSpeed(params) {
-    params.image = await processSingleFile(params.files.image)
+    params.image = await processSingleFile(params.files.image, 'datauri')
     params.model = 'bytedance/seedance-v1-lite-i2v-720p'
     delete params.files.image
     return params

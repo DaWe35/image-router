@@ -26,7 +26,7 @@ export default class HunyuanVideo15 {
   }
 
   async applyImageWaveSpeed(params) {
-    params.image = await processSingleFile(params.files.image)
+    params.image = await processSingleFile(params.files.image, 'datauri')
     params.model = 'wavespeed-ai/hunyuan-video-1.5/image-to-video'
     delete params.files.image
     return params
