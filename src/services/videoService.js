@@ -900,6 +900,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         switch (fetchParams.model) {
             case 'klingai:5@1':
             case 'klingai:4@3':
+            case 'runware:200@6': // kwaivgi Wan-2.2
                 taskPayload.width = 1280
                 taskPayload.height = 720
                 break
@@ -916,7 +917,6 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         if (!fetchParams.image) {
             switch (fetchParams.model) {
                 case 'openai:3@1':
-                case 'runware:200@6':
                 case 'runware:201@1':
                     taskPayload.width = 1280
                     taskPayload.height = 720
