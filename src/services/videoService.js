@@ -65,8 +65,10 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
 
     let intervalId
     if (res) {
-      res.setHeader('Content-Type', 'application/json')
-      res.flushHeaders()
+      if (!res.headersSent) {
+        res.setHeader('Content-Type', 'application/json')
+        res.flushHeaders()
+      }
       const heartbeatInterval = 3000 // 3 seconds
       intervalId = setInterval(() => {
         res.write(' ')

@@ -75,8 +75,10 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
 
     let intervalId
     if (res) {
-      res.setHeader('Content-Type', 'application/json')
-      res.flushHeaders()
+      if (!res.headersSent) {
+        res.setHeader('Content-Type', 'application/json')
+        res.flushHeaders()
+      }
       const heartbeatInterval = 3000 // 3 seconds
       intervalId = setInterval(() => {
         res.write(' ')
@@ -596,49 +598,41 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
     let rawBody
     let data
 
-    for (let attempt = 1; attempt <= 2; attempt++) {
-        response = await fetch(providerUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+    response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        agent
+    })
+
+    // Safely parse body (fallback to text for non-JSON errors)
+    rawBody = await response.text()
+    try {
+        data = rawBody ? JSON.parse(rawBody) : null
+    } catch (_) {
+        data = null
+    }
+
+    if (!response.ok) {
+        const formattedError = {
+            status: data?.error?.code || response.status,
+            statusText: data?.error?.status || response.statusText,
+            error: {
+                message: data?.error?.message || (rawBody || 'Request failed'),
+                type: data?.error?.status || 'Unknown Error'
             },
-            body: JSON.stringify(body),
-            agent
-        })
-
-        // Safely parse body (fallback to text for non-JSON errors)
-        rawBody = await response.text()
-        try {
-            data = rawBody ? JSON.parse(rawBody) : null
-        } catch (_) {
-            data = null
+            original_response_from_provider: data ?? rawBody
         }
 
-        if (!response.ok) {
-            const formattedError = {
-                status: data?.error?.code || response.status,
-                statusText: data?.error?.status || response.statusText,
-                error: {
-                    message: data?.error?.message || (rawBody || 'Request failed'),
-                    type: data?.error?.status || 'Unknown Error'
-                },
-                original_response_from_provider: data ?? rawBody
-            }
-
-            if (formattedError.error.message === "The model is overloaded. Please try again later." && attempt < 2) {
-                await new Promise(resolve => setTimeout(resolve, 30000))
-                continue
-            }
-
-            if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
-                formattedError.error.message = 'This model hit a global rate limit. Please try again.'
-            }
-            throw {
-                status: response.status,
-                errorResponse: formattedError
-            }
+        if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
+            formattedError.error.message = 'This model hit a global rate limit. Please try again.'
         }
-        break
+        throw {
+            status: response.status,
+            errorResponse: formattedError
+        }
     }
 
     if (!data) {
@@ -882,42 +876,24 @@ async function generateVertex({ fetchParams, userId }) {
         }
     }
 
-    // Retry logic to handle transient quota-exceeded errors from Vertex AI
-    const MAX_RETRIES = 10
-    const RETRY_DELAY_MS = 60 * 1000 // 1 minute
-    let data
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
 
-    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-        const response = await fetch(providerUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken.token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        })
-
-        if (response.ok) {
-            data = await response.json()
-            break
-        }
-
+    if (!response.ok) {
         const errorResponse = await response.json()
-        const errorMessage = errorResponse?.error?.message || ''
-        const quotaExceeded = errorMessage.includes('online_prediction_requests_per_base_model')
-
-        if (quotaExceeded && attempt < MAX_RETRIES) {
-            // Wait one minute before retrying
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS))
-            continue
-        }
-
-        // Either not a quota error or retries exhausted – throw immediately
         throw {
             status: response.status,
             errorResponse
         }
     }
+
+    const data = await response.json()
 
     // Convert Vertex AI response to our standard format
     const convertedData = {

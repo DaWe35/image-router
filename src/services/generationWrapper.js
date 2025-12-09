@@ -4,6 +4,21 @@ import { imageModels } from '../shared/imageModels/index.js'
 import { videoModels } from '../shared/videoModels/index.js'
 import { selectProvider } from '../utils/providerSelector.js'
 
+// Errors that trigger a single retry attempt
+const RETRYABLE_ERRORS = [
+  'Unknown error while reading results. Please try again later or contact support at support@runware.ai',
+  'online_prediction_requests_per_base_model',
+  'The model is overloaded. Please try again later.',
+  'Infrastructure is at maximum capacity, try again later',
+  'An unknown error occurred'
+]
+
+function isRetryableError(error) {
+  const errorMessage = error?.errorResponse?.error?.message || error?.message
+  if (!errorMessage) return false
+  return RETRYABLE_ERRORS.some(retryMsg => errorMessage.includes(retryMsg))
+}
+
 function cleanupInternalFields(result) {
   if (result && result.data && Array.isArray(result.data)) {
     result.data.forEach(item => {
@@ -36,7 +51,19 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         let generationResult
         try {
           const fetchParams = structuredClone(params) // prevent side effects
-          generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
+          
+          try {
+            generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
+          } catch (error) {
+            if (isRetryableError(error)) {
+              console.log(`Retrying generation due to error: ${error.message}`)
+              const retryParams = structuredClone(params)
+              generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
+            } else {
+              throw error
+            }
+          }
+
         } catch (error) {
           const errorToLog = error?.errorResponse?.error?.message || error?.message || 'unknown error'
           await refundUsage(apiKey, usageLogEntry, errorToLog)
