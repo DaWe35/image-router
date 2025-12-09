@@ -16,7 +16,7 @@ class GptImage1Mini {
             range: {
               min: 0.005,
               average: 0.011,
-              max: 0.015
+              max: 0.0569
             },
           },
           applyQuality: this.applyQuality,
@@ -30,7 +30,7 @@ class GptImage1Mini {
             range: {
               min: 0.005,
               average: 0.011,
-              max: 0.015
+              max: 0.0569
             },
           },
           applyQuality: this.applyQuality,
@@ -66,11 +66,11 @@ class GptImage1Mini {
   }
 
   applyQuality(params) {
-    const allowedQualities = ['auto', 'low', 'medium']
+    const allowedQualities = ['auto', 'low', 'medium', 'high']
     if (allowedQualities.includes(params.quality)) {
       params.quality = params.quality
     } else {
-      throw new Error(`This 'quality' is not supported for this model. Must be one of: ${allowedQualities.join(', ')}`)
+      throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
     }
     return params
   }
