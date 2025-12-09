@@ -10,7 +10,8 @@ const RETRYABLE_ERRORS = [
   'online_prediction_requests_per_base_model',
   'The model is overloaded. Please try again later.',
   'Infrastructure is at maximum capacity, try again later',
-  'An unknown error occurred'
+  'An unknown error occurred',
+  'No image or text found in response'
 ]
 
 function isRetryableError(error) {
@@ -58,6 +59,12 @@ export function createGenerationHandler({ validateParams, generateFn }) {
             if (isRetryableError(error)) {
               console.log(`Retrying generation due to error: ${error.message}`)
               const retryParams = structuredClone(params)
+              
+              const errorMessage = error?.errorResponse?.error?.message || error?.message
+              if (errorMessage && errorMessage.includes('No image or text found in response')) {
+                retryParams.prompt += "\nIMPORTANT: Generate an image and don't include any text."
+              }
+
               generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
             } else {
               throw error
