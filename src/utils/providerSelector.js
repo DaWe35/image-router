@@ -71,7 +71,6 @@ export function selectProvider(providers, requestParams = {}) {
 
     const requiresOpenAI =
       hasInputImage ||
-      (typeof quality === 'string' && quality.trim() !== '' && quality !== 'auto') ||
       (typeof size === 'string' && size.trim() !== '' && size !== 'auto')
 
     // If an input image is provided or non-auto quality/size is requested, we need OpenAI;
