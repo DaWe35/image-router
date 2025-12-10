@@ -57,10 +57,9 @@ export function createGenerationHandler({ validateParams, generateFn }) {
             generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
           } catch (error) {
             if (isRetryableError(error)) {
-              console.log(`Retrying generation due to error: ${error.message}`)
-              const retryParams = structuredClone(params)
-              
               const errorMessage = error?.errorResponse?.error?.message || error?.message
+              console.log(`Retrying generation due to error: ${errorMessage}`)
+              const retryParams = structuredClone(params)
               if (errorMessage && errorMessage.includes('No image or text found in response')) {
                 retryParams.prompt += "\nIMPORTANT: Generate an image and don't include any text."
               }
