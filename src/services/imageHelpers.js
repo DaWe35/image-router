@@ -217,8 +217,8 @@ export function extractWidthHeight(size) {
         return { width: null, height: null }
     }
 
-    // Accept forms like "1024x1024" or "512X768" (case-insensitive on the separator)
-    const match = /^\s*(\d+)\s*[xX]\s*(\d+)\s*$/.exec(size)
+    // Accept forms like "1024x1024", "512X768", "1024×1024" or "1024*1024"
+    const match = /^\s*(\d+)\s*[xX×*]\s*(\d+)\s*$/.exec(size)
     if (!match) {
         throw new Error("'size' must be in the format 'WIDTHxHEIGHT' (e.g. '1024x768')")
     }

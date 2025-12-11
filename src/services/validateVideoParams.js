@@ -11,7 +11,7 @@ const bodySchema = z.object({
   response_format: z.enum(['url', 'b64_json', 'b64_ephemeral']).default('url'),
   size: z.string()
     .default('auto')
-    .refine(val => val === 'auto' || /^\d+x\d+$/.test(val), {
+    .refine(val => val === 'auto' || /^\d+([xX×*])\d+$/.test(val), {
       message: "'size' must be 'auto' or in the format 'WIDTHxHEIGHT' (e.g. '1024x768')"
     })})
 

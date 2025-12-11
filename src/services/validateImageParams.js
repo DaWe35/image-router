@@ -17,7 +17,7 @@ const bodySchema = z.object({
   // Allow explicit 'auto' or dimensions like "1024x768"
   size: z.string()
     .default('auto')
-    .refine(val => val === 'auto' || /^\d+x\d+$/.test(val), {
+    .refine(val => val === 'auto' || /^\d+([xX×*])\d+$/.test(val), {
       message: "'size' must be 'auto' or in the format 'WIDTHxHEIGHT' (e.g. '1024x768')"
     }),
   output_format: z.string()
