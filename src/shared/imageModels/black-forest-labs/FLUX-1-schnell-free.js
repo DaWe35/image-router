@@ -39,6 +39,9 @@ class Flux1SchnellFree {
   }
 
   applyTogetherQuality(params) {
+    if (params.quality === 'high') {
+    throw new Error(`This free model only supports 'low' and 'medium' quality. Please use the paid model 'black-forest-labs/FLUX-1-schnell' for higher quality.`)
+  }
     const qualitySteps = {
       low: 1,
       medium: 4,

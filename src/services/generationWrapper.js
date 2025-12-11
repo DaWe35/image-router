@@ -11,7 +11,13 @@ const RETRYABLE_ERRORS = [
   'The model is overloaded. Please try again later.',
   'Infrastructure is at maximum capacity, try again later',
   'An unknown error occurred',
-  'No image or text found in response'
+  'No image or text found in response',
+  'Unknown error while reading results. Please try again later.',
+  'unknown error',
+  'An unknown error occurred',
+  `Unexpected token '<', "<html> <h"... is not valid JSON`,
+  `Unexpected token 'R', "Request En"... is not valid JSON`
+  
 ]
 
 function isRetryableError(error) {
