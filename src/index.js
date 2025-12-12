@@ -9,6 +9,7 @@ import { videoRoutes } from './routes/videoRoutes.js'
 import { imageModels } from './shared/imageModels/index.js'
 import { videoModels } from './shared/videoModels/index.js'
 import { validateApiKey } from './middleware/apiKeyMiddleware.js'
+import { blockBannedIPs } from './middleware/ipBlockMiddleware.js'
 import { prisma } from './config/database.js'
 import { getGeminiApiKey } from './services/imageHelpers.js'
 import { storageService } from './services/storageService.js'
@@ -102,8 +103,8 @@ const userVideoLimiter = buildUserLimiter((usd) => usd / 6, 1, 20)
 app.use(generalLimiter) // Apply general limiter to all other routes
 
 // Protected middleware chains (depend on DB availability)
-const protectedImageChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userImageLimiter] : [ipLimiter]
-const protectedVideoChain = process.env.DATABASE_URL ? [ipLimiter, validateApiKey, userVideoLimiter] : [ipLimiter]
+const protectedImageChain = process.env.DATABASE_URL ? [blockBannedIPs, ipLimiter, validateApiKey, userImageLimiter] : [blockBannedIPs, ipLimiter]
+const protectedVideoChain = process.env.DATABASE_URL ? [blockBannedIPs, ipLimiter, validateApiKey, userVideoLimiter] : [blockBannedIPs, ipLimiter]
 
 // Apply chains to routes
 app.use('/v1/openai/images/generations', ...protectedImageChain)
