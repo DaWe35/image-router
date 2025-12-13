@@ -1045,11 +1045,18 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
 
     if (!response.ok || !data?.data) {
         const errorObj = data?.errors?.[0] || {}
+        let errorMessage = errorObj?.message || 'Runware generation failed'
+        
+        // Rewrite error message to mention "image" instead of "referenceImages"
+        if (errorMessage.includes("Missing required parameter 'referenceImages'.")) {
+            errorMessage = "This is an image-to-image model, so it requires an input image"
+        }
+        
         const formattedError = {
             status: response.status,
             statusText: errorObj?.code || 'Error',
             error: {
-                message: errorObj?.message || 'Runware generation failed',
+                message: errorMessage,
                 type: errorObj?.code || 'runware_error'
             },
             original_response_from_provider: data
