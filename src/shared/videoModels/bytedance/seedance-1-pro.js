@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcVideoPerSecond, calcVideoPrice } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Seedance1Pro {
@@ -14,25 +14,48 @@ class Seedance1Pro {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.1132,
-              average: 0.57,
-              max: 0.7,
+              min: 0.0937,
+              average: 0.484,
+              max: 1.68,
             },
           },
           applyImage: applyImageRunwareVideo,
-        }, {
-        id: 'wavespeed',
-        model_name: 'bytedance/seedance-v1-pro-t2v-720p',
-        pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.3,
-        },
-        applyImage: this.applyImageWaveSpeed,
-      }
-    ],
+        }, /* {
+          id: 'wavespeed',
+          model_name: 'bytedance/seedance-v1-pro-t2v-720p',
+          pricing: {
+            type: PRICING_TYPES.CALCULATED,
+            calcFunction: (params) => calcVideoPrice(params, 0.06) // $0.06 per second (was $0.3 per 5s)
+          },
+          applyImage: this.applyImageWaveSpeed,
+        } */
+      ],
+      sizes: [
+        // 480p
+        '864x480',
+        '736x544',
+        '640x640',
+        '544x736',
+        '480x864',
+        '960x416',
+        // 720p
+        '1248x704',
+        '1120x832',
+        '960x960',
+        '832x1120',
+        '704x1248',
+        '1504x640',
+        // 1080p
+        '1920x1088',
+        '1664x1248',
+        '1440x1440',
+        '1248x1664',
+        '1088x1920',
+        '2176x928',
+      ],
       arena_score: 1347,
       release_date: '2025-06-16',
-      seconds: [5],
+      seconds: [1.2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       default_seconds: 5
     }
   }

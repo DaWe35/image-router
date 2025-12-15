@@ -1,4 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
+import { calcVideoPrice } from '../../../services/imageHelpers.js'
 import { applyImageSingleBase64, applyVertexImage } from '../../applyImage.js'
 
 export default class Veo3Fast {
@@ -10,8 +11,13 @@ export default class Veo3Fast {
           id: 'gemini',
           model_name: 'veo-3.0-fast-generate-001',
           pricing: {
-            type: PRICING_TYPES.FIXED,
-            value: 1.2
+            type: PRICING_TYPES.CALCULATED,
+            calcFunction: (params) => calcVideoPrice(params, 0.15), // $0.15 per second ($1.2 per 8s)
+            range: {
+              min: 0.6,
+              average: 0.6,
+              max: 1.2
+            }
           },
           applyImage: applyImageSingleBase64
         }

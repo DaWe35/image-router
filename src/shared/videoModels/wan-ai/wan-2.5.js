@@ -13,14 +13,18 @@ class Wan25 {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.473
+            range: {
+              min: 0.473,
+              average: 0.473,
+              max: 0.738
+            }
           },
           applyImage: applyImageRunwareVideo
         }
       ],
       arena_score: 1190,
       release_date: '2025-09-24',
-      seconds: [5],
+      seconds: [5, 8],
       default_seconds: 5
     }
   }

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 export default class Kling25TurboStandard {
@@ -13,14 +13,18 @@ export default class Kling25TurboStandard {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.21
+            range: {
+              min: 0.21,
+              average: 0.21,
+              max: 0.42
+            },
           },
           applyImage: applyImageRunwareVideo
         }
       ],
       arena_score: 1241,
       release_date: '2025-09-23',
-      seconds: [5],
+      seconds: [5, 10],
       default_seconds: 5
     }
   }

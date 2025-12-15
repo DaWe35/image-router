@@ -10,12 +10,17 @@ export default class Hailuo02Pro {
         model_name: 'minimax/hailuo-02/pro',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.49, // price per video in USD
+          value: 0.48, // price per video in USD
         },
         applyImage: applyImageSingleDataURI,
       }],
       arena_score: 1322,
       release_date: '2025-06-18',
+      sizes: [
+        '512x512',
+        '1366x768',
+        '1920x1080'
+      ],
       seconds: [6],
       default_seconds: 6
     }

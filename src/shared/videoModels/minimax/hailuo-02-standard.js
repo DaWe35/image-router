@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple, calcVideoPrice } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Hailuo02Standard {
@@ -13,11 +13,7 @@ class Hailuo02Standard {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            range: {
-              min: 0.231,
-              average: 0.231,
-              max: 0.431
-            }
+            value: 0.231,
           },
           applyImage: applyImageRunwareVideo
         }, {
@@ -25,7 +21,7 @@ class Hailuo02Standard {
           model_name: 'minimax/hailuo-02/standard',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.28, // price per video in USD
+            value: 0.23,
           },
           applyImage: this.applyImageWaveSpeed
         }

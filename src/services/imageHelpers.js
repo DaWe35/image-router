@@ -184,7 +184,18 @@ export function postCalcSimple(imageResult) {
         return imageResult.cost
     } catch (error) {
         console.error('Error calculating Runware price:', error)
-        return 1 // return 1 for safety, this should never happen
+        return 10 // return 10 for safety, this should never happen
+    }
+}
+
+// Video pricing: calculate price based on actual seconds
+export function calcVideoPrice(params, pricePerSecond) {
+    try {
+        const seconds = params.seconds
+        return pricePerSecond * seconds
+    } catch (error) {
+        console.error('Error calculating video price:', error)
+        return 10 // return 1 for safety, this should never happen
     }
 }
 

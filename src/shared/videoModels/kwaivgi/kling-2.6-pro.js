@@ -2,33 +2,38 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Kling25TurboPro {
+export default class Kling26Pro {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-2.5-turbo-pro',
+      id: 'kling/kling-2.6-pro',
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:6@1',
+          model_name: 'klingai:kling-video@2.6-pro',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.35,
-              average: 0.35,
-              max: 0.7
+              min: 0.7,
+              average: 0.7,
+              max: 1.4
             },
           },
           applyImage: applyImageRunwareVideo
         }
       ],
       sizes: [
-        '1920x1080',
-        '1080x1080',
-        '1080x1920',
+        '1024x1024',
+        '1536x640',
+        '1344x768',
+        '1152x896',
+        '1280x832',
+        '832x1280',
+        '896x1152',
+        '768x1344',
+        '640x1536',
       ],
-      arena_score: 1241,
-      release_date: '2025-09-23',
+      release_date: '2025-12-15',
       seconds: [5, 10],
       default_seconds: 5
     }

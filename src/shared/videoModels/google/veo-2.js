@@ -1,5 +1,4 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile } from '../../../services/imageHelpers.js'
 import { applyImageSingleBase64 } from '../../applyImage.js'
 
 class Veo2 {

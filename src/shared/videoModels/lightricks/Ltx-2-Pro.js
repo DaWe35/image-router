@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 export default class Ltx2Pro {
@@ -28,7 +28,7 @@ export default class Ltx2Pro {
         '2560x1440',
         '3840x2160'
       ],
-      seconds: [6],
+      seconds: [6, 8, 10, 20],
       default_seconds: 6
     }
   }

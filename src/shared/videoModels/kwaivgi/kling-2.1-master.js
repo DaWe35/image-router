@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple, calcVideoPrice } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Kling21Master {
@@ -13,7 +13,11 @@ class Kling21Master {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
-            value: 0.924,
+            range: {
+              min: 0.924,
+              average: 0.924,
+              max: 1.848
+            },
           },
           applyImage: applyImageRunwareVideo,
         },
@@ -21,15 +25,25 @@ class Kling21Master {
           id: 'replicate',
           model_name: 'kwaivgi/kling-v2.1-master',
           pricing: {
-            type: PRICING_TYPES.FIXED,
-            value: 1.40, // price per 5-second video (0.28 $/sec)
+            type: PRICING_TYPES.CALCULATED,
+            calcFunction: (params) => calcVideoPrice(params, 0.28),
+            range: {
+              min: 1.4,
+              average: 1.4,
+              max: 2.8
+            }
           },
           applyImage: this.applyImage,
         }
       ],
+      sizes: [
+        '1920x1080',
+        '1080x1080',
+        '1080x1920',
+      ],
       arena_score: 1150,
       release_date: '2025-06-24',
-      seconds: [5],
+      seconds: [5, 10],
       default_seconds: 5
     }
   }

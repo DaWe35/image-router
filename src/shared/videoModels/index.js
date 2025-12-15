@@ -9,6 +9,7 @@ import Ltx2Pro from './lightricks/Ltx-2-Pro.js'
 import Ltx2Fast from './lightricks/Ltx-2-Fast.js'
 
 import Sora2 from './openai/sora-2.js'
+import Sora2Pro from './openai/sora-2-pro.js'
 
 import HunyuanVideo15 from './tencent/hunyuan-video-1.5.js'
 
@@ -46,6 +47,7 @@ const modelInstances = [
   new Ltx2Fast(),
 
   new Sora2(),
+  new Sora2Pro(),
 
   new Kling16Standard(),
   new Kling21Standard(),

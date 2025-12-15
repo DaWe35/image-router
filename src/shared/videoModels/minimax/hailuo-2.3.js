@@ -27,7 +27,7 @@ export default class Hailuo23 {
         '1366x768',
         '1920x1080'
       ],
-      seconds: [6],
+      seconds: [6, 10],
       default_seconds: 6
     }
   }
