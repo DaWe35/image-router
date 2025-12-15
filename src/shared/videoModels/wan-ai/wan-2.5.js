@@ -19,7 +19,9 @@ class Wan25 {
         }
       ],
       arena_score: 1190,
-      release_date: '2025-09-24'
+      release_date: '2025-09-24',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

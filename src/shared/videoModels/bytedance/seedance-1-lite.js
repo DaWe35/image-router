@@ -30,7 +30,9 @@ class Seedance1Lite {
           applyImage: this.applyImageWaveSpeed
         }
       ],
-      release_date: '2025-06-16'
+      release_date: '2025-06-16',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

@@ -13,7 +13,14 @@ const bodySchema = z.object({
     .default('auto')
     .refine(val => val === 'auto' || /^\d+([xX×*])\d+$/.test(val), {
       message: "'size' must be 'auto' or in the format 'WIDTHxHEIGHT' (e.g. '1024x768')"
-    })})
+    }),
+  seconds: z.union([
+    z.literal('auto'),
+    z.coerce.number({
+      invalid_type_error: "'seconds' must be a number"
+    }).int().min(1, { message: "'seconds' must be at least 1" }).max(60, { message: "'seconds' must be 60 or less" })
+  ]).default('auto')
+})
 
 // Validate the parameters for the video generation request and return only the valid parameters
 export function validateVideoParams(req) {
@@ -22,7 +29,7 @@ export function validateVideoParams(req) {
         throw new Error(parseResult.error.errors[0].message)
     }
 
-    let { prompt, model, response_format, size } = parseResult.data
+    let { prompt, model, response_format, size, seconds } = parseResult.data
     
     // Resolve model alias to real model name (if it's an alias)
     model = resolveModelAlias(model)
@@ -51,7 +58,7 @@ export function validateVideoParams(req) {
         throw new Error(`'image' is a required input parameter for model '${model}'`)
     }
 
-    return { prompt, model, response_format, size, files: validFiles }
+    return { prompt, model, response_format, size, seconds, files: validFiles }
 }
 
 export const videoRequestSchema = bodySchema 

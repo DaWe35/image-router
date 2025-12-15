@@ -40,7 +40,9 @@ export default class Veo3Fast {
           }
         } */
       ],
-      release_date: '2025-06-12'
+      release_date: '2025-06-12',
+      seconds: [4, 6, 8],
+      default_seconds: 4
     }
   }
 

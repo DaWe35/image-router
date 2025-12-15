@@ -16,7 +16,9 @@ class Sora2 {
         },
         applyImage: applyImageRunwareVideo
       }],
-      release_date: '2025-09-30'
+      release_date: '2025-09-30',
+      seconds: [4],
+      default_seconds: 4
     }
   }
 

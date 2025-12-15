@@ -1,12 +1,16 @@
-import fs from 'fs/promises'
-import path from 'path'
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
 import { getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
-import { selectProvider } from '../utils/providerSelector.js'
+
+function resolveSeconds(requestedSeconds, modelConfig) {
+    if (requestedSeconds == null || requestedSeconds === 'auto') return modelConfig.default_seconds
+    const parsed = Number(requestedSeconds)
+    const isValid = Number.isFinite(parsed) && parsed > 0 && modelConfig.seconds?.includes(parsed)
+    return isValid ? parsed : modelConfig.default_seconds
+}
 
 export async function generateVideo(fetchParams, userId, res, usageLogId, providerIndex) {
     const startTime = Date.now()
@@ -17,6 +21,8 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
     if (!provider) {
         throw new Error('Invalid model specified')
     }
+
+    fetchParams.seconds = resolveSeconds(fetchParams.seconds, modelConfig)
 
     // Detect Kling v2.1 variant to set replicate mode parameter
     const klingVariantMatch = fetchParams.model.match(/kling-2\.1-(standard|pro)$/)
@@ -120,7 +126,7 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
             "aspectRatio": "16:9",
             "personGeneration": personGenerationValue,
             "sampleCount": 1,
-            "durationSeconds": fetchParams.model === 'veo-2.0-generate-001' ? 5 : 8
+            "durationSeconds": fetchParams.seconds
         }
     }
 
@@ -279,7 +285,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             aspectRatio: "16:9",
             personGeneration: "allow_adult",
             sampleCount: 1,
-            durationSeconds: 8, // veo-3 supports 8 seconds
+            durationSeconds: fetchParams.seconds,
         }
     }
 
@@ -589,7 +595,7 @@ async function generateFalVideo({ fetchParams, userId, usageLogId }) {
     // Prepare body with supported parameters
     const bodyPayload = {
         prompt: fetchParams.prompt,
-        duration: 5,
+        duration: fetchParams.seconds,
         resolution: '720p'
     }
     if (fetchParams.image) bodyPayload.image_url = fetchParams.image
@@ -718,7 +724,7 @@ async function generateWavespeedVideo({ fetchParams, userId, usageLogId }) {
 
     const bodyPayload = {
         prompt: fetchParams.prompt,
-        duration: fetchParams.model.includes('hailuo-02') ? 6 : 5 // Use 6-second duration for MiniMax Hailuo-02 models, otherwise default to 5
+        duration: fetchParams.seconds // Use 6-second duration for MiniMax Hailuo-02 models, otherwise default to 5
     }
     if (fetchParams.image) bodyPayload.image = fetchParams.image
 
@@ -863,23 +869,6 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
     }
 
     const taskUUID = usageLogId
-
-    // Build the Runware task payload
-    let duration
-    switch (fetchParams.model) {
-        case 'openai:3@1':
-            duration = 4
-            break
-        case 'minimax:3@1':
-        case 'minimax:4@1':
-        case 'minimax:4@2':
-        case 'lightricks:2@0':
-        case 'lightricks:2@1':
-            duration = 6
-            break
-        default:
-            duration = 5
-    }
     
     const taskPayload = {
         taskType: 'videoInference',
@@ -887,7 +876,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         deliveryMethod: 'async',
         positivePrompt: fetchParams.prompt,
         model: fetchParams.model,
-        duration,
+        duration: fetchParams.seconds,
         outputFormat: "mp4",
         numberResults: 1,
         includeCost: true

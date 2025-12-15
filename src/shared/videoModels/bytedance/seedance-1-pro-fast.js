@@ -46,7 +46,9 @@ export default class Seedance1ProFast {
       '1248x1664',
       '1088x1920',
       '2176x928',
-     ]
+     ],
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

@@ -19,7 +19,9 @@ class Wan22 {
         }
       ],
       arena_score: 1115,
-      release_date: '2025-07-15'
+      release_date: '2025-07-15',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

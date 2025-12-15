@@ -19,7 +19,9 @@ export default class Kling25TurboPro {
         }
       ],
       arena_score: 1241,
-      release_date: '2025-09-23'
+      release_date: '2025-09-23',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

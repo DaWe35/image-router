@@ -31,7 +31,9 @@ class Seedance1Pro {
       }
     ],
       arena_score: 1347,
-      release_date: '2025-06-16'
+      release_date: '2025-06-16',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

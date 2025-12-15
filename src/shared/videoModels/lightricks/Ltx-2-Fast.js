@@ -27,7 +27,9 @@ export default class Ltx2Fast {
         '1920x1080',
         '2560x1440',
         '3840x2160'
-      ]
+      ],
+      seconds: [6],
+      default_seconds: 6
     }
   }
 

@@ -17,7 +17,9 @@ export default class HunyuanVideo15 {
           applyImage: this.applyImageWaveSpeed
         }
       ],
-      release_date: '2025-11-21'
+      release_date: '2025-11-21',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

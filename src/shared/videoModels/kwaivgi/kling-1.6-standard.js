@@ -27,7 +27,9 @@ class Kling16Standard {
         }
       ],
       arena_score: 1025,
-      release_date: '2024-12-19'
+      release_date: '2024-12-19',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

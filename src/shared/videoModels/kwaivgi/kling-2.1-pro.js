@@ -27,7 +27,9 @@ class Kling21Pro {
         }
       ],
       arena_score: 1120,
-      release_date: '2025-06-24'
+      release_date: '2025-06-24',
+      seconds: [5],
+      default_seconds: 5
     }
   }
 

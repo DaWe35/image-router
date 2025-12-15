@@ -16,7 +16,9 @@ export default class Veo31Fast {
           applyImage: applyImageSingleBase64
         }
       ],
-      release_date: '2025-10-15'
+      release_date: '2025-10-15',
+      seconds: [4, 6, 8],
+      default_seconds: 4
     }
   }
 

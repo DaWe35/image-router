@@ -17,7 +17,9 @@ export default class Veo31 {
         }
       ],
       arena_score: 1240,
-      release_date: '2025-10-15'
+      release_date: '2025-10-15',
+      seconds: [4, 6, 8],
+      default_seconds: 4
     }
   }
 
