@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
 import sharp from 'sharp';
+import { videoModels } from '../shared/videoModels/index.js'
 
 // Helper function to convert an object to FormData
 export function objectToFormData(obj) {
@@ -188,17 +189,6 @@ export function postCalcSimple(imageResult) {
     }
 }
 
-// Video pricing: calculate price based on actual seconds
-export function calcVideoPrice(params, pricePerSecond) {
-    try {
-        const seconds = params.seconds
-        return pricePerSecond * seconds
-    } catch (error) {
-        console.error('Error calculating video price:', error)
-        return 10 // return 1 for safety, this should never happen
-    }
-}
-
 export function postCalcNanoGPTDiscounted10(imageResult) {
     try {
         // just return 110% of the cost, since NanoGPT is discounted by 10%
@@ -323,3 +313,26 @@ export const sizeToImageSize = {
     '5504x3072': '4K',
     '6336x2688': '4K',
 };
+
+
+export function resolveSeconds(requestedSeconds, modelName) {
+    const modelConfig = videoModels[modelName]
+    if (!modelConfig) {
+        throw new Error(`Model '${modelName}' not found`)
+    }
+    if (requestedSeconds == null || requestedSeconds === 'auto') return modelConfig.default_seconds
+    const parsed = Number(requestedSeconds)
+    const isValid = Number.isFinite(parsed) && parsed > 0 && modelConfig.seconds?.includes(parsed)
+    return isValid ? parsed : modelConfig.default_seconds
+}
+
+// Video pricing: calculate price based on actual seconds
+export function calcVideoPrice(params, pricePerSecond) {
+    try {
+        const seconds = resolveSeconds(params.seconds, params.model)
+        return pricePerSecond * seconds
+    } catch (error) {
+        console.error('Error calculating video price:', error)
+        return 10 // return 1 for safety, this should never happen
+    }
+}

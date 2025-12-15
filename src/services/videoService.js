@@ -1,16 +1,9 @@
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey, extractWidthHeight } from './imageHelpers.js'
+import { getGeminiApiKey, extractWidthHeight, resolveSeconds } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
-
-function resolveSeconds(requestedSeconds, modelConfig) {
-    if (requestedSeconds == null || requestedSeconds === 'auto') return modelConfig.default_seconds
-    const parsed = Number(requestedSeconds)
-    const isValid = Number.isFinite(parsed) && parsed > 0 && modelConfig.seconds?.includes(parsed)
-    return isValid ? parsed : modelConfig.default_seconds
-}
 
 export async function generateVideo(fetchParams, userId, res, usageLogId, providerIndex) {
     const startTime = Date.now()
@@ -22,7 +15,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
         throw new Error('Invalid model specified')
     }
 
-    fetchParams.seconds = resolveSeconds(fetchParams.seconds, modelConfig)
+    fetchParams.seconds = resolveSeconds(fetchParams.seconds, fetchParams.model)
 
     // Detect Kling v2.1 variant to set replicate mode parameter
     const klingVariantMatch = fetchParams.model.match(/kling-2\.1-(standard|pro)$/)
