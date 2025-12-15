@@ -53,7 +53,6 @@ class Seedance1Pro {
         '1088x1920',
         '2176x928',
       ],
-      arena_score: 1347,
       release_date: '2025-06-16',
       seconds: [1.2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       default_seconds: 5

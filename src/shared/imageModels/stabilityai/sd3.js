@@ -23,7 +23,6 @@ class Sd3 {
         applyMask: this.applyMask,
         applyQuality: this.applyQuality
       }],
-      arena_score: 1015,
       release_date: '2024-06-12'
     }
   }

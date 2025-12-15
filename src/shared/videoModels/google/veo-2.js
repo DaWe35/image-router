@@ -14,7 +14,6 @@ class Veo2 {
         },
         applyImage: applyImageSingleBase64,
       }],
-      arena_score: 1115,
       release_date: '2024-12-16',
       seconds: [5],
       default_seconds: 5

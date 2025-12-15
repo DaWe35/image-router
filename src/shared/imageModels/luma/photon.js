@@ -22,7 +22,6 @@ class Photon {
           }
         }
     ],
-      arena_score: 1035,
       release_date: '2024-12-03'
       
     }

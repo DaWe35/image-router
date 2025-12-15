@@ -19,7 +19,6 @@ class HiDreamI1Fast {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: 1050,
       release_date: '2025-04-28'
     }
   }

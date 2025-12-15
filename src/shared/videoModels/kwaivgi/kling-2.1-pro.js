@@ -35,7 +35,6 @@ class Kling21Pro {
           applyImage: this.applyImage,
         }
       ],
-      arena_score: 1120,
       release_date: '2025-06-24',
       seconds: [5, 10],
       default_seconds: 5

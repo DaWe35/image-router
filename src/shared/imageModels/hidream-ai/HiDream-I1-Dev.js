@@ -19,7 +19,6 @@ class HiDreamI1Dev {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: 1082,
       release_date: '2025-03-05'
     }
   }

@@ -23,7 +23,6 @@ class PhotonFlash {
           }
         }
       ],
-      arena_score: 964,
       release_date: '2024-12-03'
       
     }

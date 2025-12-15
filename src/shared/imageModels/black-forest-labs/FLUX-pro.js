@@ -15,7 +15,6 @@ class FluxPro {
         },
         applyQuality: this.applyQuality
       }],
-      arena_score: 1069,
       release_date: '2024-08-01'
       
     }

@@ -19,7 +19,6 @@ export default class Midjourney {
         },
       ],
       release_date: '2025-06-17',
-      arena_score: 1049
     }
   }
 

@@ -36,7 +36,6 @@ class Kling21Standard {
         }
       ],
       // Benchmark / meta data – values are estimates / placeholders
-      arena_score: 1080,
       release_date: '2025-06-24',
       seconds: [5, 10],
       default_seconds: 5

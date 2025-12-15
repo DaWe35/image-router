@@ -26,7 +26,6 @@ class DallE2 {
         /* applyImage: this.applyImage,
         applyMask: this.applyMask */
       }],
-      arena_score: 695,
       release_date: '2022-04-6'
     }
   }

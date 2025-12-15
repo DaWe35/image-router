@@ -23,7 +23,6 @@ class Flux11ProUltra {
           }
         }
       ],
-      arena_score: 1101,
       release_date: '2024-11-06',
       sizes: [
         '3136x1344',

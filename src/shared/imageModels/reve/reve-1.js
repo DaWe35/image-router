@@ -22,7 +22,6 @@ export default class Reve1 {
           applyQuality: this.applyQualityReplicate,
         }
       ],
-      arena_score: 1090,
       /* release_date: '2025-08-05', */
     }
   }

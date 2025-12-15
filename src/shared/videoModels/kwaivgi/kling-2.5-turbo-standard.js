@@ -22,7 +22,6 @@ export default class Kling25TurboStandard {
           applyImage: applyImageRunwareVideo
         }
       ],
-      arena_score: 1241,
       release_date: '2025-09-23',
       seconds: [5, 10],
       default_seconds: 5

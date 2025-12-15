@@ -37,7 +37,6 @@ export default class Gemini25Flash {
           applyImage: this.applyImageVertex
         }
       ],
-      arena_score: 1167,
       release_date: '2025-10-02'
     }
   }

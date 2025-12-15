@@ -22,7 +22,6 @@ export default class Flux2Dev {
           applyImage: applyInputImagesReferences,
         }
       ],
-      arena_score: 1152,
       release_date: '2025-11-25'
     }
   }

@@ -23,7 +23,6 @@ class Flux1SchnellFree {
           applyQuality: this.applyQuality
         }
       ],
-      arena_score: 1000,
       release_date: '2024-08-01'
       
     }

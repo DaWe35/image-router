@@ -14,7 +14,6 @@ class RecraftV3 {
         },
         applyImage: applyFalImage
       }],
-      arena_score: 1114,
       release_date: '2024-10-30'
     }
   }

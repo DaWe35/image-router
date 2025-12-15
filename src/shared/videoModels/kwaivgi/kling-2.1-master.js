@@ -41,7 +41,6 @@ class Kling21Master {
         '1080x1080',
         '1080x1920',
       ],
-      arena_score: 1150,
       release_date: '2025-06-24',
       seconds: [5, 10],
       default_seconds: 5

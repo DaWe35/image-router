@@ -14,7 +14,6 @@ export default class Hailuo02Pro {
         },
         applyImage: applyImageSingleDataURI,
       }],
-      arena_score: 1322,
       release_date: '2025-06-18',
       sizes: [
         '512x512',

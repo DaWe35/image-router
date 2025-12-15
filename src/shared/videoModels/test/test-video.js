@@ -15,7 +15,6 @@ class TestVideo {
         applyImage: this.applyImage,
         applyMask: this.applyMask,
       }],
-      arena_score: 0,
       release_date: '2025-05-04',
       seconds: [5],
       default_seconds: 5

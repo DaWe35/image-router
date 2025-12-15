@@ -27,7 +27,6 @@ export default class Kling25TurboPro {
         '1080x1080',
         '1080x1920',
       ],
-      arena_score: 1241,
       release_date: '2025-09-23',
       seconds: [5, 10],
       default_seconds: 5

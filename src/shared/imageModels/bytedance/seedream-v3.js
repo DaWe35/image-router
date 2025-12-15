@@ -36,7 +36,6 @@ export default class SeedreamV3 {
         }
       ],
       release_date: '2025-04-16',
-      arena_score: 1156
       
     }
   }

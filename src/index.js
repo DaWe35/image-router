@@ -170,8 +170,6 @@ app.get('/v1/models', (req, res) => {
                     return a.id.localeCompare(b.id)
                 case 'provider':
                     return a.provider.localeCompare(b.provider)
-                case 'arena_score':
-                    return (b.arena_score || 0) - (a.arena_score || 0)
                 case 'price':
                     const aPrice = a.providers[0]?.pricing.value ?? Infinity
                     const bPrice = b.providers[0]?.pricing.value ?? Infinity

@@ -12,7 +12,6 @@ class Grok2Image {
           value: 0.07
         }
       }],
-      arena_score: 929,
       release_date: '2024-12-12'
     }
   }

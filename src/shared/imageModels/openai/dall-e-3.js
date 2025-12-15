@@ -24,7 +24,6 @@ class DallE3 {
         },
         applyQuality: this.applyQuality,
       }],
-      arena_score: 937,
       release_date: '2023-10-20'
     }
   }

@@ -21,7 +21,6 @@ class Imagen3 {
           }
         }
       ],
-      arena_score: 1092,
       release_date: '2024-12-16',
       sizes: [
         '1024x1024',

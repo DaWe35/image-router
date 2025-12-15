@@ -31,7 +31,6 @@ class QwenImage {
           applyQuality: this.applyQualityFal
         }
       ],
-      arena_score: 1073,
       release_date: '2025-08-01'
     }
   }

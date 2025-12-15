@@ -12,7 +12,6 @@ export default class QwenImageFree {
           value: 0
         },
       }],
-      arena_score: 1073,
       release_date: '2025-08-01'
     }
   }

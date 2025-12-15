@@ -22,7 +22,6 @@ class SdxlTurboFree {
           }
         }
       ],
-        arena_score: 1031,
       release_date: '2024-10-22'
     }
   }

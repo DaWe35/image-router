@@ -22,7 +22,6 @@ class Wan25 {
           applyImage: applyImageRunwareVideo
         }
       ],
-      arena_score: 1190,
       release_date: '2025-09-24',
       seconds: [5, 8],
       default_seconds: 5

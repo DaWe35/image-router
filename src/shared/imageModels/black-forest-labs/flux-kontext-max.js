@@ -24,7 +24,6 @@ class FluxKontextMax {
           applyImage: applyImageSingle, // applyImage broken, needs to be fixed
         } */
       ],
-      arena_score: 1128,
       release_date: '2025-05-29',
       sizes: [
         '1568x672',

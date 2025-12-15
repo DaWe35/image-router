@@ -56,7 +56,6 @@ export default class Gemini3Pro {
           applyImage: this.applyImageGemini,
         }
       ],
-      arena_score: 1217,
       release_date: '2025-11-20'
     }
   }

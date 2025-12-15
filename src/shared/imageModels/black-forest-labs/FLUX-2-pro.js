@@ -23,7 +23,6 @@ export default class Flux2Pro {
         }
       ],
       release_date: '2025-11-25',
-      arena_score: 1201,
     }
   }
 

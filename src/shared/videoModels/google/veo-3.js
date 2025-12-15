@@ -39,7 +39,6 @@ export default class Veo3 {
           }
         } */
       ],
-      arena_score: 1240,
       release_date: '2025-05-20',
       seconds: [4, 6, 8],
       default_seconds: 4

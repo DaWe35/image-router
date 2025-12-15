@@ -14,7 +14,6 @@ class Veo2 {
         },
         applyImage: this.applyImage
       }],
-      arena_score: 1115,
       release_date: '2024-12-16'
     }
   }

@@ -36,7 +36,6 @@ class Kling16Standard {
           applyImage: this.applyImage
         }
       ],
-      arena_score: 1025,
       release_date: '2024-12-19',
       seconds: [5, 10],
       default_seconds: 5

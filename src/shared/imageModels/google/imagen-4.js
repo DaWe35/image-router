@@ -13,7 +13,6 @@ class Imagen4 {
         }
       }],
       release_date: '2025-08-14',
-      arena_score: 1159,
       sizes: [
         '1024x1024',
         '896x1280',

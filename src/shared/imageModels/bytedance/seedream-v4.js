@@ -30,7 +30,6 @@ export default class SeedreamV4 {
         },
       ],
       release_date: '2025-09-09',
-      arena_score: 1193,
       sizes: [
         '1024x1024',
         '2048x2048',

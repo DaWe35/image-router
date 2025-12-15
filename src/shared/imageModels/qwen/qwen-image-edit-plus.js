@@ -18,7 +18,6 @@ class QwenImageEditPlus {
           applyImage: this.applyImageQwenImageEditPlus
         }
       ],
-      arena_score: 1092,
       release_date: '2025-08-18'
     }
   }
