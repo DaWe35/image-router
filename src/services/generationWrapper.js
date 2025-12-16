@@ -3,6 +3,7 @@ import { freeTierLimiter } from '../middleware/freeTierLimiter.js'
 import { imageModels } from '../shared/imageModels/index.js'
 import { videoModels } from '../shared/videoModels/index.js'
 import { selectProvider } from '../utils/providerSelector.js'
+import util from 'util'
 
 // Errors that trigger a single retry attempt
 const RETRYABLE_ERRORS = [
@@ -31,6 +32,31 @@ function cleanupInternalFields(result) {
     result.data.forEach(item => {
       delete item._uploadedUrl
     })
+  }
+}
+
+function safeStringifyError(error) {
+  try {
+    return JSON.stringify(error, null, 2)
+  } catch (e) {
+    // Handle circular references or non-serializable values
+    const seen = new WeakSet()
+    return JSON.stringify(error, (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return '[Circular]'
+        }
+        seen.add(value)
+      }
+      if (value instanceof Error) {
+        return {
+          name: value.name,
+          message: value.message,
+          stack: value.stack
+        }
+      }
+      return value
+    }, 2)
   }
 }
 
@@ -91,7 +117,7 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         res.end()
       } catch (error) {
         console.error('generationHandler error:')
-        console.error(error)
+        console.error(util.inspect(error, { depth: null, colors: false, maxArrayLength: null }))
         // If the error is already in the correct format, forward it as-is
         if (error?.errorResponse) {
           res.write(JSON.stringify(error.errorResponse))
@@ -109,7 +135,8 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         res.status(500).end()
       }
     } catch (error) {
-      console.error('Generation error:', error)
+      console.error('Generation error:')
+      console.error(util.inspect(error, { depth: null, colors: false, maxArrayLength: null }))
       res.status(400)
       res.write(JSON.stringify({
         error: {
