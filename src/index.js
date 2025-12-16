@@ -123,6 +123,45 @@ app.use('/v1/openai/images', imageRoutes)
 app.use('/v1/openai/videos', videoRoutes)
 app.use('/v1/auth', authRoutes)
 
+// Credits endpoint
+app.get('/v1/credits', validateApiKey, async (req, res) => {
+    try {
+        const userId = res.locals.key.user.id
+        const remainingCredits = res.locals.key.user.credits
+
+        // Calculate total deposits by summing all completed deposits
+        const depositAggregation = await prisma.deposit.aggregate({
+            where: { 
+                userId,
+                status: 'COMPLETED'
+            },
+            _sum: {
+                creditsAdded: true
+            }
+        })
+
+        const totalDeposits = depositAggregation._sum.creditsAdded || 0
+        const totalUsage = totalDeposits - remainingCredits
+
+        // Convert from database format (1e-4 USD) to USD
+        const toUSD = (value) => (value / 10000).toFixed(4)
+
+        return res.json({
+            remaining_credits: toUSD(remainingCredits),
+            credit_usage: toUSD(totalUsage),
+            total_deposits: toUSD(totalDeposits),
+        })
+    } catch (error) {
+        console.error('Error fetching credit information:', error)
+        return res.status(500).json({
+            error: {
+                message: 'Failed to fetch credit information',
+                type: 'internal_error'
+            }
+        })
+    }
+})
+
 app.get('/v1/models', (req, res) => {
     const { type, provider, free, name, sort, limit } = req.query
 
