@@ -1,12 +1,27 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10 } from '../../../services/imageHelpers.js'
-import { applyImageNanoGPT } from '../../applyImage.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10, postCalcSimple } from '../../../services/imageHelpers.js'
+import { applyImageNanoGPT, applyInputImagesReferences } from '../../applyImage.js'
 
 class GptImage1 {
   constructor() {
     this.data = {
       id: 'openai/gpt-image-1',
       providers: [
+        {
+          id: 'runware',
+          model_name: 'openai:1@1',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.011,
+              average: 0.167,
+              max: 0.3
+            },
+          },
+          applyQuality: this.applyQuality,
+          applyImage: applyInputImagesReferences,
+        },
         {
           id: 'openai',
           model_name: 'gpt-image-1',
@@ -41,6 +56,7 @@ class GptImage1 {
       ],
       release_date: '2025-04-23',
       sizes: [
+        'auto',
         '1024x1024',
         '1536x1024',
         '1024x1536'
@@ -67,9 +83,7 @@ class GptImage1 {
 
   applyQuality(params) {
     const allowedQualities = ['auto', 'low', 'medium', 'high']
-    if (allowedQualities.includes(params.quality)) {
-      params.quality = params.quality
-    } else {
+    if (!allowedQualities.includes(params.quality)) {
       throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
     }
     return params

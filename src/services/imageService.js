@@ -164,7 +164,7 @@ async function generateOpenAI({ fetchParams, userId }) {
         user: userId,
         n: 1,
     }
-    if (fetchParams.model === 'gpt-image-1') fetchBody.moderation = 'low'
+    if (fetchParams.model.startsWith('gpt-image-')) fetchBody.moderation = 'low'
     if (fetchParams.output_format) {
         fetchBody.output_format = fetchParams.output_format
     }
@@ -201,6 +201,8 @@ async function generateOpenAI({ fetchParams, userId }) {
     }
 
     const data = await response.json()
+    console.log('OpenAI response:')
+    console.log(data)
     return data
 }
 
@@ -971,6 +973,10 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
 
     if (fetchParams.steps) {
         taskPayload.steps = fetchParams.steps
+    }
+
+    if (fetchParams.quality) {
+        taskPayload.providerSettings = {"openai": {"quality": fetchParams.quality}}
     }
 
     // Image-to-image support
