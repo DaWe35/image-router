@@ -12,6 +12,7 @@ import FluxKreaDev from './black-forest-labs/flux-krea-dev.js'
 import Flux2Dev from './black-forest-labs/FLUX-2-dev.js'
 import Flux2Pro from './black-forest-labs/FLUX-2-pro.js'
 import Flux2Flex from './black-forest-labs/FLUX-2-flex.js'
+import Flux2Max from './black-forest-labs/FLUX-2-max.js'
 
 import BlurBackground from './bria/Blur-Background.js'
 import BlurBackgroundFree from './bria/Blur-Background-Free.js'
@@ -148,6 +149,7 @@ const modelInstances = [
   new Flux2Dev(),
   new Flux2Pro(),
   new Flux2Flex(),
+  new Flux2Max(),
 
   new BlurBackground(),
   new BlurBackgroundFree(),
