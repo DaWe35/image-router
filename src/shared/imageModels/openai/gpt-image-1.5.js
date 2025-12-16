@@ -15,7 +15,7 @@ class GptImage1 {
             postCalcFunction: postCalcSimple,
             range: {
               min: 0.009,
-              average: 0.051,
+              average: 0.133,
               max: 0.2
             },
           },

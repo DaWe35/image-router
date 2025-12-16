@@ -20,7 +20,6 @@ export default class Flux2Max {
           },
           applyImage: this.applyImage,
           applyMask: this.applyMask,
-          applyQuality: this.applyQuality,
         }
       ],
       release_date: '2025-12-16',
@@ -45,17 +44,6 @@ export default class Flux2Max {
   async applyMask(params) {
     params.maskImage = await processSingleFile(params.files.mask, 'datauri')
     delete params.files.mask
-    return params
-  }
-
-  applyQuality(params) {
-    const qualitySteps = {
-      low: 15,
-      medium: 20,
-      high: 45
-    }
-    params.steps = qualitySteps[params.quality] ?? qualitySteps['medium']
-    delete params.quality
     return params
   }
 
