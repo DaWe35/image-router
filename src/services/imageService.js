@@ -1464,7 +1464,10 @@ async function generateChutes({ fetchParams }) {
     const buffer = await response.arrayBuffer()
 
     if (!response.ok) {
-        const errorText = buffer ? Buffer.from(buffer).toString('utf8') : response.statusText
+        let errorText = buffer ? Buffer.from(buffer).toString('utf8') : response.statusText
+        if (errorText && errorText.includes('This free model is at maximum capacity. Please try again later, or switch to the paid model which is served by stable providers.')) {
+            errorText = 'Infrastructure is at maximum capacity, try again later'
+        }
         const formattedError = {
             status: response.status,
             statusText: response.statusText,
