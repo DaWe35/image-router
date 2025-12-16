@@ -7,7 +7,8 @@ class GptImage1Mini {
     this.data = {
       id: 'openai/gpt-image-1-mini',
       providers: [
-        {
+        // Runware is incompatible, it DOES NOT SUPPORT QUALITY === 'auto'
+        /* {
           id: 'runware',
           model_name: 'openai:1@2',
           pricing: {
@@ -21,7 +22,7 @@ class GptImage1Mini {
           },
           applyQuality: this.applyQualityRunware,
           applyImage: applyInputImagesReferences,
-        },
+        }, */
         {
           id: 'openai',
           model_name: 'gpt-image-1-mini',
