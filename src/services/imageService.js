@@ -975,8 +975,8 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.steps = fetchParams.steps
     }
 
-    if (fetchParams.quality) {
-        taskPayload.providerSettings = {"openai": {"quality": fetchParams.quality}}
+    if (fetchParams.openai_quality) {
+        taskPayload.providerSettings = {"openai": {"quality": fetchParams.openai_quality}}
     }
 
     // Image-to-image support

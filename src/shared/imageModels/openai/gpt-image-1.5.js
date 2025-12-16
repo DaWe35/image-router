@@ -19,7 +19,7 @@ class GptImage1 {
               max: 0.2
             },
           },
-          applyQuality: this.applyQuality,
+          applyQuality: this.applyQualityRunware,
           applyImage: applyInputImagesReferences,
         },
         {
@@ -64,6 +64,15 @@ class GptImage1 {
 
       const totalPrice = inputTextPrice * inputTextTokens + inputImagePrice * inputImageTokens + outputImagePrice * outputImageTokens
       return totalPrice
+  }
+
+  applyQualityRunware(params) {
+    const allowedQualities = ['auto', 'low', 'medium', 'high']
+    if (!allowedQualities.includes(params.quality)) {
+      throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
+    }
+    params.openai_quality = params.quality
+    return params
   }
 
   applyQuality(params) {
