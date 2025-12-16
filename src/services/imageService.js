@@ -201,8 +201,6 @@ async function generateOpenAI({ fetchParams, userId }) {
     }
 
     const data = await response.json()
-    console.log('OpenAI response:')
-    console.log(data)
     return data
 }
 
