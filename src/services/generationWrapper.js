@@ -17,7 +17,8 @@ const RETRYABLE_ERRORS = [
   'unknown error',
   'An unknown error occurred',
   `Unexpected token '<', "<html> <h"... is not valid JSON`,
-  `Unexpected token 'R', "Request En"... is not valid JSON`
+  `Unexpected token 'R', "Request En"... is not valid JSON`,
+  `Processing (Stuck?)`
   
 ]
 
