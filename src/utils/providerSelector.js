@@ -66,7 +66,8 @@ export function selectProvider(providers, requestParams = {}) {
   }
 
   // Special-case selection for GPT-Image-1
-  if (modelId === 'openai/gpt-image-1' || modelId === 'openai/gpt-image-1-mini') {
+  // this is deprecated, we use OpenAI now for all requests
+  /* if (modelId === 'openai/gpt-image-1' || modelId === 'openai/gpt-image-1-mini') {
     const { quality, size } = requestParams
 
     const requiresOpenAI =
@@ -76,7 +77,7 @@ export function selectProvider(providers, requestParams = {}) {
     // If an input image is provided or non-auto quality/size is requested, we need OpenAI;
     // otherwise we prefer NanoGPT which is cheaper for pure text-to-image.
     desiredProviderId = requiresOpenAI ? 'openai' : 'nanogpt';
-  }
+  } */
 
   // Find index of desired provider; fallback to 0 if not found
   const idx = providers.findIndex(p => p.id === desiredProviderId);
