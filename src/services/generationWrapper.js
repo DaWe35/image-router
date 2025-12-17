@@ -20,6 +20,8 @@ const RETRYABLE_ERRORS = [
   `Unexpected token 'R', "Request En"... is not valid JSON`,
   `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`,
   `Processing (Stuck?)`
+  `Internal error encountered.`
+  `ByteDance responded with an error. The provider returned the . Additional information below.` // usually server overload
 ]
 
 function isRetryableError(error) {
