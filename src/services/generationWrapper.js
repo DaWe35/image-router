@@ -18,8 +18,8 @@ const RETRYABLE_ERRORS = [
   'An unknown error occurred',
   `Unexpected token '<', "<html> <h"... is not valid JSON`,
   `Unexpected token 'R', "Request En"... is not valid JSON`,
+  `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`,
   `Processing (Stuck?)`
-  
 ]
 
 function isRetryableError(error) {
@@ -32,32 +32,13 @@ function cleanupInternalFields(result) {
   if (result && result.data && Array.isArray(result.data)) {
     result.data.forEach(item => {
       delete item._uploadedUrl
+      delete item.original_response_from_provider
     })
   }
-}
-
-function safeStringifyError(error) {
-  try {
-    return JSON.stringify(error, null, 2)
-  } catch (e) {
-    // Handle circular references or non-serializable values
-    const seen = new WeakSet()
-    return JSON.stringify(error, (key, value) => {
-      if (typeof value === 'object' && value !== null) {
-        if (seen.has(value)) {
-          return '[Circular]'
-        }
-        seen.add(value)
-      }
-      if (value instanceof Error) {
-        return {
-          name: value.name,
-          message: value.message,
-          stack: value.stack
-        }
-      }
-      return value
-    }, 2)
+  
+  // Also remove from top-level result
+  if (result) {
+    delete result.original_response_from_provider
   }
 }
 
@@ -83,6 +64,8 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         const usageLogEntry = await preLogUsage(params, apiKey, req, providerIndex)
 
         let generationResult
+        let retryErrors = [] // Collect original responses from any failures
+        
         try {
           const fetchParams = structuredClone(params) // prevent side effects
           
@@ -90,6 +73,11 @@ export function createGenerationHandler({ validateParams, generateFn }) {
             generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
           } catch (error) {
             if (isRetryableError(error)) {
+              // Capture the original response from the first failure
+              const originalResponse = error?.errorResponse?.original_response_from_provider
+              if (originalResponse) {
+                retryErrors.push(originalResponse)
+              }
               const errorMessage = error?.errorResponse?.error?.message || error?.message
               console.log(`Retrying generation due to error: ${errorMessage}`)
               const retryParams = structuredClone(params)
@@ -104,12 +92,18 @@ export function createGenerationHandler({ validateParams, generateFn }) {
           }
 
         } catch (error) {
+          // Final failure - capture original response
+          const originalResponse = error?.errorResponse?.original_response_from_provider
+          if (originalResponse) {
+            retryErrors.push(originalResponse)
+          }
+          
           const errorToLog = error?.errorResponse?.error?.message || error?.message || 'unknown error'
-          await refundUsage(apiKey, usageLogEntry, errorToLog)
+          await refundUsage(apiKey, usageLogEntry, errorToLog, retryErrors.length > 0 ? retryErrors : null)
           throw error
         }
 
-        const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, generationResult, providerIndex)
+        const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, generationResult, providerIndex, retryErrors.length > 0 ? retryErrors : null)
         generationResult.cost = postPriceInt / 10000
 
         cleanupInternalFields(generationResult)
@@ -121,6 +115,7 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         console.error(util.inspect(error, { depth: null, colors: false, maxArrayLength: null }))
         // If the error is already in the correct format, forward it as-is
         if (error?.errorResponse) {
+          delete error.errorResponse.original_response_from_provider
           res.write(JSON.stringify(error.errorResponse))
           res.status(error.status || 500).end()
           return

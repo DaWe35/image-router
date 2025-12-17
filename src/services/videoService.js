@@ -164,7 +164,8 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
         return {
             error: {
                 message: 'no operation name returned from video generation request: ' + JSON.stringify(operationData),
-                type: 'internal_error'
+                type: 'internal_error',
+                original_response_from_provider: operationData
             }
         }
     }
@@ -197,7 +198,8 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
                 return {
                     error: {
                         message: 'video generation failed: ' + JSON.stringify(checkData.error),
-                        type: 'internal_error'
+                        type: 'internal_error',
+                        original_response_from_provider: checkData
                     }
                 }
             }
@@ -210,7 +212,8 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
                 return {
                     error: {
                         message: 'no video samples found in response: ' + JSON.stringify(checkData),
-                        type: 'internal_error'
+                        type: 'internal_error',
+                        original_response_from_provider: checkData
                     }
                 }
             }
@@ -473,7 +476,8 @@ async function generateGeminiMockVideo({ fetchParams, userId, usageLogId }) {
             return {
                 error: {
                     message: 'video generation failed: ' + JSON.stringify(checkData.error),
-                    type: 'internal_error'
+                    type: 'internal_error',
+                    original_response_from_provider: checkData
                 }
             }
         }
@@ -486,7 +490,8 @@ async function generateGeminiMockVideo({ fetchParams, userId, usageLogId }) {
             return {
                 error: {
                     message: 'no video samples found in response: ' + JSON.stringify(checkData),
-                    type: 'internal_error'
+                    type: 'internal_error',
+                    original_response_from_provider: checkData
                 }
             }
         }
@@ -608,7 +613,10 @@ async function generateFalVideo({ fetchParams, userId, usageLogId }) {
     if (!submitResponse.ok) {
         throw {
             status: submitResponse.status,
-            errorResponse: submitData
+            errorResponse: {
+                ...submitData,
+                original_response_from_provider: submitData
+            }
         }
     }
 

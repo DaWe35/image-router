@@ -51,6 +51,7 @@ model APIUsage {
   apiKeyTempJwt             Boolean         @default(false)
   ip                        String?
   outputUrls                String[]        @default([])
+  originalResponseFromProvider Json?
 
   apiKey                    APIKey?          @relation(fields: [apiKeyId], references: [id])
   apiKeyId                  String?

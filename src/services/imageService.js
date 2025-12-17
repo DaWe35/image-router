@@ -137,7 +137,10 @@ async function generateGrok({ fetchParams, userId }) {
     if (!response.ok) {
         throw {
             status: response.status,
-            errorResponse: data
+            errorResponse: {
+                ...data,
+                original_response_from_provider: data
+            }
         }
     }
     
@@ -196,7 +199,10 @@ async function generateOpenAI({ fetchParams, userId }) {
         const errorResponse = await response.json()
         throw {
             status: response.status,
-            errorResponse: errorResponse
+            errorResponse: {
+                ...errorResponse,
+                original_response_from_provider: errorResponse
+            }
         }
     }
 
@@ -243,7 +249,10 @@ async function generateNanoGPT({ fetchParams, userId }) {
     if (!response.ok) {
         const errorResponse = await response.json()
         return {
-            error: errorResponse.error,
+            error: {
+                ...errorResponse.error,
+                original_response_from_provider: errorResponse
+            },
             cost: errorResponse?.cost
         }
     }
@@ -794,7 +803,10 @@ async function generateVertexGemini({ fetchParams, userId }) {
         const errorResponse = await response.json()
         throw {
             status: response.status,
-            errorResponse
+            errorResponse: {
+                ...errorResponse,
+                original_response_from_provider: errorResponse
+            }
         }
     }
     
@@ -889,7 +901,10 @@ async function generateVertex({ fetchParams, userId }) {
         const errorResponse = await response.json()
         throw {
             status: response.status,
-            errorResponse
+            errorResponse: {
+                ...errorResponse,
+                original_response_from_provider: errorResponse
+            }
         }
     }
 
@@ -1478,7 +1493,8 @@ async function generateChutes({ fetchParams }) {
             error: {
                 message: errorText || 'Chutes generation failed',
                 type: 'chutes_error'
-            }
+            },
+            original_response_from_provider: errorText
         }
         throw {
             status: response.status,
@@ -1644,7 +1660,10 @@ async function generateOpenRouter({ fetchParams, userId }) {
     if (!response.ok) {
         throw {
             status: response.status,
-            errorResponse: data
+            errorResponse: {
+                ...data,
+                original_response_from_provider: data
+            }
         }
     }
 

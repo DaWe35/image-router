@@ -7,6 +7,37 @@ const models = {
 import { prisma } from '../config/database.js'
 import { preCalcPrice, postCalcPrice, convertPriceToDbFormat } from '../shared/priceCalculator.js'
 
+// Helper function to remove b64_json data from objects to prevent database bloat
+function sanitizeOriginalResponse(obj) {
+    if (!obj) return obj
+    
+    // Handle arrays
+    if (Array.isArray(obj)) {
+        return obj.map(item => sanitizeOriginalResponse(item))
+    }
+    
+    // Handle objects
+    if (typeof obj === 'object') {
+        const sanitized = {}
+        for (const key in obj) {
+            if (key === 'b64_json') {
+                // Replace b64_json with a placeholder indicating it was removed
+                sanitized[key] = '[removed - base64 data]'
+            } else if (key === 'bytesBase64Encoded') {
+                // Also handle Vertex AI format
+                sanitized[key] = '[removed - base64 data]'
+            } else {
+                // Recursively sanitize nested objects
+                sanitized[key] = sanitizeOriginalResponse(obj[key])
+            }
+        }
+        return sanitized
+    }
+    
+    // Return primitives as-is
+    return obj
+}
+
 export async function preLogUsage(params, apiKey, req, providerIndex) {
     const modelConfig = models[params.model]
 
@@ -63,7 +94,7 @@ export async function preLogUsage(params, apiKey, req, providerIndex) {
     return usageLogEntry
 }
 
-export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
+export async function refundUsage(apiKey, usageLogEntry, errorToLog, retryErrors) {
     try {            
         // Use a transaction to update both user balance and API usage together
         await prisma.$transaction(async (tx) => {
@@ -79,7 +110,8 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
                 data: {
                     status: 'error',
                     error: errorToLog,
-                    cost: 0 // Request failed, no cost
+                    cost: 0, // Request failed, no cost
+                    originalResponseFromProvider: sanitizeOriginalResponse(retryErrors) || undefined
                 }
             })
         })
@@ -92,7 +124,7 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog) {
 }
 
 
-export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, providerIndex) {
+export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, providerIndex, retryErrors) {
     const prePriceUsd = preCalcPrice(params, providerIndex)
     const prePriceInt = convertPriceToDbFormat(prePriceUsd)
 
@@ -121,7 +153,8 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, p
                     speedMs: imageResult.latency,
                     status: 'success',
                     cost: postPriceInt, // Update to actual cost
-                    outputUrls: outputUrls
+                    outputUrls: outputUrls,
+                    originalResponseFromProvider: sanitizeOriginalResponse(retryErrors) || undefined
                 }
             })
         })
