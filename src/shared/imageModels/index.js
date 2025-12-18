@@ -50,6 +50,7 @@ import DallE3 from './openai/dall-e-3.js'
 import GptImage1 from './openai/gpt-image-1.js'
 import GptImage1Mini from './openai/gpt-image-1-mini.js'
 import GptImage15 from './openai/gpt-image-1.5.js'
+import GptImage15Free from './openai/gpt-image-1.5-free.js'
 
 import RecraftV3 from './recraft-ai/recraft-v3.js'
 import RecraftV3Svg from './recraft-ai/recraft-v3-svg.js'
@@ -186,6 +187,7 @@ const modelInstances = [
   new DallE3(),
   new GptImage1(),
   new GptImage1Mini(),
+  new GptImage15Free(),
   new GptImage15(),
   
   new RecraftV3(),
