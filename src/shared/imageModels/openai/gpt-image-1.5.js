@@ -71,7 +71,10 @@ class GptImage1 {
     if (!allowedQualities.includes(params.quality)) {
       throw new Error(`'quality' must be one of: ${allowedQualities.join(', ')}`)
     }
-    params.openai_quality = params.quality
+    if (params.quality !== 'auto') { // leave undefined if auto
+      params.openai_quality = params.quality
+    }
+    delete params.quality
     return params
   }
 
