@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
 
-export default class Reve1 {
+export default class {
   constructor() {
     this.data = {
       id: 'reve/reve-1',

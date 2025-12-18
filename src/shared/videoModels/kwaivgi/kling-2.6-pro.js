@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Kling26Pro {
+export default class {
   constructor() {
     this.data = {
       id: 'kling/kling-2.6-pro',

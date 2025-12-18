@@ -3,7 +3,7 @@ import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles, postCa
 import { applyImageNanoGPT } from '../../applyImage.js'
 import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
-export default class SeedreamV4 {
+export default class {
   constructor() {
     this.data = {
       id: 'bytedance/seedream-4',

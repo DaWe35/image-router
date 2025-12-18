@@ -2,7 +2,8 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyInputImagesReferences } from '../../applyImage.js'
 
-class GptImage1 {
+
+export default class {
   constructor() {
     this.data = {
       id: 'openai/gpt-image-1.5',
@@ -98,5 +99,3 @@ class GptImage1 {
     return params
   }
 }
-
-export default GptImage1

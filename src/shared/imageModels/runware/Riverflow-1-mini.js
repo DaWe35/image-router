@@ -3,7 +3,7 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImagesReferences1024x1024 } from '../../applyImage.js'
 
 
-export default class Riverflow1Mini {
+export default class {
   constructor() {
     this.data = {
       id: 'sourceful/riverflow-1-mini',

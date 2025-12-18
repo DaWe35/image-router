@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Kling25TurboPro {
+export default class {
   constructor() {
     this.data = {
       id: 'kwaivgi/kling-2.5-turbo-pro',

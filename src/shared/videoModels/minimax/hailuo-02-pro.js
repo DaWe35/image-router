@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { applyImageSingleDataURI } from '../../applyImage.js'
 
-export default class Hailuo02Pro {
+export default class {
   constructor() {
     this.data = {
       id: 'minimax/hailuo-02-pro',

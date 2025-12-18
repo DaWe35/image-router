@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-export default class Ovis7B {
+export default class {
   constructor() {
     this.data = {
       id: 'AIDC-AI/Ovis-Image-7B',

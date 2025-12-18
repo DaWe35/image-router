@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
 import { applyImageSingleDataURI } from '../../applyImage.js'
 
-export default class Midjourney {
+export default class {
   constructor() {
     this.data = {
       id: 'midjourney/midjourney',

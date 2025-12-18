@@ -3,7 +3,7 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
-export default class AnimagineXL {
+export default class {
   constructor() {
     this.data = {
       id: 'cagliostrolab/animagine-xl-3.0',

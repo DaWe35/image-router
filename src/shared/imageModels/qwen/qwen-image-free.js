@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 
-export default class QwenImageFree {
+export default class {
   constructor() {
     this.data = {
       id: 'qwen/qwen-image:free',

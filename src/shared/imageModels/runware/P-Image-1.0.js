@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
 
-export default class PImage10 {
+export default class {
   constructor() {
     this.data = {
       id: 'prunaai/P-Image-1.0',

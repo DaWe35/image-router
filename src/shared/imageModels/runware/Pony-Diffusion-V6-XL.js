@@ -3,7 +3,7 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
-export default class PonyDiffusionV6XL {
+export default class {
   constructor() {
     this.data = {
       id: 'purplesmartai/pony-diffusion-v6-xl',

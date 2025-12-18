@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Hailuo23Fast {
+export default class {
   constructor() {
     this.data = {
       id: 'minimax/hailuo-2.3-fast',

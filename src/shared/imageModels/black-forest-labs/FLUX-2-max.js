@@ -3,7 +3,7 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
-export default class Flux2Max {
+export default class {
   constructor() {
     this.data = {
       id: 'black-forest-labs/FLUX-2-max',

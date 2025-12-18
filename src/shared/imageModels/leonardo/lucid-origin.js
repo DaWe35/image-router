@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
 
-export default class LucidOrigin {
+export default class {
   constructor() {
     this.data = {
       id: 'leonardoai/lucid-origin',

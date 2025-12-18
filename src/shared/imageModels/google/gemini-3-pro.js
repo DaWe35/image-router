@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, sizeToImageSize } from '../../../services/imageHelpers.js'
 
-export default class Gemini3Pro {
+export default class {
   constructor() {
     this.data = {
       id: 'google/gemini-3-pro',

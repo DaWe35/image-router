@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10 } from '../../../services/imageHelpers.js'
 import { applyImageNanoGPT } from '../../applyImage.js'
 
-export default class HunyuanImage3 {
+export default class {
   constructor() {
     this.data = {
       id: 'tencent/hunyuan-image-3',

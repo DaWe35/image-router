@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class HunyuanVideo15 {
+export default class {
   constructor() {
     this.data = {
       id: 'tencent/hunyuan-video-1.5',

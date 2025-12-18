@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applySingleInputImage, applyImageSingle } from '../../applyImage.js'
 
-export default class RemoveBackground {
+export default class {
   constructor() {
     this.data = {
       id: 'bria/remove-background',

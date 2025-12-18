@@ -3,7 +3,7 @@ import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { processSingleFile } from '../../../services/imageHelpers.js'
 import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
 
-export default class IllustriousXL {
+export default class {
   constructor() {
     this.data = {
       id: 'onomaai/illustrious-xl',

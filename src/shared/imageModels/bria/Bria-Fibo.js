@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple, processSingleFile } from '../../../services/imageHelpers.js'
 
-export default class BriaFibo {
+export default class {
   constructor() {
     this.data = {
       id: 'bria/bria-fibo',

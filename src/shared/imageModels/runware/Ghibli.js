@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { applyImageSingleDataURI } from '../../applyImage.js'
 
-export default class Ghibli {
+export default class {
   constructor() {
     this.data = {
       id: 'wavespeed/ghibli',

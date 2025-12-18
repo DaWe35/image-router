@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { calcVideoPrice } from '../../../services/imageHelpers.js'
 import { applyImageSingleBase64 } from '../../applyImage.js'
 
-export default class Veo31Fast {
+export default class {
   constructor() {
     this.data = {
       id: 'google/veo-3.1-fast',

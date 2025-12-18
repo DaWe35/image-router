@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
 
-export default class Gemini25Flash {
+export default class {
   constructor() {
     this.data = {
       id: 'google/gemini-2.5-flash',

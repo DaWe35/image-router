@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-export default class Ltx2Pro {
+export default class {
   constructor() {
     this.data = {
       id: 'lightricks/ltx-2-pro',

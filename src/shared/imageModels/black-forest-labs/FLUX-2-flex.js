@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyInputImagesReferences } from '../../applyImage.js'
 
-export default class Flux2Flex {
+export default class {
   constructor() {
     this.data = {
       id: 'black-forest-labs/FLUX-2-flex',
