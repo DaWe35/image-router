@@ -1014,7 +1014,10 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
     // SD3, SDXL-turbo
     if (fetchParams.seedImage) {
         taskPayload.seedImage = fetchParams.seedImage
-        taskPayload.strength = typeof fetchParams.strength === 'number' ? fetchParams.strength : 0.8
+    }
+
+    if (fetchParams.strength) {
+        taskPayload.strength = fetchParams.strength
     }
     
     // Sourceful: Riverflow

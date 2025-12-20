@@ -45,6 +45,7 @@ class Flux1Schnell {
 
   async applyImage(params) {
     params.seedImage = await processSingleFile(params.files.image, 'datauri')
+    params.strength = 0.8
     delete params.files.image
 
     if (!params.size || params.size === 'auto') {
