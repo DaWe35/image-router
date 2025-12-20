@@ -25,8 +25,8 @@ class SdxlTurbo {
           }
         },
         /* {
-          name: 'replicate',
-          providerModelId: 'stability-ai/stable-diffusion-3.5-large-turbo',
+          id: 'replicate',
+          model_name: 'stability-ai/stable-diffusion-3.5-large-turbo',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0.04
