@@ -7,8 +7,8 @@ class Sd35 {
       id: 'stabilityai/sd3.5',
       providers: [
         {
-          name: 'replicate',
-          providerModelId: 'stability-ai/stable-diffusion-3.5-large',
+          id: 'replicate',
+          model_name: 'stability-ai/stable-diffusion-3.5-large',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0.065,
