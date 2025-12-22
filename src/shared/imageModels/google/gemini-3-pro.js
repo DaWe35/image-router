@@ -1,5 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, sizeToImageSize } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, sizeToImageSize, postCalcSimple } from '../../../services/imageHelpers.js'
+import { applyReferenceImages } from '../../applyImage.js'
 
 export default class {
   constructor() {
@@ -40,7 +41,21 @@ export default class {
         '5504x3072',
         '6336x2688',
       ],
-      providers: [
+      providers: [,
+        {
+          id: 'runware',
+          model_name: 'google:4@2',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.134,
+              average: 0.134,
+              max: 0.24
+            },
+          },
+          applyImage: applyReferenceImages,
+        },
         {
           id: 'gemini',
           model_name: 'gemini-3-pro-image-preview',
