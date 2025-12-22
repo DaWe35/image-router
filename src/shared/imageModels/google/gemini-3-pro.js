@@ -41,7 +41,7 @@ export default class {
         '5504x3072',
         '6336x2688',
       ],
-      providers: [,
+      providers: [
         {
           id: 'runware',
           model_name: 'google:4@2',
