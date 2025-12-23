@@ -125,8 +125,10 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog, retryErrors
 
 
 export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, providerIndex, retryErrors) {
-    const prePriceUsd = preCalcPrice(params, providerIndex)
-    const prePriceInt = convertPriceToDbFormat(prePriceUsd)
+    // We use the cost from usageLogEntry as the prePriceInt because it reflects
+    // what was actually deducted in preLogUsage. This is important if providerIndex
+    // changes during execution (e.g. fallback to another provider).
+    const prePriceInt = usageLogEntry.cost
 
     const postPriceUsd = postCalcPrice(params, imageResult, providerIndex)
     const postPriceInt = convertPriceToDbFormat(postPriceUsd)
