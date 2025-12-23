@@ -5,7 +5,7 @@ import { videoModels } from '../shared/videoModels/index.js'
 import { selectProvider } from '../utils/providerSelector.js'
 import util from 'util'
 
-// Errors that trigger a single retry attempt
+// Errors that trigger a single retry attempt with the same provider
 const RETRYABLE_ERRORS = [
   'Unknown error while reading results. Please try again later or contact support at support@runware.ai',
   'online_prediction_requests_per_base_model',
@@ -24,10 +24,44 @@ const RETRYABLE_ERRORS = [
   `ByteDance responded with an error. The provider returned the . Additional information below.`, // usually server overload
 ]
 
+// Errors that trigger retry with secondary provider (credit, quota, rate limit issues)
+const PROVIDER_FALLBACK_ERRORS = [
+  'insufficient credit',
+  'insufficient balance',
+  'insufficient funds',
+  'out of credit',
+  'quota exceeded',
+  'quota limit',
+  'rate limit',
+  'rate-limit',
+  'too many requests',
+  'throttle',
+  'throttled',
+  'billing',
+  'payment required',
+  'credit limit',
+  'usage limit',
+  'monthly limit',
+  'daily limit',
+  'request limit',
+  'account suspended',
+  'quota_exceeded',
+  'RATE_LIMIT_EXCEEDED',
+  'INSUFFICIENT_QUOTA',
+  'RESOURCE_EXHAUSTED',
+]
+
 function isRetryableError(error) {
   const errorMessage = error?.errorResponse?.error?.message || error?.message
   if (!errorMessage) return false
   return RETRYABLE_ERRORS.some(retryMsg => errorMessage.includes(retryMsg))
+}
+
+function isProviderFallbackError(error) {
+  const errorMessage = error?.errorResponse?.error?.message || error?.message
+  if (!errorMessage) return false
+  const lowerMessage = errorMessage.toLowerCase()
+  return PROVIDER_FALLBACK_ERRORS.some(pattern => lowerMessage.includes(pattern))
 }
 
 function cleanupInternalFields(result) {
@@ -61,9 +95,9 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         // Select provider once per request to keep consistency across logging and generation
         const models = { ...imageModels, ...videoModels }
         const modelConfig = models[params.model]
-        const providerIndex = selectProvider(modelConfig?.providers, params)
+        let providerIndex = selectProvider(modelConfig?.providers, params)
 
-        const usageLogEntry = await preLogUsage(params, apiKey, req, providerIndex)
+        let usageLogEntry = await preLogUsage(params, apiKey, req, providerIndex)
 
         let generationResult
         let retryErrors = [] // Collect original responses from any failures
@@ -74,8 +108,33 @@ export function createGenerationHandler({ validateParams, generateFn }) {
           try {
             generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
           } catch (error) {
-            if (isRetryableError(error)) {
+            // Check if this is a provider fallback error (credit, quota, rate limit)
+            if (isProviderFallbackError(error) && modelConfig?.providers?.length > providerIndex + 1) {
               // Capture the original response from the first failure
+              const originalResponse = error?.errorResponse?.original_response_from_provider
+              if (originalResponse) {
+                retryErrors.push(originalResponse)
+              }
+              const errorMessage = error?.errorResponse?.error?.message || error?.message
+              console.log(`Provider fallback: switching to secondary provider due to: ${errorMessage}`)
+              
+              // Refund the first usage log
+              const errorToLog = errorMessage || 'Provider fallback error'
+              await refundUsage(apiKey, usageLogEntry, errorToLog, retryErrors.length > 0 ? retryErrors : null)
+              
+              // Try next provider in the list
+              providerIndex = providerIndex + 1
+              console.log(`Retrying with provider index ${providerIndex}`)
+              
+              // Create new usage log entry for the secondary provider
+              usageLogEntry = await preLogUsage(params, apiKey, req, providerIndex)
+              retryErrors = [] // Reset retry errors for new provider attempt
+              
+              // Retry with secondary provider
+              const retryParams = structuredClone(params)
+              generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
+            } else if (isRetryableError(error)) {
+              // Regular retryable error - retry with same provider
               const originalResponse = error?.errorResponse?.original_response_from_provider
               if (originalResponse) {
                 retryErrors.push(originalResponse)
