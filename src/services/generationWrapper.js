@@ -5,6 +5,25 @@ import { videoModels } from '../shared/videoModels/index.js'
 import { selectProvider } from '../utils/providerSelector.js'
 import util from 'util'
 
+// Errors that trigger a switch to a secondary provider if available
+const PROVIDER_SWITCH_ERRORS = [
+  'insufficient_quota',
+  'usage_limit_exceeded',
+  'rate_limit_exceeded',
+  '429',
+  'credit',
+  'balance',
+  'quota',
+  'too many requests',
+  'This API method requires billing to be enabled'
+]
+
+function isProviderSwitchError(error) {
+  const errorMessage = (error?.errorResponse?.error?.message || error?.message || '').toLowerCase()
+  if (!errorMessage) return false
+  return PROVIDER_SWITCH_ERRORS.some(msg => errorMessage.includes(msg))
+}
+
 // Errors that trigger a single retry attempt
 const RETRYABLE_ERRORS = [
   'Unknown error while reading results. Please try again later or contact support at support@runware.ai',
@@ -68,14 +87,33 @@ export function createGenerationHandler({ validateParams, generateFn }) {
 
         let generationResult
         let retryErrors = [] // Collect original responses from any failures
+        let activeProviderIndex = providerIndex
         
         try {
           const fetchParams = structuredClone(params) // prevent side effects
           
           try {
-            generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
+            generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
           } catch (error) {
-            if (isRetryableError(error)) {
+            // Check for provider switch errors first
+            if (isProviderSwitchError(error) && modelConfig?.providers?.length > 1) {
+              // Capture original response
+              const originalResponse = error?.errorResponse?.original_response_from_provider
+              if (originalResponse) {
+                retryErrors.push(originalResponse)
+              }
+
+              const errorMessage = error?.errorResponse?.error?.message || error?.message
+              const nextProviderIndex = (activeProviderIndex + 1) % modelConfig.providers.length
+              console.log(`Switching provider from ${modelConfig.providers[activeProviderIndex].id} to ${modelConfig.providers[nextProviderIndex].id} due to error: ${errorMessage}`)
+              
+              // Switch to the next provider
+              activeProviderIndex = nextProviderIndex
+              
+              const retryParams = structuredClone(params)
+              generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
+
+            } else if (isRetryableError(error)) {
               // Capture the original response from the first failure
               const originalResponse = error?.errorResponse?.original_response_from_provider
               if (originalResponse) {
@@ -88,7 +126,7 @@ export function createGenerationHandler({ validateParams, generateFn }) {
                 retryParams.prompt += "\nIMPORTANT: Generate an image and don't include any text."
               }
 
-              generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, providerIndex)
+              generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
             } else {
               throw error
             }
@@ -106,7 +144,7 @@ export function createGenerationHandler({ validateParams, generateFn }) {
           throw error
         }
 
-        const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, generationResult, providerIndex, retryErrors.length > 0 ? retryErrors : null)
+        const postPriceInt = await postLogUsage(params, apiKey, usageLogEntry, generationResult, activeProviderIndex, retryErrors.length > 0 ? retryErrors : null)
         generationResult.cost = postPriceInt / 10000
 
         cleanupInternalFields(generationResult)

@@ -125,14 +125,20 @@ export async function refundUsage(apiKey, usageLogEntry, errorToLog, retryErrors
 
 
 export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, providerIndex, retryErrors) {
-    const prePriceUsd = preCalcPrice(params, providerIndex)
-    const prePriceInt = convertPriceToDbFormat(prePriceUsd)
+    // We use the cost from usageLogEntry as the prePriceInt because it reflects
+    // what was actually deducted in preLogUsage. This is important if providerIndex
+    // changes during execution (e.g. fallback to another provider).
+    const prePriceInt = usageLogEntry.cost
 
     const postPriceUsd = postCalcPrice(params, imageResult, providerIndex)
     const postPriceInt = convertPriceToDbFormat(postPriceUsd)
 
     // Extract URLs from the result
     const outputUrls = extractOutputUrls(imageResult, usageLogEntry.id)
+
+    // Get the actual provider ID that was used (may differ from initial provider if switched)
+    const modelConfig = models[params.model]
+    const actualProviderId = modelConfig?.providers?.[providerIndex]?.id
 
     try {
         // Use a transaction to update both user balance and API usage together
@@ -146,7 +152,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, p
                 })
             }
             
-            // Update API usage entry with success, actual cost, and output URLs
+            // Update API usage entry with success, actual cost, output URLs, and actual provider
             await tx.APIUsage.update({
                 where: { id: usageLogEntry.id },
                 data: {
@@ -154,6 +160,7 @@ export async function postLogUsage(params, apiKey, usageLogEntry, imageResult, p
                     status: 'success',
                     cost: postPriceInt, // Update to actual cost
                     outputUrls: outputUrls,
+                    provider: actualProviderId, // Update to actual provider used (may differ if switched)
                     originalResponseFromProvider: sanitizeOriginalResponse(retryErrors) || undefined
                 }
             })

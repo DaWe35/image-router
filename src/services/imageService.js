@@ -7,7 +7,6 @@ import { imageModels } from '../shared/imageModels/index.js'
 import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize } from './imageHelpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
-import { selectProvider } from '../utils/providerSelector.js'
 
 
 export async function generateImage(fetchParams, userId, res, usageLogId, providerIndex) {
