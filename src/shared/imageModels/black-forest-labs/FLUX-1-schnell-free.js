@@ -5,15 +5,15 @@ class Flux1SchnellFree {
     this.data = {
       id: 'black-forest-labs/FLUX-1-schnell:free',
       providers: [
-        {
+        /* {
           id: 'together',
-          model_name: 'black-forest-labs/FLUX.1-schnell-Free',
+          model_name: 'black-forest-labs/FLUX.1-schnell-Free', // deprecated
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0
           },
           applyQuality: this.applyTogetherQuality
-        }, {
+        },  */{
           id: 'deepinfra',
           model_name: 'black-forest-labs/FLUX-1-schnell',
           pricing: {
