@@ -43,20 +43,6 @@ export default class {
       ],
       providers: [
         {
-          id: 'runware',
-          model_name: 'google:4@2',
-          pricing: {
-            type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcSimple,
-            range: {
-              min: 0.134,
-              average: 0.134,
-              max: 0.24
-            },
-          },
-          applyImage: applyReferenceImages,
-        },
-        {
           id: 'gemini',
           model_name: 'gemini-3-pro-image-preview',
           pricing: {
@@ -69,6 +55,20 @@ export default class {
             },
           },
           applyImage: this.applyImageGemini,
+        },
+        {
+          id: 'runware',
+          model_name: 'google:4@2',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.134,
+              average: 0.134,
+              max: 0.24
+            },
+          },
+          applyImage: applyReferenceImages,
         }
       ],
       release_date: '2025-11-20'
