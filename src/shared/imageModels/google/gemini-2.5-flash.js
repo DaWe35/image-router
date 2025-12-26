@@ -1,5 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
+import { applyReferenceImages } from '../../applyImage.js'
 
 export default class {
   constructor() {
@@ -27,6 +29,15 @@ export default class {
             value: 0.035,
           },
           applyImage: this.applyImageGemini,
+        }, {
+          id: 'runware',
+          model_name: 'google:4@1',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            value: 0.039,
+          },
+          applyImage: applyReferenceImages,
         }, {
           id: 'vertex',
           model_name: 'gemini-2.5-flash-image',

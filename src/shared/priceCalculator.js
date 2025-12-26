@@ -1,7 +1,6 @@
 import { imageModels } from './imageModels/index.js'
 import { videoModels } from './videoModels/index.js'
 import { PRICING_TYPES } from './PricingScheme.js'
-import { selectProvider } from '../utils/providerSelector.js'
 const models = {
     ...imageModels,
     ...videoModels

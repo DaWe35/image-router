@@ -14,7 +14,8 @@ const PROVIDER_SWITCH_ERRORS = [
   'credit',
   'balance',
   'quota',
-  'too many requests'
+  'too many requests',
+  'This API method requires billing to be enabled'
 ]
 
 function isProviderSwitchError(error) {
@@ -103,10 +104,11 @@ export function createGenerationHandler({ validateParams, generateFn }) {
               }
 
               const errorMessage = error?.errorResponse?.error?.message || error?.message
-              console.log(`Switching provider due to error: ${errorMessage}`)
+              const nextProviderIndex = (activeProviderIndex + 1) % modelConfig.providers.length
+              console.log(`Switching provider from ${modelConfig.providers[activeProviderIndex].id} to ${modelConfig.providers[nextProviderIndex].id} due to error: ${errorMessage}`)
               
               // Switch to the next provider
-              activeProviderIndex = (activeProviderIndex + 1) % modelConfig.providers.length
+              activeProviderIndex = nextProviderIndex
               
               const retryParams = structuredClone(params)
               generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
