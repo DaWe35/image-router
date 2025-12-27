@@ -173,7 +173,8 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
                     id: true,
                     name: true,
                     createdAt: true,
-                    isActive: true
+                    isActive: true,
+                    apiKeyTempJwt: true
                 }
             })
 
