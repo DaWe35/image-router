@@ -154,7 +154,7 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
 
         if (req.query.by_api_key === 'true') {
             const usageByApiKey = await prisma.aPIUsage.groupBy({
-                by: ['apiKeyId'],
+                by: ['apiKeyId', 'apiKeyTempJwt'],
                 where: { 
                     userId
                 },
@@ -173,8 +173,7 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
                     id: true,
                     name: true,
                     createdAt: true,
-                    isActive: true,
-                    apiKeyTempJwt: true
+                    isActive: true
                 }
             })
 
@@ -186,13 +185,20 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
             response.usage_by_api_key = usageByApiKey.map(usage => {
                 const keyDetails = usage.apiKeyId ? apiKeyMap[usage.apiKeyId] : null
                 
+                let name = 'Unknown Key'
+                if (usage.apiKeyId) {
+                    name = keyDetails?.name || 'Deleted Key'
+                } else if (usage.apiKeyTempJwt) {
+                    name = 'Temporary web token (imagerouter.io)'
+                }
+
                 return {
                     api_key_id: usage.apiKeyId || 'temp_jwt',
-                    api_key_name: usage.apiKeyId ? (keyDetails?.name || 'Deleted Key') : keyDetails?.apiKeyTempJwt ? 'Temporary web token (imagerouter.io)' : 'Unknown Key',
+                    api_key_name: name,
                     credit_usage: toUSD(usage._sum.cost || 0),
                     total_requests: usage._count._all,
                     created_at: keyDetails?.createdAt || null,
-                    is_active: keyDetails?.isActive ?? true
+                    is_active: keyDetails?.isActive ?? (usage.apiKeyTempJwt ? true : false)
                 }
             })
         }
