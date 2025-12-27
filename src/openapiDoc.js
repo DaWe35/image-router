@@ -112,6 +112,38 @@ registry.registerPath({
   }
 })
 
+registry.registerPath({
+  method: 'get',
+  path: '/v1/credits',
+  request: {
+    query: z.object({
+      by_api_key: z.string().optional().openapi({ description: 'If true, returns usage broken down by API key' })
+    })
+  },
+  responses: {
+    200: {
+      description: 'Success',
+      content: {
+        'application/json': {
+          schema: z.object({
+            remaining_credits: z.string(),
+            credit_usage: z.string(),
+            total_deposits: z.string(),
+            usage_by_api_key: z.array(z.object({
+              api_key_id: z.string(),
+              api_key_name: z.string(),
+              credit_usage: z.string(),
+              total_requests: z.number(),
+              created_at: z.string().nullable(),
+              is_active: z.boolean()
+            })).optional()
+          })
+        }
+      }
+    }
+  }
+})
+
 const generator = new OpenApiGeneratorV31(registry.definitions)
 
 export const openApiDocument = generator.generateDocument({
