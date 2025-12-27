@@ -146,11 +146,58 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
         // Convert from database format (1e-4 USD) to USD
         const toUSD = (value) => (value / 10000).toFixed(4)
 
-        return res.json({
+        const response = {
             remaining_credits: toUSD(remainingCredits),
             credit_usage: toUSD(totalUsage),
             total_deposits: toUSD(totalDeposits),
-        })
+        }
+
+        if (req.query.by_api_key === 'true') {
+            const usageByApiKey = await prisma.aPIUsage.groupBy({
+                by: ['apiKeyId'],
+                where: { 
+                    userId
+                },
+                _sum: {
+                    cost: true
+                },
+                _count: {
+                  _all: true
+                }
+            })
+
+            // Fetch API key details to make the response more useful
+            const apiKeys = await prisma.aPIKey.findMany({
+                where: { userId },
+                select: {
+                    id: true,
+                    name: true,
+                    createdAt: true,
+                    isActive: true,
+                    apiKeyTempJwt: true
+                }
+            })
+
+            const apiKeyMap = apiKeys.reduce((acc, key) => {
+                acc[key.id] = key
+                return acc
+            }, {})
+
+            response.usage_by_api_key = usageByApiKey.map(usage => {
+                const keyDetails = usage.apiKeyId ? apiKeyMap[usage.apiKeyId] : null
+                
+                return {
+                    api_key_id: usage.apiKeyId || 'temp_jwt',
+                    api_key_name: usage.apiKeyId ? (keyDetails?.name || 'Deleted Key') : keyDetails?.apiKeyTempJwt ? 'Temporary web token (imagerouter.io)' : 'Unknown Key',
+                    credit_usage: toUSD(usage._sum.cost || 0),
+                    total_requests: usage._count._all,
+                    created_at: keyDetails?.createdAt || null,
+                    is_active: keyDetails?.isActive ?? true
+                }
+            })
+        }
+
+        return res.json(response)
     } catch (error) {
         console.error('Error fetching credit information:', error)
         return res.status(500).json({
