@@ -173,8 +173,7 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
                     id: true,
                     name: true,
                     createdAt: true,
-                    isActive: true,
-                    apiKeyTempJwt: true
+                    isActive: true
                 }
             })
 
@@ -194,12 +193,12 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
                 }
 
                 return {
-                    api_key_id: usage.apiKeyId || 'temp_jwt',
+                    api_key_id: usage.apiKeyId || (usage.apiKeyTempJwt ? 'temp_jwt' : 'unknown'),
                     api_key_name: name,
                     credit_usage: toUSD(usage._sum.cost || 0),
                     total_requests: usage._count._all,
                     created_at: keyDetails?.createdAt || null,
-                    is_active: keyDetails?.isActive ?? (usage.apiKeyTempJwt ? true : false)
+                    is_active: keyDetails?.isActive ?? true
                 }
             })
         }
