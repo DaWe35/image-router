@@ -1180,6 +1180,10 @@ async function generateFal({ fetchParams }) {
         bodyPayload.image_url = fetchParams.image_url
     }
 
+    if (fetchParams.image_urls) {
+        bodyPayload.image_urls = Array.isArray(fetchParams.image_urls) ? fetchParams.image_urls : [fetchParams.image_urls]
+    }
+
     if (fetchParams.num_inference_steps) {
         bodyPayload.num_inference_steps = fetchParams.num_inference_steps
     }
@@ -1236,8 +1240,8 @@ async function generateFal({ fetchParams }) {
     }
     
     // Build helper URLs from response
-    const statusUrl = submitData.status_url || `${baseUrl}/${modelPath}/requests/${submitData.request_id}/status`
-    const resultUrl = submitData.response_url || `${baseUrl}/${modelPath}/requests/${submitData.request_id}`
+    const statusUrl = submitData.status_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}/status`
+    const resultUrl = submitData.response_url || `${baseUrl}/${fetchParams.model}/requests/${submitData.request_id}`
 
     // Poll queue until completed
     let status = submitData.status
