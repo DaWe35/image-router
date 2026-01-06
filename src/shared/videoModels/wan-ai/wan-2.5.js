@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-class Wan25 {
+export default class {
   constructor() {
     this.data = {
       id: 'kwaivgi/wan-2.5',
@@ -32,5 +32,4 @@ class Wan25 {
     return this.data
   }
 }
-
-export default Wan25 
+ 

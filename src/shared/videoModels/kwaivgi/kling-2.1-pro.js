@@ -2,7 +2,7 @@ import { PRICING_TYPES } from '../../PricingScheme.js'
 import { processSingleFile, postCalcSimple, calcVideoPrice } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
-class Kling21Pro {
+export default class {
   constructor() {
     this.data = {
       id: 'kwaivgi/kling-2.1-pro',
@@ -51,5 +51,3 @@ class Kling21Pro {
     return params
   }
 }
-
-export default Kling21Pro 
