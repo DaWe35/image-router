@@ -892,7 +892,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         switch (fetchParams.model) {
             case 'klingai:5@1':
             case 'klingai:4@3':
-            case 'runware:200@6': // kwaivgi Wan-2.2
+            case 'runware:200@6': // Wan-2.2
                 taskPayload.width = 1280
                 taskPayload.height = 720
                 break
@@ -909,7 +909,8 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         if (!fetchParams.image) {
             switch (fetchParams.model) {
                 case 'openai:3@1':
-                case 'runware:201@1':
+                case 'runware:201@1': // Wan-2.5
+                case 'alibaba:wan@2.6': // Wan-2.6
                     taskPayload.width = 1280
                     taskPayload.height = 720
                     break
@@ -937,10 +938,20 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
     }
 
     // Image-to-video support
-    // Seedance
     if (fetchParams.image) {
         const images = Array.isArray(fetchParams.image) ? fetchParams.image : [fetchParams.image]
         taskPayload.frameImages = images.map(id => ({ inputImage: id }))
+    }
+
+    // Frame images support for wan-2.6
+    if (fetchParams.inputs_frameImages_image) {
+        if (!taskPayload.inputs) {
+            taskPayload.inputs = {}
+        }
+        if (!taskPayload.inputs.frameImages) {
+            taskPayload.inputs.frameImages = []
+        }
+        taskPayload.inputs.frameImages.push({ image: fetchParams.inputs_frameImages_image })
     }
 
     const response = await fetch(providerUrl, {

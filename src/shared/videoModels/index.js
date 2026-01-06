@@ -22,6 +22,7 @@ import Kling25TurboStandard from './kwaivgi/kling-2.5-turbo-standard.js'
 
 import Wan22 from './wan-ai/wan-2.2.js'
 import Wan25 from './wan-ai/wan-2.5.js'
+import Wan26 from './wan-ai/wan-2.6.js'
 
 import Seedance1Lite from './bytedance/seedance-1-lite.js'
 import Seedance1Pro from './bytedance/seedance-1-pro.js'
@@ -58,7 +59,8 @@ const modelInstances = [
 
   new Wan22(),
   new Wan25(),
-
+  new Wan26(),
+  
   new Seedance1Lite(),
   new Seedance1Pro(),
   new Seedance1ProFast(),

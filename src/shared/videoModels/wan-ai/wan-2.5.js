@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/imageHelpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 class Wan25 {
@@ -30,12 +30,6 @@ class Wan25 {
 
   getData() {
     return this.data
-  }
-
-  async applyImage(params) {
-    params.start_image = await processSingleFile(params.files.image, 'datauri')
-    delete params.files.image
-    return params
   }
 }
 
