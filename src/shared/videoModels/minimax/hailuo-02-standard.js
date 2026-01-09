@@ -27,8 +27,13 @@ class Hailuo02Standard {
         }
       ],
       release_date: '2025-06-18',
+      sizes: [
+        '512x512',
+        '1366x768',
+        '1920x1080'
+      ],
       seconds: [6],
-      default_seconds: 6
+      default_seconds: 6,
     }
   }
 
