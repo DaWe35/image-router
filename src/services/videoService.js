@@ -5,6 +5,19 @@ import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
+// Video size to aspect ratio mapping for Gemini/Veo models
+export const videoSizeToAspectRatio = {
+    // 16:9 landscape
+    '1920x1080': '16:9',
+    '1280x720': '16:9',
+    // 9:16 portrait
+    '1080x1920': '9:16',
+    '720x1280': '9:16',
+    // 1:1 square
+    '1080x1080': '1:1',
+    '720x720': '1:1',
+}
+
 export async function generateVideo(fetchParams, userId, res, usageLogId, providerIndex) {
     const startTime = Date.now()
     const modelConfig = videoModels[fetchParams.model]
@@ -111,12 +124,18 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
         personGenerationValue = fetchParams.image ? "allow_adult" : "allow_all"
     }
 
+    // Convert size to aspect ratio (default to 16:9 if not specified or invalid)
+    let aspectRatio = '16:9'
+    if (fetchParams.size && videoSizeToAspectRatio[fetchParams.size]) {
+        aspectRatio = videoSizeToAspectRatio[fetchParams.size]
+    }
+
     let bodyPayload = {
         "instances": [{
             "prompt": fetchParams.prompt
         }],
         "parameters": {
-            "aspectRatio": "16:9",
+            "aspectRatio": aspectRatio,
             "personGeneration": personGenerationValue,
             "sampleCount": 1,
             "durationSeconds": fetchParams.seconds
@@ -272,13 +291,19 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${fetchParams.model}`
     const predictUrl = `${baseUrl}:predictLongRunning`
 
+    // Convert size to aspect ratio (default to 16:9 if not specified or invalid)
+    let aspectRatio = '16:9'
+    if (fetchParams.size && videoSizeToAspectRatio[fetchParams.size]) {
+        aspectRatio = videoSizeToAspectRatio[fetchParams.size]
+    }
+
     // Build request body according to Vertex AI Veo API
     const requestBody = {
         instances: [{
             prompt: fetchParams.prompt
         }],
         parameters: {
-            aspectRatio: "16:9",
+            aspectRatio: aspectRatio,
             personGeneration: "allow_adult",
             sampleCount: 1,
             durationSeconds: fetchParams.seconds,
