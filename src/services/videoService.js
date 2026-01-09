@@ -313,10 +313,6 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
         }
     } */
 
-    // Add generateAudio for veo-3
-    if (fetchParams.model === 'veo-3.0-generate-preview') {
-        requestBody.parameters.generateAudio = false
-    }
 
     // Start the video generation operation
     const response = await fetch(predictUrl, {
