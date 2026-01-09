@@ -14,7 +14,14 @@ class Veo2 {
         },
         applyImage: this.applyImage
       }],
-      release_date: '2024-12-16'
+      release_date: '2024-12-16',
+      sizes: [
+        '1280x720',   // 16:9 landscape
+        '720x1280',   // 9:16 portrait
+        '1080x1080',  // 1:1 square
+        '1920x1080',  // 16:9 Full HD
+        '1080x1920'   // 9:16 Full HD portrait
+      ]
     }
   }
 

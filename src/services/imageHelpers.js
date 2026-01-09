@@ -275,6 +275,12 @@ export const sizeToAspectRatio = {
     '3072x5504': '9:16',
     '5504x3072': '16:9',
     '6336x2688': '21:9',
+    // Video sizes (Veo and other video models)
+    '1280x720': '16:9',
+    '720x1280': '9:16',
+    '1080x1080': '1:1',
+    '1920x1080': '16:9',
+    '1080x1920': '9:16',
 };
 
 // Map size to imageSize for Gemini 3 Pro (1K, 2K, 4K)
