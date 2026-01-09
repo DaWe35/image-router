@@ -14,7 +14,13 @@ class Veo2 {
         },
         applyImage: this.applyImage
       }],
-      release_date: '2024-12-16'
+      release_date: '2024-12-16',
+      sizes: [
+        '1280x720',
+        '720x1280',
+        '1920x1080',
+        '1080x1920',
+      ]
     }
   }
 

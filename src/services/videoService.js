@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey, extractWidthHeight, resolveSeconds } from './imageHelpers.js'
+import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
@@ -111,15 +111,25 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
         personGenerationValue = fetchParams.image ? "allow_adult" : "allow_all"
     }
 
+    // Convert size to aspect ratio for Gemini video models
+    let aspectRatio = "16:9" // default
+    if (fetchParams.size && fetchParams.size !== 'auto') {
+        if (!sizeToAspectRatio[fetchParams.size]) {
+            throw new Error(`Unsupported size '${fetchParams.size}' for model '${fetchParams.model}'`)
+        }
+        aspectRatio = sizeToAspectRatio[fetchParams.size]
+    }
+
     let bodyPayload = {
         "instances": [{
             "prompt": fetchParams.prompt
         }],
         "parameters": {
-            "aspectRatio": "16:9",
+            "aspectRatio": aspectRatio,
             "personGeneration": personGenerationValue,
             "sampleCount": 1,
-            "durationSeconds": fetchParams.seconds
+            "durationSeconds": fetchParams.seconds,
+            "resolution": sizeToGoogleResolution(fetchParams.size)
         }
     }
 
@@ -272,16 +282,26 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${fetchParams.model}`
     const predictUrl = `${baseUrl}:predictLongRunning`
 
+    // Convert size to aspect ratio for Vertex Gemini video models
+    let aspectRatio = "16:9" // default
+    if (fetchParams.size && fetchParams.size !== 'auto') {
+        if (!sizeToAspectRatio[fetchParams.size]) {
+            throw new Error(`Unsupported size '${fetchParams.size}' for model '${fetchParams.model}'`)
+        }
+        aspectRatio = sizeToAspectRatio[fetchParams.size]
+    }
+
     // Build request body according to Vertex AI Veo API
     const requestBody = {
         instances: [{
             prompt: fetchParams.prompt
         }],
         parameters: {
-            aspectRatio: "16:9",
+            aspectRatio: aspectRatio,
             personGeneration: "allow_adult",
             sampleCount: 1,
             durationSeconds: fetchParams.seconds,
+            resolution: sizeToGoogleResolution(fetchParams.size)
         }
     }
 

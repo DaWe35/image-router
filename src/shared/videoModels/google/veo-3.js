@@ -40,6 +40,12 @@ export default class {
         } */
       ],
       release_date: '2025-05-20',
+      sizes: [
+        '1280x720',
+        '720x1280',
+        '1920x1080',
+        '1080x1920',
+      ],
       seconds: [4, 6, 8],
       default_seconds: 4
     }
