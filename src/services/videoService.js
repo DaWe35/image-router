@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey, extractWidthHeight, resolveSeconds } from './imageHelpers.js'
+import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio } from './imageHelpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
@@ -116,7 +116,7 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
             "prompt": fetchParams.prompt
         }],
         "parameters": {
-            "aspectRatio": "16:9",
+            "aspectRatio": sizeToAspectRatio[fetchParams.size] || "16:9",
             "personGeneration": personGenerationValue,
             "sampleCount": 1,
             "durationSeconds": fetchParams.seconds
@@ -278,7 +278,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             prompt: fetchParams.prompt
         }],
         parameters: {
-            aspectRatio: "16:9",
+            aspectRatio: sizeToAspectRatio[fetchParams.size] || "16:9",
             personGeneration: "allow_adult",
             sampleCount: 1,
             durationSeconds: fetchParams.seconds,
