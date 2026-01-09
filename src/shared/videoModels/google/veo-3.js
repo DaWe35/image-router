@@ -41,11 +41,10 @@ export default class {
       ],
       release_date: '2025-05-20',
       sizes: [
-        '1280x720',   // 16:9 landscape
-        '720x1280',   // 9:16 portrait
-        '1080x1080',  // 1:1 square
-        '1920x1080',  // 16:9 Full HD
-        '1080x1920'   // 9:16 Full HD portrait
+        '1280x720',
+        '720x1280',
+        '1920x1080',
+        '1080x1920',
       ],
       seconds: [4, 6, 8],
       default_seconds: 4

@@ -275,10 +275,11 @@ export const sizeToAspectRatio = {
     '3072x5504': '9:16',
     '5504x3072': '16:9',
     '6336x2688': '21:9',
-    // Video sizes (Veo and other video models)
+    // Veo sizes
     '1280x720': '16:9',
     '720x1280': '9:16',
     '1080x1080': '1:1',
+    '720x720': '1:1',
     '1920x1080': '16:9',
     '1080x1920': '9:16',
 };
@@ -330,6 +331,15 @@ export function resolveSeconds(requestedSeconds, modelName) {
     const parsed = Number(requestedSeconds)
     const isValid = Number.isFinite(parsed) && parsed > 0 && modelConfig.seconds?.includes(parsed)
     return isValid ? parsed : modelConfig.default_seconds
+}
+
+// Helper to convert size (e.g. "1280x720") to Google resolution format (e.g. "720p")
+export function sizeToGoogleResolution(size) {
+    if (!size || size === 'auto') {
+        return '720p' // default
+    }
+    const { width, height } = extractWidthHeight(size)
+    return Math.min(width, height) + 'p'
 }
 
 // Video pricing: calculate price based on actual seconds
