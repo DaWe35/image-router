@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution } from './imageHelpers.js'
+import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution } from './helpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'

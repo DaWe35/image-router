@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { calcVideoPrice } from '../../../services/imageHelpers.js'
+import { calcVideoPrice } from '../../../services/helpers.js'
 import { applyImageSingleBase64 } from '../../applyImage.js'
 
 export default class {

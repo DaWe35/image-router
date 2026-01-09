@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple } from '../../../services/helpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 export default class {

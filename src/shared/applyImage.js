@@ -1,4 +1,4 @@
-import { processSingleFile, processSingleOrMultipleFiles } from '../services/imageHelpers.js'
+import { processSingleFile, processSingleOrMultipleFiles } from '../services/helpers.js'
 
 // Image helpers
 
