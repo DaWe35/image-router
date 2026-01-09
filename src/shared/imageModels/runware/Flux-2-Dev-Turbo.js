@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcSimple, processSingleFile, processSingleOrMultipleFiles, calculateRunwareDimensions, extractWidthHeight } from '../../../services/imageHelpers.js'
+import { postCalcSimple, processSingleFile, processSingleOrMultipleFiles, calculateRunwareDimensions, extractWidthHeight } from '../../../services/helpers.js'
 
 export default class {
   constructor() {

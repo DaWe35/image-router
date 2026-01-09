@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import sharp from 'sharp';
-import { calculateRunwareDimensions } from '../src/services/imageHelpers.js';
+import { calculateRunwareDimensions } from '../src/services/helpers.js';
 
 describe('calculateRunwareDimensions', () => {
   test('should return dimensions within maxPixels limit after rounding', async () => {

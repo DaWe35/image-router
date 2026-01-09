@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcSimple, processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
-import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
+import { postCalcSimple, processSingleOrMultipleFiles } from '../../../services/helpers.js'
+import { calculateRunwareDimensions } from '../../../services/helpers.js'
 
 class QwenImage {
   constructor() {

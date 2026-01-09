@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { imageModels } from '../shared/imageModels/index.js'
 import { videoModels } from '../shared/videoModels/index.js'
-import { extractWidthHeight } from './imageHelpers.js'
+import { extractWidthHeight } from './helpers.js'
 import { resolveModelAlias } from './modelAliases.js'
 
 const bodySchema = z.object({

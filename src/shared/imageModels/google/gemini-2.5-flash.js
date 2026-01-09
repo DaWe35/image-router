@@ -1,6 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles } from '../../../services/imageHelpers.js'
-import { postCalcSimple } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles } from '../../../services/helpers.js'
+import { postCalcSimple } from '../../../services/helpers.js'
 import { applyReferenceImages } from '../../applyImage.js'
 
 export default class {

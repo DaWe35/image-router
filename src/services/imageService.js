@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
-import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize } from './imageHelpers.js'
+import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize } from './helpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 

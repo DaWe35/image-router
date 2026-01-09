@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10 } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted10 } from '../../../services/helpers.js'
 import { applyImageNanoGPT } from '../../applyImage.js'
 
 export default class {

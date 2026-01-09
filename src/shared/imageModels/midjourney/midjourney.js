@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
+import { postCalcNanoGPTDiscounted5 } from '../../../services/helpers.js'
 import { applyImageSingleDataURI } from '../../applyImage.js'
 
 export default class {

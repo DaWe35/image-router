@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
 import { applyReferenceImages } from '../../applyImage.js'
 import { applyFalImage } from '../../applyImage.js'
-import { postCalcSimple } from '../../../services/imageHelpers.js'
+import { postCalcSimple } from '../../../services/helpers.js'
 
 class SeedEditV3 {
   constructor() {

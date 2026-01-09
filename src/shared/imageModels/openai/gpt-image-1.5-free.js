@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile, postCalcSimple } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcSimple } from '../../../services/helpers.js'
 import { applyInputImagesReferences } from '../../applyImage.js'
 
 

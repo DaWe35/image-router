@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile } from '../../../services/imageHelpers.js'
+import { processSingleFile } from '../../../services/helpers.js'
 
 class InfiniteYou {
   constructor() {

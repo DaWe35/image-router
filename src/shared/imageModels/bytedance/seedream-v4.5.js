@@ -1,7 +1,7 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles, postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
+import { processSingleFile, postCalcSimple, processSingleOrMultipleFiles, postCalcNanoGPTDiscounted5 } from '../../../services/helpers.js'
 import { applyImageNanoGPT } from '../../applyImage.js'
-import { calculateRunwareDimensions } from '../../../services/imageHelpers.js'
+import { calculateRunwareDimensions } from '../../../services/helpers.js'
 
 export default class {
   constructor() {

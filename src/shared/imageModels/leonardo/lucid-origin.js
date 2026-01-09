@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted5 } from '../../../services/imageHelpers.js'
+import { processSingleOrMultipleFiles, processSingleFile, postCalcNanoGPTDiscounted5 } from '../../../services/helpers.js'
 
 export default class {
   constructor() {

@@ -1,5 +1,5 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcSimple, processSingleFile } from '../../../services/imageHelpers.js'
+import { postCalcSimple, processSingleFile } from '../../../services/helpers.js'
 
 export default class {
   constructor() {
