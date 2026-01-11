@@ -15,7 +15,8 @@ const PROVIDER_SWITCH_ERRORS = [
   'balance',
   'quota',
   'too many requests',
-  'This API method requires billing to be enabled'
+  'This API method requires billing to be enabled',
+  'Invalid API key',
 ]
 
 function isProviderSwitchError(error) {
