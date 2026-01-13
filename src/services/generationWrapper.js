@@ -36,9 +36,7 @@ const RETRYABLE_ERRORS = [
   'Unknown error while reading results. Please try again later.',
   'unknown error',
   'An unknown error occurred',
-  `Unexpected token '<', "<html> <h"... is not valid JSON`,
-  `Unexpected token 'R', "Request En"... is not valid JSON`,
-  `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`,
+  `... is not valid JSON`,
   `Processing (Stuck?)`,
   `Internal error encountered.`,
   `ByteDance responded with an error. The provider returned the . Additional information below.`, // usually server overload
