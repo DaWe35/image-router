@@ -37,6 +37,7 @@ const RETRYABLE_ERRORS = [
   'unknown error',
   'An unknown error occurred',
   `... is not valid JSON`,
+  `Deadline expired before operation could complete`,
   `Processing (Stuck?)`,
   `Internal error encountered.`,
   `ByteDance responded with an error. The provider returned the . Additional information below.`, // usually server overload
