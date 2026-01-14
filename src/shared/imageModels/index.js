@@ -136,6 +136,8 @@ import Clarity from './upscale/Clarity.js'
 
 import HunyuanImage3 from './tencent/hunyuan-image-3.js'
 
+import GlmImage from './zai/GLM-Image.js'
+
 // Initialize all models
 const modelInstances = [
   new Flux11Pro(),
@@ -275,6 +277,8 @@ const modelInstances = [
   new Clarity(),
 
   new HunyuanImage3(),
+
+  new GlmImage(),
 ]
 
 // Create an object with model IDs as keys

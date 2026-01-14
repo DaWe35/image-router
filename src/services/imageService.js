@@ -53,6 +53,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
       chutes: generateChutes,
       deepinfra: generateDeepInfra,
       fal: generateFal,
+      zai: generateZAI,
       grok: generateGrok,
       gemini: generateGemini,
       geminiImagen: generateGeminiImagen,
@@ -127,6 +128,47 @@ async function generateGrok({ fetchParams, userId }) {
             'accept': 'application/json',
             'Authorization': `Bearer ${providerKey}`,
             'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            errorResponse: {
+                ...data,
+                original_response_from_provider: data
+            }
+        }
+    }
+    
+    return data
+}
+
+// zAI Image API call
+async function generateZAI({ fetchParams, userId }) {
+    const providerUrl = 'https://api.z.ai/api/paas/v4/images/generations'
+    const providerKey = process.env.ZAI_API_KEY
+
+    if (!providerKey) {
+        throw new Error('ZAI_API_KEY environment variable is required for zAI provider')
+    }
+
+    const body = {
+        model: fetchParams.model,
+        prompt: fetchParams.prompt,
+        size: (fetchParams.size && fetchParams.size !== 'auto') ? fetchParams.size : '1280x1280',
+        user_id: userId,
+        quality: fetchParams.quality,
+    }
+
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${providerKey}`
         },
         body: JSON.stringify(body)
     })
