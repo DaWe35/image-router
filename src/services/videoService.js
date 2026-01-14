@@ -104,12 +104,8 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
     const predictUrl = `${baseUrl}/models/${fetchParams.model}:predictLongRunning?key=${providerKey}`
 
-    let personGenerationValue
-    if (fetchParams.model === 'veo-2.0-generate-001') {
-        personGenerationValue = "allow_adult"
-    } else {
-        personGenerationValue = fetchParams.image ? "allow_adult" : "allow_all"
-    }
+    let personGenerationValue = "allow_adult"
+    
 
     // Convert size to aspect ratio for Gemini video models
     let aspectRatio = "16:9" // default
@@ -133,11 +129,22 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
         }
     }
 
+    // Image-to-video support
     if (fetchParams.image) {
         bodyPayload.instances[0].image = {
             "bytesBase64Encoded": fetchParams.image.base64,
             "mimeType": fetchParams.image.mimeType
         }
+    }
+
+    if (fetchParams.referenceImages64) {
+        bodyPayload.instances[0].referenceImages = fetchParams.referenceImages64.map(img => ({
+            "image": {
+                "bytesBase64Encoded": img.base64,
+                "mimeType": img.mimeType
+            },
+            "referenceType": "asset"
+        }));
     }
 
     // Start the video generation operation
@@ -301,17 +308,28 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             personGeneration: "allow_adult",
             sampleCount: 1,
             durationSeconds: fetchParams.seconds,
-            resolution: sizeToGoogleResolution(fetchParams.size)
+            resolution: sizeToGoogleResolution(fetchParams.size),
+            generateAudio: true,
         }
     }
 
-    // I dont think this is working
-    /* if (fetchParams.image) {
+    // Image-to-video support
+    if (fetchParams.image) {
         requestBody.instances[0].image = {
             "bytesBase64Encoded": fetchParams.image.base64,
             "mimeType": fetchParams.image.mimeType
         }
-    } */
+    }
+
+    if (fetchParams.referenceImages64) {
+        requestBody.instances[0].referenceImages = fetchParams.referenceImages64.map(img => ({
+            "image": {
+                "bytesBase64Encoded": img.base64,
+                "mimeType": img.mimeType
+            },
+            "referenceType": "asset"
+        }));
+    }
 
 
     // Start the video generation operation

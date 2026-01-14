@@ -19,6 +19,21 @@ export async function applyImageSingleBase64(params) {
     return params
 }
 
+export async function applyReferenceImagesBase64(params) {
+    // same as applyImageSingleBase64 but allows multiple images
+    const files = Array.isArray(params.files.image) ? params.files.image : [params.files.image]
+    const base64Results = await processSingleOrMultipleFiles(params.files.image, 'base64')
+    const base64Array = Array.isArray(base64Results) ? base64Results : [base64Results]
+    
+    params.referenceImages64 = base64Array.map((base64, index) => ({
+        base64,
+        mimeType: files[index].mimetype || 'image/png'
+    }))
+    
+    delete params.files.image
+    return params
+}
+
 export async function applyImageSingleDataURI(params) {
     params.image = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
