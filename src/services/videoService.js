@@ -901,6 +901,14 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
 
     const { width, height } = extractWidthHeight(fetchParams.size)
 
+    if (fetchParams.model === 'bytedance:seedance@1.5-pro') { // Enable audio for Seedance 1.5 Pro
+        taskPayload.providerSettings = {
+            "bytedance": {
+              "audio": true
+            }
+        }
+    }
+
     if (width && height) {
         taskPayload.width = width
         taskPayload.height = height

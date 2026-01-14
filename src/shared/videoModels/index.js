@@ -27,6 +27,7 @@ import Wan26 from './wan-ai/wan-2.6.js'
 import Seedance1Lite from './bytedance/seedance-1-lite.js'
 import Seedance1Pro from './bytedance/seedance-1-pro.js'
 import Seedance1ProFast from './bytedance/seedance-1-pro-fast.js'
+import Seedance15Pro from './bytedance/seedance-1.5-pro.js'
 
 import Hailuo02Standard from './minimax/hailuo-02-standard.js'
 import Hailuo02Pro from './minimax/hailuo-02-pro.js'
@@ -64,6 +65,7 @@ const modelInstances = [
   new Seedance1Lite(),
   new Seedance1Pro(),
   new Seedance1ProFast(),
+  new Seedance15Pro(),
 
   new HunyuanVideo15(),
 
