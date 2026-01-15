@@ -1029,6 +1029,10 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.steps = fetchParams.steps
     }
 
+    if (fetchParams.acceleration) {
+        taskPayload.acceleration = fetchParams.acceleration
+    }
+
     if (fetchParams.openai_quality) {
         taskPayload.providerSettings = {"openai": {"quality": fetchParams.openai_quality}}
     }
