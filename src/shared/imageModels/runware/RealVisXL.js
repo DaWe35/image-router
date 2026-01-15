@@ -16,7 +16,7 @@ export default class {
           range: {
             min: 0.0013,
             average: 0.0019,
-            max: 0.009
+            max: 0.0058
           }
         },
         applyImage: this.applyImage,
