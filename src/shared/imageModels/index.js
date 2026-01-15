@@ -130,6 +130,9 @@ import QwenImageFree from './qwen/qwen-image-free.js'
 import QwenImageEdit from './qwen/qwen-image-edit.js'
 import QwenImageEditPlus from './qwen/qwen-image-edit-plus.js'
 import Ovis7B from './qwen/ovis-7b.js'
+import QwenImageLayered from './qwen/qwen-image-layered.js'
+import QwenImage2512 from './qwen/qwen-image-2512.js'
+import QwenImageEdit2511 from './qwen/qwen-image-edit-2511.js'
 
 import Grok2Image from './xAI/grok-2-image.js'
 
@@ -276,6 +279,9 @@ const modelInstances = [
   new QwenImageEdit(),
   new QwenImageEditPlus(),
   new Ovis7B(),
+  new QwenImageLayered(),
+  new QwenImage2512(),
+  new QwenImageEdit2511(),
 
   new Grok2Image(),
 

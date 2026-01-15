@@ -60,6 +60,7 @@ class StorageService {
             'image/webp': '.webp',
             'image/gif': '.gif',
             'image/svg+xml': '.svg',
+            'image/tiff': '.tiff',
             'video/mp4': '.mp4',
             'video/webm': '.webm',
             'video/quicktime': '.mov'
@@ -220,6 +221,7 @@ class StorageService {
         if (urlLower.includes('.webp')) return 'image/webp'
         if (urlLower.includes('.gif')) return 'image/gif'
         if (urlLower.includes('.svg')) return 'image/svg+xml'
+        if (urlLower.includes('.tiff')) return 'image/tiff'
         
         // Fallback based on context
         if (urlLower.includes('video')) return 'video/mp4'

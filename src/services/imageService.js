@@ -1021,7 +1021,9 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskType,
         taskUUID,
         model: fetchParams.model,
-        outputFormat: fetchParams.output_format ? fetchParams.output_format.toUpperCase() : "WEBP",
+        outputFormat: fetchParams.model === 'alibaba:qwen-image@layered' 
+            ? 'TIFF' 
+            : (fetchParams.output_format ? fetchParams.output_format.toUpperCase() : "WEBP"),
         includeCost: true
     }
 
@@ -1086,18 +1088,22 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         taskPayload.numberResults = 1
 
         const { width, height } = extractWidthHeight(fetchParams.size)
-        const isEdit = fetchParams.referenceImages || fetchParams.inputs_references || fetchParams.inputImage || fetchParams.seedImage
+        const isEdit = fetchParams.inputs_referenceImages || fetchParams.referenceImages || fetchParams.inputs_references || fetchParams.inputImage || fetchParams.seedImage || fetchParams.inputs_image
 
-        if (!isEdit) { // default 1024 for text to image, if size is not defined in model or params
+        if (!isEdit && fetchParams.model !== 'alibaba:qwen-image@layered') { // default 1024 for text to image, if size is not defined in model or params
             // Default size for bytedance:seedream@4.5 is 2048x2048
             const defaultSize = fetchParams.model === 'bytedance:seedream@4.5' ? 2048 : 1024
             taskPayload.width = width || defaultSize
             taskPayload.height = height || defaultSize
-        } else { // no default 1024 for image to image. Aspect Ratio preserved automatically.
+            console.log('!isEdit')
+        } else { // no default size for image to image. Aspect Ratio preserved automatically.
             if (width) taskPayload.width = width
             if (height) taskPayload.height = height
+            console.log('isEdit')
         }
     }
+
+    console.log('width', taskPayload.width)
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -1115,8 +1121,8 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         let errorMessage = errorObj?.message || 'Runware generation failed'
         
         // Rewrite error message to mention "image" instead of "referenceImages"
-        if (errorMessage.includes("Missing required parameter 'referenceImages'.")) {
-            errorMessage = "This is an image-to-image model, so it requires an input image"
+        if (errorMessage.includes("Missing required parameter 'referenceImages'.") || errorMessage.includes("Missing required parameter '[inputs][referenceImages]'.")) {
+            errorMessage = "Image input is missing for image-to-image generation."
         }
         
         const formattedError = {
