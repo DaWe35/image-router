@@ -112,6 +112,7 @@ import HidreamE11 from './hidream-ai/hidream-e1-1.js'
 import Riverflow1 from './runware/Riverflow-1.js'
 import Riverflow1Mini from './runware/Riverflow-1-mini.js'
 import ImagineArt15 from './runware/imagineart-1.5.js'
+import ImagineArt15Pro from './runware/imagineart-1.5-pro.js'
 import PImage10 from './runware/P-Image-1.0.js'
 
 import SeedreamV3 from './bytedance/seedream-v3.js'
@@ -256,6 +257,7 @@ const modelInstances = [
   new Riverflow1(),
   new Riverflow1Mini(),
   new ImagineArt15(),
+  new ImagineArt15Pro(),
   new PImage10(),
   
   new SeedreamV3(),
