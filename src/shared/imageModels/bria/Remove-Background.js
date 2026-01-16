@@ -8,16 +8,6 @@ export default class {
       id: 'bria/remove-background',
       providers: [
         {
-          id: 'deepinfra',
-          model_name: 'Bria/remove_background',
-          pricing: {
-            /* type: PRICING_TYPES.POST_GENERATION,
-            postCalcFunction: postCalcSimple, */
-            type: PRICING_TYPES.FIXED,
-            value: 0.0005,
-          },
-          applyImage: applyImageSingle
-        }, {
           id: 'runware',
           model_name: 'runware:110@1',
           pricing: {
@@ -26,6 +16,16 @@ export default class {
             value: 0.0006,
           },
           applyImage: applySingleInputImage
+        }, {
+          id: 'deepinfra',
+          model_name: 'Bria/remove_background',
+          pricing: {
+            /* type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple, */
+            type: PRICING_TYPES.FIXED,
+            value: 0.018,
+          },
+          applyImage: applyImageSingle
         }
       ],
       release_date: '2024-10-30'

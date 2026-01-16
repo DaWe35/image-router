@@ -58,6 +58,21 @@ export function validateImageParams(req) {
   if (model === 'ByteDance/InfiniteYou:free' || model === 'ByteDance/InfiniteYou') {
     throw new Error("InfiniteYou is no longer available.")
   }
+  if (model === 'bria/blur-background:free') {
+    throw new Error("This free model is no longer available. Please switch to the paid alternative: 'bria/blur-background'.")
+  }
+  if (model === 'bria/bria-3.2:free') {
+    throw new Error("This free model is no longer available. Please switch to the paid alternative: 'bria/bria-3.2'.")
+  }
+  if (model === 'bria/bria-3.2-vector:free') {
+    throw new Error("This free model is no longer available. Please switch to the paid alternative: 'bria/bria-3.2-vector'.")
+  }
+  if (model === 'bria/enhance:free') {
+    throw new Error("This free model is no longer available. Please switch to the paid alternative: 'bria/enhance'.")
+  }
+  if (model === 'bria/erase-foreground:free') {
+    throw new Error("This free model is no longer available. Please switch to the paid alternative: 'bria/erase-foreground'.")
+  }
 
   const modelConfig = imageModels[model]
   if (!modelConfig) {
