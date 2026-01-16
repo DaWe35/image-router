@@ -14,7 +14,7 @@ export default class {
             /* type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple, */
             type: PRICING_TYPES.FIXED,
-            value: 0.0005,
+            value: 0.04,
           }
         }
       ],
