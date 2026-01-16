@@ -1091,8 +1091,9 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         const isEdit = fetchParams.inputs_referenceImages || fetchParams.referenceImages || fetchParams.inputs_references || fetchParams.inputImage || fetchParams.seedImage || fetchParams.inputs_image
 
         if (!isEdit && fetchParams.model !== 'alibaba:qwen-image@layered') { // default 1024 for text to image, if size is not defined in model or params
-            // Default size for bytedance:seedream@4.5 is 2048x2048
-            const defaultSize = fetchParams.model === 'bytedance:seedream@4.5' ? 2048 : 1024
+            let defaultSize = 1024
+            if (fetchParams.model === 'bytedance:seedream@4.5') defaultSize = 2048
+            if (fetchParams.model === 'imagineart:1.5-pro@0') defaultSize = 4096
             taskPayload.width = width || defaultSize
             taskPayload.height = height || defaultSize
             console.log('!isEdit')

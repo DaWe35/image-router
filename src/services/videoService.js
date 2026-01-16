@@ -472,7 +472,7 @@ async function generateTestVideo({ fetchParams, userId, usageLogId }) {
     return {
         created: Math.floor(Date.now() / 1000),
         data: [{
-            url: `https://raw.githubusercontent.com/DaWe35/image-router/refs/heads/main/src/shared/videoModels/test/big_buck_bunny_720p_1mb.mp4`,
+            url: `https://thumb.imagerouter.io/big_buck_bunny_720p_1mb.mp4`,
             revised_prompt: null
         }]
     }
