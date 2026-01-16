@@ -1,5 +1,4 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcSimple } from '../../../services/helpers.js'
 
 export default class {
   constructor() {
