@@ -19,21 +19,15 @@ import Flux2Klein4bBase from './black-forest-labs/FLUX-2-klein-4b-base.js'
 import Flux2Klein9bBase from './black-forest-labs/FLUX-2-klein-9b-base.js'
 
 import BlurBackground from './bria/Blur-Background.js'
-import BlurBackgroundFree from './bria/Blur-Background-Free.js'
 import Bria32Vector from './bria/Bria-3.2-Vector.js'
-import Bria32VectorFree from './bria/Bria-3.2-Vector-Free.js'
 import Bria32 from './bria/Bria-3.2.js'
-import Bria32Free from './bria/Bria-3.2-Free.js'
 import BriaFibo from './bria/Bria-Fibo.js'
 import Enhance from './bria/Enhance.js'
-import EnhanceFree from './bria/Enhance-Free.js'
 import EraseForeground from './bria/Erase-Foreground.js'
-import EraseForegroundFree from './bria/Erase-Foreground-Free.js'
 import Erase from './bria/Erase.js'
 import Expand from './bria/Expand.js'
 import GenFill from './bria/Gen-Fill.js'
 import RemoveBackground from './bria/Remove-Background.js'
-import RemoveBackgroundFree from './bria/Remove-Background-Free.js'
 import ReplaceBackground from './bria/Replace-Background.js'
 
 import Sd15Dpo from './stabilityai/sd1.5-dpo.js'
@@ -165,21 +159,15 @@ const modelInstances = [
   new Flux2Klein9bBase(),
 
   new BlurBackground(),
-  new BlurBackgroundFree(),
   new Bria32Vector(),
-  new Bria32VectorFree(),
   new Bria32(),
-  new Bria32Free(),
   new BriaFibo(),
   new Enhance(),
-  new EnhanceFree(),
   new EraseForeground(),
-  new EraseForegroundFree(),
   //new Erase(),
   //new Expand(),
   //new GenFill(),
   new RemoveBackground(),
-  new RemoveBackgroundFree(),
   //new ReplaceBackground(),
   
   new Sd15Dpo(),
