@@ -41,7 +41,8 @@ const RETRYABLE_ERRORS = [
   `Processing (Stuck?)`,
   `Internal error encountered.`,
   `ByteDance responded with an error. The provider returned the . Additional information below.`, // usually server overload
-  'The provider "Google" returned an invalid response. Additional information: No content data returned from Google'
+  'The provider "Google" returned an invalid response. Additional information: No content data returned from Google',
+  'High concurrency usage of this API, please reduce concurrency or contact customer service to increase limits',
 ]
 
 function isRetryableError(error) {
