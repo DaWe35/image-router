@@ -119,8 +119,6 @@ import SeedreamV3 from './bytedance/seedream-v3.js'
 import SeedEditV3 from './bytedance/seededit-v3.js'
 import SeedreamV4 from './bytedance/seedream-v4.js'
 import SeedreamV45 from './bytedance/seedream-v4.5.js'
-import InfiniteYou from './bytedance/infiniteyou.js'
-import InfiniteYouFree from './bytedance/infiniteyou-free.js'
 import Chroma from './lodestones/chroma.js'
 import ChromaFree from './lodestones/chroma-free.js'
 import DreaminaV31 from './bytedance/dreamina-3.1.js'
@@ -270,8 +268,6 @@ const modelInstances = [
   new HiDreamI1Free(),
   new Chroma(),
   new ChromaFree(),
-  new InfiniteYou(),
-  new InfiniteYouFree(),
   new DreaminaV31(),
 
   new QwenImage(),

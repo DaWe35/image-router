@@ -55,7 +55,9 @@ export function validateImageParams(req) {
   if (model === 'stabilityai/sd3.5-medium') {
     throw new Error("SD3.5 medium is no longer available. Available alternative: 'stabilityai/sd3.5'")
   }
-  
+  if (model === 'ByteDance/InfiniteYou:free' || model === 'ByteDance/InfiniteYou') {
+    throw new Error("InfiniteYou is no longer available.")
+  }
 
   const modelConfig = imageModels[model]
   if (!modelConfig) {
