@@ -15,7 +15,7 @@ export default class {
             postCalcFunction: postCalcSimple,
             range: {
               min: 0.0045,
-              average: 0.0109,
+              average: 0.009,
               max: 0.0275
             }
           },

@@ -107,12 +107,12 @@ export async function applyImageRunwareVideo(params) {
 }
 
 export function applyAccelerationRunware(params) {
-    if (params.quality === 'low') {
-        params.acceleration = 'high'
+    if (params.quality === 'medium') {
+        params.acceleration = 'medium'
     } else if (params.quality === 'high') {
         params.acceleration = 'low'
     } else {
-        params.acceleration = 'medium'
+        params.acceleration = 'high'
     }
     return params
 }

@@ -17,6 +17,7 @@ import Flux2DevTurbo from './runware/Flux-2-Dev-Turbo.js'
 import Flux2Klein4b from './black-forest-labs/FLUX-2-klein-4b.js'
 import Flux2Klein4bBase from './black-forest-labs/FLUX-2-klein-4b-base.js'
 import Flux2Klein9bBase from './black-forest-labs/FLUX-2-klein-9b-base.js'
+import Flux2Klein4bFree from './black-forest-labs/FLUX-2-klein-4b-free.js'
 
 import BlurBackground from './bria/Blur-Background.js'
 import Bria32Vector from './bria/Bria-3.2-Vector.js'
@@ -154,6 +155,7 @@ const modelInstances = [
   new Flux2Flex(),
   new Flux2Max(),
   new Flux2DevTurbo(),
+  new Flux2Klein4bFree(),
   new Flux2Klein4b(),
   new Flux2Klein4bBase(),
   new Flux2Klein9bBase(),

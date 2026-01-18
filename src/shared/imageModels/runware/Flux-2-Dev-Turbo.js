@@ -14,7 +14,7 @@ export default class {
             calcFunction: this.calculatePriceFal,
             range: {
               min: 0.008,
-              average: 0.008,
+              average: 0.0084,
               max: 0.024
             }
           },
