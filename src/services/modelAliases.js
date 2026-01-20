@@ -16,6 +16,15 @@ const MODEL_ALIASES = {
   'gemini-2.5-flash-image': 'google/gemini-2.5-flash',
   'google/gemini-3-pro-image': 'google/gemini-3-pro',
   'gemini-3-pro-image': 'google/gemini-3-pro',
+  'kwaivgi/kling-2.5-turbo-standard': '',
+  'kwaivgi/kling-2.5-turbo-pro': 'kling/kling-2.5-turbo-pro',
+  'kwaivgi/kling-2.1-standard': 'kling/kling-2.1-standard',
+  'kwaivgi/kling-2.1-pro': 'kling/kling-2.1-pro',
+  'kwaivgi/kling-2.1-master': 'kling/kling-2.1-master',
+  'kwaivgi/kling-1.6-standard': 'kling/kling-1.6-standard',
+  'kwaivgi/wan-2.2': 'wan/wan-2.2',
+  'kwaivgi/wan-2.5': 'wan/wan-2.5',
+  'kwaivgi/wan-2.6': 'wan/wan-2.6',
   // Add more aliases here as needed
   // 'alias-name': 'real-model-name',
 }

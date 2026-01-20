@@ -51,12 +51,6 @@ export function validateVideoParams(req) {
     if (files.image) {
         validFiles.image = Array.isArray(files.image) ? files.image[0] : files.image
     }
-    
-    // Additional validation – certain models require an image input
-    const modelsRequiringImage = ['kwaivgi/kling-2.1-standard', 'kwaivgi/kling-2.1-pro']
-    if (modelsRequiringImage.includes(model) && !validFiles.image) {
-        throw new Error(`'image' is a required input parameter for model '${model}'`)
-    }
 
     return { prompt, model, response_format, size, seconds, files: validFiles }
 }

@@ -13,12 +13,12 @@ import Sora2Pro from './openai/sora-2-pro.js'
 
 import HunyuanVideo15 from './tencent/hunyuan-video-1.5.js'
 
-import Kling16Standard from './kwaivgi/kling-1.6-standard.js'
-import Kling21Standard from './kwaivgi/kling-2.1-standard.js'
-import Kling21Pro from './kwaivgi/kling-2.1-pro.js'
-import Kling21Master from './kwaivgi/kling-2.1-master.js'
-import Kling25TurboPro from './kwaivgi/kling-2.5-turbo-pro.js'
-import Kling25TurboStandard from './kwaivgi/kling-2.5-turbo-standard.js'
+import Kling16Standard from './kling/kling-1.6-standard.js'
+import Kling21Standard from './kling/kling-2.1-standard.js'
+import Kling21Pro from './kling/kling-2.1-pro.js'
+import Kling21Master from './kling/kling-2.1-master.js'
+import Kling25TurboPro from './kling/kling-2.5-turbo-pro.js'
+import Kling25TurboStandard from './kling/kling-2.5-turbo-standard.js'
 
 import Wan22 from './wan-ai/wan-2.2.js'
 import Wan25 from './wan-ai/wan-2.5.js'

@@ -5,7 +5,7 @@ import { applyImageRunwareVideo } from '../../applyImage.js'
 export default class {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-2.5-turbo-standard',
+      id: 'kling/kling-2.5-turbo-standard',
       providers: [
         {
           id: 'runware',

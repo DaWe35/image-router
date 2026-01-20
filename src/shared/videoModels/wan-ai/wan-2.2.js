@@ -5,7 +5,7 @@ import { applyImageRunwareVideo } from '../../applyImage.js'
 export default class {
   constructor() {
     this.data = {
-      id: 'kwaivgi/wan-2.2',
+      id: 'wan/wan-2.2',
       providers: [
         {
           id: 'runware',

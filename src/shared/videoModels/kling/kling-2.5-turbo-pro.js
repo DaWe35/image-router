@@ -1,39 +1,25 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile, postCalcSimple, calcVideoPrice } from '../../../services/helpers.js'
+import { processSingleFile, postCalcSimple } from '../../../services/helpers.js'
 import { applyImageRunwareVideo } from '../../applyImage.js'
 
 export default class {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-2.1-master',
+      id: 'kling/kling-2.5-turbo-pro',
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:4@3',
+          model_name: 'klingai:6@1',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.924,
-              average: 0.924,
-              max: 1.848
+              min: 0.35,
+              average: 0.35,
+              max: 0.7
             },
           },
-          applyImage: applyImageRunwareVideo,
-        },
-        {
-          id: 'replicate',
-          model_name: 'kwaivgi/kling-v2.1-master',
-          pricing: {
-            type: PRICING_TYPES.CALCULATED,
-            calcFunction: (params) => calcVideoPrice(params, 0.28),
-            range: {
-              min: 1.4,
-              average: 1.4,
-              max: 2.8
-            }
-          },
-          applyImage: this.applyImage,
+          applyImage: applyImageRunwareVideo
         }
       ],
       sizes: [
@@ -41,7 +27,7 @@ export default class {
         '1080x1080',
         '1080x1920',
       ],
-      release_date: '2025-06-24',
+      release_date: '2025-09-23',
       seconds: [5, 10],
       default_seconds: 5
     }

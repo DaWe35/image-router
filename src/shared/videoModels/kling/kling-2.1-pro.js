@@ -5,37 +5,36 @@ import { applyImageRunwareVideo } from '../../applyImage.js'
 export default class {
   constructor() {
     this.data = {
-      id: 'kwaivgi/kling-2.1-standard',
+      id: 'kling/kling-2.1-pro',
       providers: [
         {
           id: 'runware',
-          model_name: 'klingai:5@1',
+          model_name: 'klingai:5@2',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.1848,
-              average: 0.1848,
-              max: 0.3696
+              min: 0.3234,
+              average: 0.3234,
+              max: 0.6468
             },
           },
           applyImage: applyImageRunwareVideo,
         }, {
           id: 'replicate',
-          model_name: 'kwaivgi/kling-v2.1',
+          model_name: 'kwaivgi/kling-v2.1', // same replicate model, but pro mode
           pricing: {
             type: PRICING_TYPES.CALCULATED,
-            calcFunction: (params) => calcVideoPrice(params, 0.05),
+            calcFunction: (params) => calcVideoPrice(params, 0.09),
             range: {
-              min: 0.25,
-              average: 0.25,
-              max: 0.5
+              min: 0.45,
+              average: 0.45,
+              max: 0.9
             }
           },
           applyImage: this.applyImage,
         }
       ],
-      // Benchmark / meta data – values are estimates / placeholders
       release_date: '2025-06-24',
       seconds: [5, 10],
       default_seconds: 5
