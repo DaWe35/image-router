@@ -16,7 +16,7 @@ const MODEL_ALIASES = {
   'gemini-2.5-flash-image': 'google/gemini-2.5-flash',
   'google/gemini-3-pro-image': 'google/gemini-3-pro',
   'gemini-3-pro-image': 'google/gemini-3-pro',
-  'kwaivgi/kling-2.5-turbo-standard': '',
+  'kwaivgi/kling-2.5-turbo-standard': 'kling/kling-2.5-turbo-standard',
   'kwaivgi/kling-2.5-turbo-pro': 'kling/kling-2.5-turbo-pro',
   'kwaivgi/kling-2.1-standard': 'kling/kling-2.1-standard',
   'kwaivgi/kling-2.1-pro': 'kling/kling-2.1-pro',
