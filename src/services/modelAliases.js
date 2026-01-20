@@ -12,7 +12,10 @@ const MODEL_ALIASES = {
   // Bria aliases (company name variation)
   'briaai/RMBG-2.0': 'bria/remove-background',
   'briaai/RMBG-2.0:free': 'bria/remove-background:free',
-  
+  'google/gemini-2.5-flash-image': 'google/gemini-2.5-flash',
+  'gemini-2.5-flash-image': 'google/gemini-2.5-flash',
+  'google/gemini-3-pro-image': 'google/gemini-3-pro',
+  'gemini-3-pro-image': 'google/gemini-3-pro',
   // Add more aliases here as needed
   // 'alias-name': 'real-model-name',
 }
