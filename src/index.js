@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit'
 import fetch from 'node-fetch'
 import { imageRoutes } from './routes/imageRoutes.js'
 import { videoRoutes } from './routes/videoRoutes.js'
+import { unifiedRoutes } from './routes/unifiedRoutes.js'
 import { imageModels } from './shared/imageModels/index.js'
 import { videoModels } from './shared/videoModels/index.js'
 import { validateApiKey } from './middleware/apiKeyMiddleware.js'
@@ -105,11 +106,13 @@ app.use(generalLimiter) // Apply general limiter to all other routes
 // Protected middleware chains (depend on DB availability)
 const protectedImageChain = process.env.DATABASE_URL ? [blockBannedIPs, ipLimiter, validateApiKey, userImageLimiter] : [blockBannedIPs, ipLimiter]
 const protectedVideoChain = process.env.DATABASE_URL ? [blockBannedIPs, ipLimiter, validateApiKey, userVideoLimiter] : [blockBannedIPs, ipLimiter]
+const protectedUnifiedChain = process.env.DATABASE_URL ? [blockBannedIPs, ipLimiter, validateApiKey, userImageLimiter] : [blockBannedIPs, ipLimiter]
 
 // Apply chains to routes
 app.use('/v1/openai/images/generations', ...protectedImageChain)
 app.use('/v1/openai/images/edits', ...protectedImageChain)
 app.use('/v1/openai/videos/generations', ...protectedVideoChain)
+app.use('/v1/responses', ...protectedUnifiedChain)
 
 // Debug endpoint that returns the detected client IP
 app.get('/ip', (req, res) => {
@@ -121,6 +124,7 @@ app.get('/ip', (req, res) => {
 // Routes
 app.use('/v1/openai/images', imageRoutes)
 app.use('/v1/openai/videos', videoRoutes)
+app.use('/v1', unifiedRoutes)
 app.use('/v1/auth', authRoutes)
 
 // Credits endpoint

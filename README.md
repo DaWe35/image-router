@@ -6,11 +6,40 @@ A simple API router for image generation models. This service acts as a proxy be
 
 ## Features
 
-- OpenAI compatible API endpoint
+- Unified API endpoint following [Open Responses](https://www.openresponses.org/) spec
+- Single endpoint for images, videos, and audio
+- OpenAI compatible legacy endpoints
 - Rate limiting
 - Free and paid model usage tracking
 
 ## API Endpoints
+
+### Unified API (Recommended)
+
+Use the unified `/v1/responses` endpoint for all generation types:
+- Supports text, image, video, and audio generation
+- Single API for all models
+- Follows [Open Responses](https://www.openresponses.org/) specification
+
+📖 **[Quick Start](./QUICK_START.md)** | **[Full Docs](./UNIFIED_API.md)** | **[Examples](./examples/unified-api-example.js)** | **[Migration Guide](./MIGRATION_GUIDE.md)**
+
+**Example:**
+```bash
+curl -X POST http://localhost:3000/v1/responses \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "openai/dall-e-3",
+    "messages": [{"role": "user", "content": "A sunset over mountains"}],
+    "size": "1024x1024"
+  }'
+```
+
+### Legacy OpenAI-Compatible Endpoints
+
+- `POST /v1/openai/images/generations` - Image generation
+- `POST /v1/openai/images/edits` - Image editing  
+- `POST /v1/openai/videos/generations` - Video generation
 
 See [API Reference](https://docs.imagerouter.io)
 
