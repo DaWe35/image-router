@@ -36,9 +36,6 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
         if (typeof providerConfig?.applyImage === 'function') {
             fetchParams = await providerConfig.applyImage(fetchParams)
         } else {
-            const supportedModels = Object.keys(videoModels).filter(modelId =>
-                videoModels[modelId].supported_params?.edit === true
-            )
             throw new Error(`This model does not support image inputs`)
         }
     }

@@ -26,9 +26,6 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
         if (typeof selectedProvider?.applyImage === 'function') {
             fetchParams = await selectedProvider.applyImage(fetchParams)
         } else {
-            const supportedModels = Object.keys(imageModels).filter(modelId => 
-                imageModels[modelId].supported_params?.edit === true
-            )
             throw new Error(`This model does not support image inputs`)
         }
     }

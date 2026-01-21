@@ -85,12 +85,13 @@ modelInstances.forEach(instance => {
   delete modelData.id
   
   // Add output type and feature support flags
-  modelData.output = ["video"]
-  modelData.supported_params = {
+  modelData.inputs = {
+    image: typeof modelData.providers[0]?.applyImage === 'function',
+    mask: typeof modelData.providers[0]?.applyMask === 'function',
     quality: typeof modelData.providers[0]?.applyQuality === 'function',
-    edit: typeof modelData.providers[0]?.applyImage === 'function',
-    mask: typeof modelData.providers[0]?.applyMask === 'function'
+    size: modelData.sizes ?? ['custom']
   }
+  modelData.output = ["video"]
   
   videoModels[modelId] = modelData
 })

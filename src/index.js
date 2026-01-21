@@ -218,72 +218,89 @@ app.get('/v1/credits', validateApiKey, async (req, res) => {
 app.get('/v1/models', (req, res) => {
     const { type, provider, free, name, sort, limit } = req.query
 
-    let allModels = {
-        ...imageModels,
-        ...videoModels
-    }
-
-    let modelsArray = Object.entries(allModels).map(([id, modelData]) => ({
-        id,
-        ...modelData,
-        provider: id.split('/')[0]
-    }))
-
-    // Filtering
-    if (type) {
-        modelsArray = modelsArray.filter(model => {
-            if (type === 'image') return model.output.includes('image')
-            if (type === 'video') return model.output.includes('video')
-            return true
+    const allModels = { ...imageModels, ...videoModels }
+    
+    // Filters and sorting
+    const modelsArray = Object.entries(allModels)
+        .map(([id, modelData]) => ({ id, ...modelData, provider: id.split('/')[0] }))
+        .filter(model => !type || model.output.includes(type))
+        .filter(model => !provider || model.provider.toLowerCase().includes(provider.toLowerCase()))
+        .filter(model => !free || (free === 'true') === model.providers.some(p => p.pricing.value === 0))
+        .filter(model => !name || model.id.toLowerCase().includes(name.toLowerCase()))
+        .sort((a, b) => {
+            if (!sort) return 0
+            if (sort === 'name') return a.id.localeCompare(b.id)
+            if (sort === 'provider') return a.provider.localeCompare(b.provider)
+            if (sort === 'price') return (a.providers[0]?.pricing.value ?? Infinity) - (b.providers[0]?.pricing.value ?? Infinity)
+            if (sort === 'date') return new Date(b.release_date || 0) - new Date(a.release_date || 0)
+            return 0
         })
-    }
+        .slice(0, limit ? parseInt(limit, 10) : undefined)
 
-    if (provider) {
-        modelsArray = modelsArray.filter(model => model.provider.toLowerCase().includes(provider.toLowerCase()))
-    }
+    const result = modelsArray.reduce((acc, { id, provider, ...modelData }) => {
+        // Rename 'image' back to 'edit' for v1 API compatibility
+        if (modelData.inputs) {
+            modelData.supported_params = {
+                ...modelData.inputs,
+                edit: modelData.inputs.image
+            }
+            delete modelData.supported_params.image
+            // Remove sizes from supported_params for v1 (keep it at top level)
+            delete modelData.supported_params.size
+            delete modelData.inputs
+        }
+        acc[id] = modelData
+        return acc
+    }, {})
 
-    if (free) {
-        const isFree = free === 'true'
-        modelsArray = modelsArray.filter(model => {
-            const hasFreeProvider = model.providers.some(p => p.pricing.value === 0)
-            return isFree ? hasFreeProvider : !hasFreeProvider
+    res.json(result)
+})
+
+app.get('/v2/models', (req, res) => {
+    const { type, provider, free, name, sort, limit } = req.query
+
+    const allModels = { ...imageModels, ...videoModels }
+
+    // Filters and sorting
+    const modelsArray = Object.entries(allModels)
+        .map(([id, modelData]) => ({ id, ...modelData, provider: id.split('/')[0] }))
+        .filter(model => !type || model.output.includes(type))
+        .filter(model => !provider || model.provider.toLowerCase().includes(provider.toLowerCase()))
+        .filter(model => !free || (free === 'true') === model.providers.some(p => p.pricing.value === 0))
+        .filter(model => !name || model.id.toLowerCase().includes(name.toLowerCase()))
+        .sort((a, b) => {
+            if (!sort) return 0
+            if (sort === 'name') return a.id.localeCompare(b.id)
+            if (sort === 'provider') return a.provider.localeCompare(b.provider)
+            if (sort === 'price') return (a.providers[0]?.pricing.value ?? Infinity) - (b.providers[0]?.pricing.value ?? Infinity)
+            if (sort === 'date') return new Date(b.release_date || 0) - new Date(a.release_date || 0)
+            return 0
         })
-    }
+        .slice(0, limit ? parseInt(limit, 10) : undefined)
 
-    if (name) {
-        modelsArray = modelsArray.filter(model => model.id.toLowerCase().includes(name.toLowerCase()))
-    }
-
-    // Sorting
-    if (sort) {
-        modelsArray.sort((a, b) => {
-            switch (sort) {
-                case 'name':
-                    return a.id.localeCompare(b.id)
-                case 'provider':
-                    return a.provider.localeCompare(b.provider)
-                case 'price':
-                    const aPrice = a.providers[0]?.pricing.value ?? Infinity
-                    const bPrice = b.providers[0]?.pricing.value ?? Infinity
-                    return aPrice - bPrice
-                case 'date':
-                    return new Date(b.release_date || 0) - new Date(a.release_date || 0)
-                default:
-                    return 0
+    const result = modelsArray.reduce((acc, { id, provider, providers, ...modelData }) => {
+        // Collect all min/max/average prices from all providers
+        const allPrices = []
+        
+        providers.forEach(p => {
+            if (p.pricing?.range) {
+                allPrices.push(p.pricing.range.min, p.pricing.range.max)
+            } else if (p.pricing?.value != null) {
+                allPrices.push(p.pricing.value)
             }
         })
-    }
-
-    // Limiting
-    if (limit) {
-        modelsArray = modelsArray.slice(0, parseInt(limit, 10))
-    }
-
-    // Convert back to object format
-    const result = modelsArray.reduce((acc, model) => {
-        const { id, ...modelData } = model
-        delete modelData.provider // Clean up the added provider field
-        acc[id] = modelData
+        
+        acc[id] = {
+            ...modelData,
+            price: {
+                min: Math.min(...allPrices),
+                average: providers[0]?.pricing?.range?.average ?? providers[0]?.pricing?.value,
+                max: Math.max(...allPrices),
+            }
+        }
+        // Remove sizes from top level for v2 (now in supported_params)
+        delete acc[id].sizes
+        
         return acc
     }, {})
 
