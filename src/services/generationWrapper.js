@@ -23,7 +23,7 @@ const PROVIDER_SWITCH_ERRORS = [
 function isProviderSwitchError(error) {
   const errorMessage = (error?.errorResponse?.error?.message || error?.message || '').toLowerCase()
   if (!errorMessage) return false
-  return PROVIDER_SWITCH_ERRORS.some(msg => errorMessage.includes(msg))
+  return PROVIDER_SWITCH_ERRORS.some(msg => errorMessage.includes(msg.toLowerCase()))
 }
 
 // Errors that trigger a single retry attempt
@@ -50,9 +50,9 @@ const RETRYABLE_ERRORS = [
 ]
 
 function isRetryableError(error) {
-  const errorMessage = error?.errorResponse?.error?.message || error?.message
+  const errorMessage = (error?.errorResponse?.error?.message || error?.message || '').toLowerCase()
   if (!errorMessage) return false
-  return RETRYABLE_ERRORS.some(retryMsg => errorMessage.includes(retryMsg))
+  return RETRYABLE_ERRORS.some(retryMsg => errorMessage.includes(retryMsg.toLowerCase()))
 }
 
 function cleanupInternalFields(result) {

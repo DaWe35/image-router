@@ -89,7 +89,8 @@ modelInstances.forEach(instance => {
     image: typeof modelData.providers[0]?.applyImage === 'function',
     mask: typeof modelData.providers[0]?.applyMask === 'function',
     quality: typeof modelData.providers[0]?.applyQuality === 'function',
-    size: modelData.sizes ?? ['custom']
+    size: modelData.sizes ?? ['custom'],
+    seconds: modelData.seconds ?? ['auto']
   }
   modelData.output = ["video"]
   
