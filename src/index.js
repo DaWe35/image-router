@@ -247,6 +247,7 @@ app.get('/v1/models', (req, res) => {
             delete modelData.supported_params.image
             // Remove sizes from supported_params for v1 (keep it at top level)
             delete modelData.supported_params.size
+            delete modelData.supported_params.seconds
             delete modelData.inputs
         }
         acc[id] = modelData
@@ -300,6 +301,8 @@ app.get('/v2/models', (req, res) => {
         }
         // Remove sizes from top level for v2 (now in supported_params)
         delete acc[id].sizes
+        delete acc[id].seconds
+        delete acc[id].default_seconds
         
         return acc
     }, {})
