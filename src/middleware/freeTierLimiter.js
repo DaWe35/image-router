@@ -16,7 +16,7 @@ export const freeTierLimiter = async (req, res, next) => {
   if (!hasCredits && !isJwtToken) {
     return res.status(403).json({
       error: {
-        message: 'Free models are available on ImageRouter.io website and for funded accounts. More info: https://imagerouter.io/pricing',
+        message: 'Free models are only available on the website (eg https://imagerouter.io/generate). To gain API access, please deposit any amount (free models cost $0, but one time deposit needed to prevent abuse). More info about pricing: https://imagerouter.io/pricing',
         type: 'access_denied'
       }
     })
