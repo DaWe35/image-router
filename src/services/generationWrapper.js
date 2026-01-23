@@ -49,6 +49,7 @@ const RETRYABLE_ERRORS = [
   'The operation was cancelled.',
   'ECONNRESET',
   '504 Gateway Time-out',
+  'Inference error occurred while processing the request. Please try again or contact support if the issue persists.',
 ]
 
 function isRetryableError(error) {
