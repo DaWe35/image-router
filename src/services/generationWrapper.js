@@ -48,6 +48,7 @@ const RETRYABLE_ERRORS = [
   'An error has occurred please read documentation for additional details.',
   'The operation was cancelled.',
   'ECONNRESET',
+  '504 Gateway Time-out',
 ]
 
 function isRetryableError(error) {
