@@ -1093,15 +1093,12 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
             if (fetchParams.model === 'imagineart:1.5-pro@0') defaultSize = 4096
             taskPayload.width = width || defaultSize
             taskPayload.height = height || defaultSize
-            console.log('!isEdit')
         } else { // no default size for image to image. Aspect Ratio preserved automatically.
             if (width) taskPayload.width = width
             if (height) taskPayload.height = height
-            console.log('isEdit')
         }
     }
 
-    console.log('width', taskPayload.width)
 
     const response = await fetch(providerUrl, {
         method: 'POST',
@@ -1427,7 +1424,6 @@ async function generateWavespeed({ fetchParams }) {
         if (width && height) bodyPayload.size = `${width}*${height}`
     }
 
-    console.log('bodyPayload', bodyPayload)
     const response = await fetch(providerUrl, {
         method: 'POST',
         headers: {
