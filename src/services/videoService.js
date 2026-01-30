@@ -101,8 +101,33 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
     const predictUrl = `${baseUrl}/models/${fetchParams.model}:predictLongRunning?key=${providerKey}`
 
+    // Determine personGeneration based on model version and generation type
     let personGenerationValue = "allow_adult"
+    const isImageToVideo = Boolean(fetchParams.image)
+    const hasReferenceImages = Boolean(fetchParams.referenceImages64)
     
+    // Veo 3.1 & Veo 3.1 Fast
+    if (fetchParams.model.includes('veo-3.1')) {
+        if (isImageToVideo || hasReferenceImages) {
+            personGenerationValue = "allow_adult"
+        } else {
+            // Text-to-video & Extension
+            personGenerationValue = "allow_all"
+        }
+    }
+    // Veo 3 & Veo 3 Fast
+    else if (fetchParams.model.includes('veo-3.0')) {
+        if (isImageToVideo) {
+            personGenerationValue = "allow_adult"
+        } else {
+            // Text-to-video
+            personGenerationValue = "allow_all"
+        }
+    }
+    // Veo 2 (default to allow_all for text-to-video, allow_adult for image-to-video)
+    else if (fetchParams.model.includes('veo-2')) {
+        personGenerationValue = isImageToVideo ? "allow_adult" : "allow_all"
+    }
 
     // Convert size to aspect ratio for Gemini video models
     let aspectRatio = "16:9" // default
@@ -286,6 +311,34 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     const baseUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${fetchParams.model}`
     const predictUrl = `${baseUrl}:predictLongRunning`
 
+    // Determine personGeneration based on model version and generation type
+    let personGenerationValue = "allow_adult"
+    const isImageToVideo = Boolean(fetchParams.image)
+    const hasReferenceImages = Boolean(fetchParams.referenceImages64)
+    
+    // Veo 3.1 & Veo 3.1 Fast
+    if (fetchParams.model.includes('veo-3.1')) {
+        if (isImageToVideo || hasReferenceImages) {
+            personGenerationValue = "allow_adult"
+        } else {
+            // Text-to-video & Extension
+            personGenerationValue = "allow_all"
+        }
+    }
+    // Veo 3 & Veo 3 Fast
+    else if (fetchParams.model.includes('veo-3.0')) {
+        if (isImageToVideo) {
+            personGenerationValue = "allow_adult"
+        } else {
+            // Text-to-video
+            personGenerationValue = "allow_all"
+        }
+    }
+    // Veo 2 (default to allow_all for text-to-video, allow_adult for image-to-video)
+    else if (fetchParams.model.includes('veo-2')) {
+        personGenerationValue = isImageToVideo ? "allow_adult" : "allow_all"
+    }
+
     // Convert size to aspect ratio for Vertex Gemini video models
     let aspectRatio = "16:9" // default
     if (fetchParams.size && fetchParams.size !== 'auto') {
@@ -302,7 +355,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
         }],
         parameters: {
             aspectRatio: aspectRatio,
-            personGeneration: "allow_adult",
+            personGeneration: personGenerationValue,
             sampleCount: 1,
             durationSeconds: fetchParams.seconds,
             resolution: sizeToGoogleResolution(fetchParams.size),
