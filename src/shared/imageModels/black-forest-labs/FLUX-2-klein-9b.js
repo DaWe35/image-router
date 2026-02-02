@@ -14,9 +14,9 @@ export default class {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.0006,
+              min: 0.0008,
               average: 0.0008,
-              max: 0.0044
+              max: 0.0059
             }
           },
           applyImage: applyInputImagesReferences,
