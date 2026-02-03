@@ -64,6 +64,21 @@ export async function preLogUsage(params, apiKey, req, providerIndex) {
     // Get client IP
     const clientIp = process.env.PROXY_COUNT > 0 ? req?.headers['cf-connecting-ip'] : req?.ip
 
+    // Determine input types based on params
+    const inputTypes = []
+    if (params.prompt) {
+        inputTypes.push('PROMPT')
+    }
+    if (params.files?.image) {
+        inputTypes.push('IMAGE')
+    }
+    if (params.files?.video) {
+        inputTypes.push('VIDEO')
+    }
+    if (params.files?.audio) {
+        inputTypes.push('AUDIO')
+    }
+
     // Use a transaction to ensure both operations succeed or fail together
     const usageLogEntry = await prisma.$transaction(async (tx) => {
         // Deduct maximum estimated credits initially
@@ -84,7 +99,9 @@ export async function preLogUsage(params, apiKey, req, providerIndex) {
                 cost: prePriceInt, // Initial cost is max price
                 speedMs: 0,
                 imageSize: params.size || 'unknown',
-                quality: params.quality ? params.quality : 'auto',
+                quality: params.quality || undefined,
+                seconds: params.seconds || undefined,
+                inputTypes: inputTypes,
                 status: 'processing',
                 ip: clientIp
             }

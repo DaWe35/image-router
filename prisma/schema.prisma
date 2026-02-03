@@ -35,6 +35,14 @@ enum Quality {
   high
 }
 
+// Input types enum for tracking what types of input were used in the request
+enum InputType {
+  PROMPT      // Text prompt
+  IMAGE       // Image input (for image-to-image, inpainting, etc.)
+  VIDEO       // Video input (for video-to-video, etc.)
+  AUDIO       // Audio input (for future audio models)
+}
+
 model APIUsage {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
@@ -45,6 +53,8 @@ model APIUsage {
   speedMs                   Int
   imageSize                 String
   quality                   Quality?
+  seconds                   Int?
+  inputTypes                InputType[]     @default([])
   status                    String
   error                     String?
   metadata                  Json?
