@@ -1,13 +1,13 @@
 ---
 name: imagerouter
-description: Generate AI images with any model using ImageRouter API (requires API key).
+description: Generate Images with any AI model on ImageRouter (requires API key).
 homepage: https://imagerouter.io
 metadata: {"clawdbot":{"emoji":"🎨","requires":{"bins":["curl"]}}}
 ---
 
-# ImageRouter Image Generation
+# [ImageRouter](https://imagerouter.io) AI Image Generation
 
-Generate images with any model available on ImageRouter using curl commands.
+Generate images with any AI model available on [ImageRouter](https://imagerouter.io).
 
 ## Available models
 The `test/test` model is a free dummy model that is used for testing the API. It is not a real model, therefore you should use other models for image generation.
