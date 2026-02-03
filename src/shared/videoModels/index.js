@@ -7,6 +7,7 @@ import Veo31Fast from './google/veo-3.1-fast.js'
 
 import Ltx2Pro from './lightricks/Ltx-2-Pro.js'
 import Ltx2Fast from './lightricks/Ltx-2-Fast.js'
+import Ltx2 from './lightricks/Ltx-2.js'
 
 import Sora2 from './openai/sora-2.js'
 import Sora2Pro from './openai/sora-2-pro.js'
@@ -47,6 +48,7 @@ const modelInstances = [
 
   new Ltx2Pro(),
   new Ltx2Fast(),
+  new Ltx2(),
 
   new Sora2(),
   new Sora2Pro(),

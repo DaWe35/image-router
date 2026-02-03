@@ -43,7 +43,7 @@ export default class {
     params.inputs_frameImages_image = await processSingleFile(params.files.image, 'datauri')
     delete params.files.image
     return params
-}
+  }
 
   getData() {
     return this.data

@@ -1025,6 +1025,10 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                     taskPayload.width = 1920
                     taskPayload.height = 1080
                     break
+                case 'lightricks:ltx@2':
+                    taskPayload.width = 1408
+                    taskPayload.height = 768
+                    break
             }
         }
     }
@@ -1035,7 +1039,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
         taskPayload.frameImages = images.map(id => ({ inputImage: id }))
     }
 
-    // Frame images support for wan-2.6
+    // Frame images support for wan-2.6 and LTX 2
     if (fetchParams.inputs_frameImages_image) {
         if (!taskPayload.inputs) {
             taskPayload.inputs = {}
@@ -1044,6 +1048,10 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
             taskPayload.inputs.frameImages = []
         }
         taskPayload.inputs.frameImages.push({ image: fetchParams.inputs_frameImages_image })
+    }
+
+    if (fetchParams.steps) {    
+        taskPayload.steps = fetchParams.steps
     }
 
     const response = await fetch(providerUrl, {
