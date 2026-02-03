@@ -9,6 +9,7 @@ const bodySchema = z.object({
   }).max(10000, { message: "'prompt' must be 10,000 characters or less. Please contact ImageRouter support if you need a higher limit." }).optional(),
   model: z.string().min(1, { message: "'model' is a required parameter" }),
   response_format: z.enum(['url', 'b64_json', 'b64_ephemeral']).default('url'),
+  quality: z.enum(['auto', 'low', 'medium', 'high']).default('auto'),
   size: z.string()
     .default('auto')
     .refine(val => val === 'auto' || /^\d+([xX×*])\d+$/.test(val), {
@@ -18,7 +19,7 @@ const bodySchema = z.object({
     z.literal('auto'),
     z.coerce.number({
       invalid_type_error: "'seconds' must be a number"
-    }).int().min(1, { message: "'seconds' must be at least 1" }).max(60, { message: "'seconds' must be 60 or less" })
+    }).min(1, { message: "'seconds' must be at least 1" }).max(60, { message: "'seconds' must be 60 or less" })
   ]).default('auto')
 })
 
@@ -29,7 +30,7 @@ export function validateVideoParams(req) {
         throw new Error(parseResult.error.errors[0].message)
     }
 
-    let { prompt, model, response_format, size, seconds } = parseResult.data
+    let { prompt, model, response_format, quality, size, seconds } = parseResult.data
     
     // Resolve model alias to real model name (if it's an alias)
     model = resolveModelAlias(model)
@@ -52,7 +53,7 @@ export function validateVideoParams(req) {
         validFiles.image = Array.isArray(files.image) ? files.image[0] : files.image
     }
 
-    return { prompt, model, response_format, size, seconds, files: validFiles }
+    return { prompt, model, response_format, quality, size, seconds, files: validFiles }
 }
 
 export const videoRequestSchema = bodySchema 

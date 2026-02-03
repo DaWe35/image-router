@@ -53,7 +53,7 @@ model APIUsage {
   speedMs                   Int
   imageSize                 String
   quality                   Quality?
-  seconds                   Int?
+  seconds                   Decimal?        @db.Decimal(8, 2)
   inputTypes                InputType[]     @default([])
   status                    String
   error                     String?
