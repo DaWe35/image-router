@@ -20,7 +20,7 @@ class GrokImagineVideo {
         },
         applyImage: applyImageSingleDataURI,
       }],
-      release_date: '2025-01-15',
+      release_date: '2026-01-28',
       sizes: [
         // 720p
         '1280x720', // 16:9
