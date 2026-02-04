@@ -167,7 +167,11 @@ async function generateGrok({ fetchParams, userId }) {
         throw {
             status: response.status,
             errorResponse: {
-                ...data,
+                status: response.status,
+                error: {
+                    type: data.code,
+                    message: data.error,
+                },
                 original_response_from_provider: data
             }
         }
