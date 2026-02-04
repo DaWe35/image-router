@@ -129,6 +129,7 @@ import QwenImage2512 from './qwen/qwen-image-2512.js'
 import QwenImageEdit2511 from './qwen/qwen-image-edit-2511.js'
 
 import Grok2Image from './xAI/grok-2-image.js'
+import GrokImagineImage from './xAI/grok-imagine-image.js'
 
 import SwinIR from './upscale/SwinIR.js'
 import CCSR from './upscale/CCSR.js'
@@ -272,7 +273,7 @@ const modelInstances = [
   new QwenImageEdit2511(),
 
   new Grok2Image(),
-
+  new GrokImagineImage(),
   new SwinIR(),
   new CCSR(),
   new SDLatent(),

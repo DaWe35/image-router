@@ -319,6 +319,25 @@ export const sizeToImageSize = {
     '6336x2688': '4K',
 };
 
+// xAI Grok aspect ratios are wrong, so don't use this anywhere else.
+export const wrongGrokSizeToAspectRatio = {
+    '1024x1024': '1:1',
+    '1280x896': '4:3',
+    '896x1280': '3:4',
+    '1408x768': '16:9',
+    '768x1408': '9:16',
+    '1296x864': '3:2',
+    '864x1296': '2:3',
+    '1248x576': '19.5:9',
+    '576x1248': '9:19.5',
+    '1280x576': '20:9',
+    '576x1280': '9:20',
+    '1248x832': '2:1',
+    '832x1248': '1:2',
+    '1408x704': '19.5:9',
+    '704x1408': '9:19.5',
+}
+
 
 export function resolveSeconds(requestedSeconds, modelName) {
     const modelConfig = videoModels[modelName]

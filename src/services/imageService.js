@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
-import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize } from './helpers.js'
+import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize, wrongGrokSizeToAspectRatio } from './helpers.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
@@ -107,7 +107,8 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
 }
 // xAI Grok Images API call
 async function generateGrok({ fetchParams, userId }) {
-    const providerUrl = 'https://api.x.ai/v1/images/generations'
+    const isEdit = Boolean(fetchParams.image)
+    const providerUrl = isEdit ? 'https://api.x.ai/v1/images/edits' : 'https://api.x.ai/v1/images/generations'
     const providerKey = process.env.XAI_API_KEY
 
     if (!providerKey) {
@@ -116,7 +117,21 @@ async function generateGrok({ fetchParams, userId }) {
 
     const body = {
         model: fetchParams.model,
-        prompt: fetchParams.prompt
+        prompt: fetchParams.prompt,
+        n: 1,
+        user: userId,
+    }
+
+
+    if (fetchParams.size) {
+        const aspectRatio = wrongGrokSizeToAspectRatio[fetchParams.size];
+        if (aspectRatio) {
+            body.size = fetchParams.size;
+        }
+    }
+
+    if (fetchParams.image) {
+        body.image = {url: fetchParams.image};
     }
 
     const response = await fetch(providerUrl, {
@@ -129,7 +144,23 @@ async function generateGrok({ fetchParams, userId }) {
         body: JSON.stringify(body)
     })
 
-    const data = await response.json()
+    let data
+    const rawData = await response.text()
+    try {
+        data = JSON.parse(rawData)
+    } catch (error) {
+        console.error('catch error', error)
+        throw {
+            status: response.status,
+            errorResponse: {
+                status: response.status,
+                error: {
+                    type: 'invalid_response',
+                    message: rawData,
+                }
+            }
+        }
+    }
 
     if (!response.ok) {
         throw {
