@@ -10,8 +10,13 @@ class Grok2Image {
         id: 'grok',
         model_name: 'grok-imagine-image',
         pricing: {
-          type: PRICING_TYPES.FIXED,
-          value: 0.02
+          type: PRICING_TYPES.CALCULATED,
+          calcFunction: this.calcPrice,
+          range: {
+            min: 0.02,
+            average: 0.02,
+            max: 0.022
+          }
         },
         applyImage: applyImageSingleDataURI,
       }],
@@ -34,6 +39,13 @@ class Grok2Image {
         '704x1408',
       ]
     }
+  }
+
+  calcPrice(params) {
+    const basePrice = 0.02
+    const inputImageCount = params?.images?.length || 0
+    const inputImageCost = inputImageCount * 0.002
+    return basePrice + inputImageCost
   }
 
   getData() {
