@@ -128,6 +128,7 @@ async function generateGrok({ fetchParams, userId }) {
         if (aspectRatio) {
             body.aspect_ratio = aspectRatio;
         }
+        console.log('aspectRatio', aspectRatio)
     }
 
     if (fetchParams.image) {

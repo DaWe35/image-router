@@ -332,10 +332,8 @@ export const wrongGrokSizeToAspectRatio = {
     '576x1248': '9:19.5',
     '1280x576': '20:9',
     '576x1280': '9:20',
-    '1248x832': '2:1',
-    '832x1248': '1:2',
-    '1408x704': '19.5:9',
-    '704x1408': '9:19.5',
+    '1408x704': '2:1',
+    '704x1408': '1:2',
 }
 
 export const wrongGrokVideoSizeToAspectRatio = {
