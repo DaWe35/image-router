@@ -126,7 +126,7 @@ async function generateGrok({ fetchParams, userId }) {
     if (fetchParams.size) {
         const aspectRatio = wrongGrokSizeToAspectRatio[fetchParams.size];
         if (aspectRatio) {
-            body.size = fetchParams.size;
+            body.aspect_ratio = aspectRatio;
         }
     }
 
