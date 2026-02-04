@@ -338,6 +338,24 @@ export const wrongGrokSizeToAspectRatio = {
     '704x1408': '9:19.5',
 }
 
+export const wrongGrokVideoSizeToAspectRatio = {
+    // 720p
+    '1280x720': {aspectRatio: '16:9', resolution: '720p'},
+    '960x720': {aspectRatio: '4:3', resolution: '720p'},
+    '1088x720': {aspectRatio: '3:2', resolution: '720p'},
+    '720x720': {aspectRatio: '1:1', resolution: '720p'},
+    '720x1088': {aspectRatio: '2:3', resolution: '720p'},
+    '720x960': {aspectRatio: '3:4', resolution: '720p'},
+    '720x1280': {aspectRatio: '9:16', resolution: '720p'},
+    // 480p
+    '848x480': {aspectRatio: '16:9', resolution: '480p'},
+    '640x480': {aspectRatio: '4:3', resolution: '480p'},
+    '720x480': {aspectRatio: '3:2', resolution: '480p'},
+    '480x480': {aspectRatio: '1:1', resolution: '480p'},
+    '480x720': {aspectRatio: '2:3', resolution: '480p'},
+    '480x640': {aspectRatio: '3:4', resolution: '480p'},
+    '480x848': {aspectRatio: '9:16', resolution: '480p'},
+}
 
 export function resolveSeconds(requestedSeconds, modelName) {
     const modelConfig = videoModels[modelName]

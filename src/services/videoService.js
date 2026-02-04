@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution } from './helpers.js'
+import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution, wrongGrokVideoSizeToAspectRatio } from './helpers.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
@@ -47,6 +47,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
         fal: generateFalVideo,
         gemini: generateGeminiVideo,
         geminiMock: generateGeminiMockVideo,
+        grok: generateGrokVideo,
         replicate: generateReplicateVideo,
         runware: generateRunwareVideo,
         test: generateTestVideo,
@@ -1181,6 +1182,180 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
             message: 'Video generation timed out on Runware – please try again later',
             type: 'timeout_error',
             original_response_from_provider: lastPollPayload
+        }
+    }
+}
+
+async function generateGrokVideo({ fetchParams, userId }) {
+    const providerUrl = 'https://api.x.ai/v1/videos/generations'
+    const providerKey = process.env.XAI_API_KEY
+
+    if (!providerKey) {
+        throw new Error('XAI_API_KEY environment variable is required for xAI provider')
+    }
+
+    // Map size to aspect_ratio and resolution using wrongGrokVideoSizeToAspectRatio
+    let aspectRatio = '16:9'
+    let resolution = '720p'
+    if (fetchParams.size && fetchParams.size !== 'auto') {
+        const mapping = wrongGrokVideoSizeToAspectRatio[fetchParams.size]
+        if (mapping) {
+            aspectRatio = mapping.aspectRatio
+            resolution = mapping.resolution
+        }
+    }
+
+    const body = {
+        model: fetchParams.model,
+        prompt: fetchParams.prompt,
+        duration: fetchParams.seconds || 5,
+        aspect_ratio: aspectRatio,
+        resolution: resolution,
+        user: userId,
+    }
+
+    if (fetchParams.image) {
+        body.image = { url: fetchParams.image }
+    }
+
+    // Initial request to start video generation
+    const response = await fetch(providerUrl, {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json',
+            'Authorization': `Bearer ${providerKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+
+    let data
+    const rawData = await response.text()
+    try {
+        data = JSON.parse(rawData)
+    } catch (error) {
+        console.error('catch error', error)
+        throw {
+            status: response.status,
+            errorResponse: {
+                status: response.status,
+                error: {
+                    type: 'invalid_response',
+                    message: rawData,
+                }
+            }
+        }
+    }
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            errorResponse: {
+                status: response.status,
+                error: {
+                    type: data.code,
+                    message: data.error,
+                },
+                original_response_from_provider: data
+            }
+        }
+    }
+
+    const requestId = data.request_id
+    if (!requestId) {
+        throw {
+            status: 500,
+            errorResponse: {
+                error: {
+                    type: 'invalid_response',
+                    message: 'No request_id returned from xAI API'
+                }
+            }
+        }
+    }
+
+    // Poll for results
+    const maxAttempts = 120 // 5 minutes max (5 second intervals)
+    const pollInterval = 5000 // 5 seconds
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, pollInterval))
+
+        const pollUrl = `https://api.x.ai/v1/videos/${requestId}`
+        const pollResponse = await fetch(pollUrl, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${providerKey}`,
+            }
+        })
+
+        const pollRawData = await pollResponse.text()
+        let pollData
+        try {
+            pollData = JSON.parse(pollRawData)
+        } catch (error) {
+            console.error('Poll parsing error', error)
+            continue
+        }
+
+        if (!pollResponse.ok) {
+            throw {
+                status: pollResponse.status,
+                errorResponse: {
+                    ...pollData,
+                    original_response_from_provider: pollData
+                }
+            }
+        }
+
+        // Check if video is ready - handle both response formats
+        // Format 1: { status: 'done', response: { video: { url: '...' } } }
+        // Format 2: { video: { url: '...' }, model: '...' }
+        const videoUrl = pollData.response?.video?.url || pollData.video?.url
+        
+        if (videoUrl) {
+            return {
+                created: Math.floor(Date.now() / 1000),
+                data: [{
+                    url: videoUrl,
+                    revised_prompt: null,
+                }]
+            }
+        }
+
+        // If status is still pending, continue polling
+        if (pollData.status === 'pending') {
+            continue
+        }
+
+        // If we have a status but it's not done or pending, throw error
+        if (pollData.status) {
+            throw {
+                status: 500,
+                errorResponse: {
+                    error: {
+                        type: 'unknown_status',
+                        message: `Unexpected status: ${pollData.status}`,
+                        original_response_from_provider: pollData
+                    }
+                }
+            }
+        }
+
+        // If no status field and no video URL, something is wrong - continue polling
+        // (could be a transient state)
+        continue
+    }
+
+    // Timeout
+    throw {
+        status: 504,
+        errorResponse: {
+            error: {
+                type: 'timeout',
+                message: 'Video generation timed out after 5 minutes'
+            }
         }
     }
 }

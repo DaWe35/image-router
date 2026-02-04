@@ -35,6 +35,8 @@ import Hailuo02Pro from './minimax/hailuo-02-pro.js'
 import Hailuo23 from './minimax/hailuo-2.3.js'
 import Hailuo23Fast from './minimax/hailuo-2.3-fast.js'
 
+import GrokImagineVideo from './xAI/grok-imagine-video.js'
+
 import TestVideo from './test/test-video.js'
 
 // Initialize all models
@@ -75,6 +77,8 @@ const modelInstances = [
   new Hailuo02Pro(),
   new Hailuo23(),
   new Hailuo23Fast(),
+
+  new GrokImagineVideo(),
 
   new TestVideo(),
 ]

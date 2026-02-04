@@ -105,6 +105,7 @@ export async function generateImage(fetchParams, userId, res, usageLogId, provid
       throw error
     }
 }
+
 // xAI Grok Images API call
 async function generateGrok({ fetchParams, userId }) {
     const isEdit = Boolean(fetchParams.image)
@@ -121,7 +122,6 @@ async function generateGrok({ fetchParams, userId }) {
         n: 1,
         user: userId,
     }
-
 
     if (fetchParams.size) {
         const aspectRatio = wrongGrokSizeToAspectRatio[fetchParams.size];

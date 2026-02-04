@@ -100,7 +100,7 @@ export async function preLogUsage(params, apiKey, req, providerIndex) {
                 speedMs: 0,
                 imageSize: params.size || 'unknown',
                 quality: params.quality || undefined,
-                seconds: params.seconds || undefined,
+                seconds: params.seconds ? String(params.seconds) : undefined,
                 inputTypes: inputTypes,
                 status: 'processing',
                 ip: clientIp
