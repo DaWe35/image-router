@@ -20,7 +20,7 @@ class Grok2Image {
         },
         applyImage: applyImageSingleDataURI,
       }],
-      release_date: '2025-07-28',
+      release_date: '2026-01-28',
       sizes: [
         '1024x1024', // 1:1
         '1280x896', // 4:3
