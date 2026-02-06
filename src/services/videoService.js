@@ -1303,7 +1303,11 @@ async function generateGrokVideo({ fetchParams, userId }) {
             throw {
                 status: pollResponse.status,
                 errorResponse: {
-                    ...pollData,
+                    status: response.status,
+                    error: {
+                        type: pollData.code,
+                        message: pollData.error,
+                    },
                     original_response_from_provider: pollData
                 }
             }
