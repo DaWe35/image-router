@@ -1155,10 +1155,10 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         if (errorMessage.includes("Missing required parameter 'referenceImages'.") || errorMessage.includes("Missing required parameter '[inputs][referenceImages]'.")) {
             errorMessage = "Image input is missing for image-to-image generation."
         }
-        if (errorMessage.includes("positivePrompt")) {
-            errorMessage = errorMessage.replace("positivePrompt", "prompt")
-            errorMessage = errorMessage.replace("Positive prompt", "Prompt")
-        }
+        errorMessage = errorMessage.replace("positivePrompt", "prompt")
+        errorMessage = errorMessage.replace("Positive prompt", "Prompt")
+        errorMessage = errorMessage.replace("seedImage", "image")
+        errorMessage = errorMessage.replace("maskImage", "mask")
         
         const formattedError = {
             status: response.status,
