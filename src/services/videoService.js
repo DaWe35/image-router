@@ -234,11 +234,16 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
 
         if (isDone) {
             if (checkData.error) {
-                console.log('ERROR: video generation failed:', checkData.error)
-                return {
-                    error: {
-                        message: 'video generation failed: ' + JSON.stringify(checkData.error),
-                        type: 'internal_error',
+                console.log('ERROR: Gemini video generation failed:', checkData.error)
+                throw {
+                    status: checkResponse.status || 500,
+                    errorResponse: {
+                        status: checkResponse.status || 500,
+                        statusText: checkData.error?.status || 'internal_error',
+                        error: {
+                            message: 'Gemini video generation failed: ' + JSON.stringify(checkData.error),
+                            type: 'internal_error',
+                        },
                         original_response_from_provider: checkData
                     }
                 }
@@ -249,10 +254,16 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
             
             if (!generatedSamples || generatedSamples.length === 0) {
                 console.log('ERROR: no video samples found in response:', checkData)
-                return {
-                    error: {
-                        message: 'no video samples found in response: ' + JSON.stringify(checkData),
-                        type: 'internal_error',
+                const isModerationError = checkData.response?.generateVideoResponse?.raiMediaFilteredCount > 0
+                throw {
+                    status: checkResponse.status || 500,
+                    errorResponse: {
+                        status: checkResponse.status || 500,
+                        statusText: checkData?.error?.status || response.statusText,
+                        error: {
+                            message: isModerationError ? 'Generated video rejected by Gemini content moderation: ' + checkData.response?.generateVideoResponse?.raiMediaFilteredReasons?.join(', ') : 'No video samples found in Gemini response',
+                            type: isModerationError ? 'content_moderated' : 'internal_error',
+                        },
                         original_response_from_provider: checkData
                     }
                 }
@@ -458,11 +469,16 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
 
         if (isDone) {
             if (checkData.error) {
-                console.log('ERROR: video generation failed:', checkData.error)
-                return {
-                    error: {
-                        message: 'video generation failed: ' + JSON.stringify(checkData.error),
-                        type: 'internal_error',
+                console.log('ERROR: Vertex video generation failed:', checkData.error)
+                throw {
+                    status: checkResponse.status || 500,
+                    errorResponse: {
+                        status: checkResponse.status || 500,
+                        statusText: checkData.error?.status || 'internal_error',
+                        error: {
+                            message: 'Gemini video generation failed: ' + JSON.stringify(checkData.error),
+                            type: 'internal_error',
+                        },
                         original_response_from_provider: checkData
                     }
                 }
@@ -472,11 +488,17 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             const generatedSamples = checkData.response?.videos
             
             if (!generatedSamples || generatedSamples.length === 0) {
-                console.log('ERROR: no video samples found in response:', JSON.stringify(checkData))
-                return {
-                    error: {
-                        message: 'no video samples found in response: ' + JSON.stringify(checkData),
-                        type: 'internal_error',
+                console.log('ERROR: no video samples found in Vertex response:', JSON.stringify(checkData))
+                const isModerationError = checkData.response?.generateVideoResponse?.raiMediaFilteredCount > 0
+                throw {
+                    status: checkResponse.status || 500,
+                    errorResponse: {
+                        status: checkResponse.status || 500,
+                        statusText: checkData?.error?.status || response.statusText,
+                        error: {
+                            message: isModerationError ? 'Generated video rejected by Vertex content moderation: ' + checkData.response?.generateVideoResponse?.raiMediaFilteredReasons?.join(', ') : 'No video samples found in Gemini response',
+                            type: isModerationError ? 'content_moderated' : 'internal_error',
+                        },
                         original_response_from_provider: checkData
                     }
                 }
