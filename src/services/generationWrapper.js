@@ -52,6 +52,7 @@ const RETRYABLE_ERRORS = [
   'ECONNRESET',
   '504 Gateway Time-out',
   'Inference error occurred while processing the request. Please try again or contact support if the issue persists.',
+  'Task processing timeout. Results were not received within the expected time window. Please try again later.', // Runware
 ]
 
 function isRetryableError(error) {
