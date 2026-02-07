@@ -49,8 +49,8 @@ export default class {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: this.postCalcPrice,
             range: {
-              min: 0.134,
-              average: 0.134,
+              min: 0.138,
+              average: 0.138,
               max: 0.24
             },
           },
@@ -63,8 +63,8 @@ export default class {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: postCalcSimple,
             range: {
-              min: 0.134,
-              average: 0.134,
+              min: 0.138,
+              average: 0.138,
               max: 0.24
             },
           },
@@ -107,7 +107,7 @@ export default class {
     }
 
     // Output pricing
-    const outputImagePrice1K2K = 0.134
+    const outputImagePrice1K2K = 0.138
     const outputImagePrice4K = 0.24
 
     let outputCost = 0

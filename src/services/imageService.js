@@ -1160,6 +1160,10 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
         errorMessage = errorMessage.replace("seedImage", "image")
         errorMessage = errorMessage.replace("maskImage", "mask")
         
+        if (errorObj?.code == 'providerError' && errorMessage.includes('Additional information below.') && errorObj?.responseContent) {
+            errorMessage = errorObj.responseContent
+        }
+
         const formattedError = {
             status: response.status,
             statusText: errorObj?.code || 'Error',
