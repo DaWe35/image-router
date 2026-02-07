@@ -1026,6 +1026,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
                 case 'openai:3@1':
                 case 'runware:201@1': // Wan-2.5
                 case 'alibaba:wan@2.6': // Wan-2.6
+                case 'xai:grok-imagine@video':
                     taskPayload.width = 1280
                     taskPayload.height = 720
                     break

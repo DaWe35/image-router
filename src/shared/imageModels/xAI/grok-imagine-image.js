@@ -1,25 +1,41 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { processSingleFile } from '../../../services/helpers.js'
-import { applyImageSingleDataURI } from '../../applyImage.js'
+import { processSingleFile, postCalcSimple } from '../../../services/helpers.js'
+import { applyImageSingleDataURI, applyInputImagesReferences } from '../../applyImage.js'
 
 class Grok2Image {
   constructor() {
     this.data = {
       id: 'xAI/grok-imagine-image',
-      providers: [{
-        id: 'grok',
-        model_name: 'grok-imagine-image',
-        pricing: {
-          type: PRICING_TYPES.CALCULATED,
-          calcFunction: this.calcPrice,
-          range: {
-            min: 0.02,
-            average: 0.02,
-            max: 0.022
-          }
+      providers: [
+        {
+          id: 'runware',
+          model_name: 'xai:grok-imagine@image',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.02,
+              average: 0.02,
+              max: 0.022
+            }
+          },
+          applyImage: applyInputImagesReferences,
         },
-        applyImage: applyImageSingleDataURI,
-      }],
+        {
+          id: 'grok',
+          model_name: 'grok-imagine-image',
+          pricing: {
+            type: PRICING_TYPES.CALCULATED,
+            calcFunction: this.calcPrice,
+            range: {
+              min: 0.02,
+              average: 0.02,
+              max: 0.022
+            }
+          },
+          applyImage: applyImageSingleDataURI,
+        }
+      ],
       release_date: '2026-01-28',
       sizes: [
         '1024x1024', // 1:1

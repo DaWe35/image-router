@@ -1,25 +1,40 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { applyImageSingleDataURI } from '../../applyImage.js'
-import { wrongGrokVideoSizeToAspectRatio } from '../../../services/helpers.js'
+import { applyImageSingleDataURI, applyImageRunwareVideo } from '../../applyImage.js'
+import { wrongGrokVideoSizeToAspectRatio, postCalcSimple } from '../../../services/helpers.js'
 
 class GrokImagineVideo {
   constructor() {
     this.data = {
       id: 'xAI/grok-imagine-video',
-      providers: [{
-        id: 'grok',
-        model_name: 'grok-imagine-video',
-        pricing: {
-          type: PRICING_TYPES.CALCULATED,
-          calcFunction: this.calcPrice,
-          range: {
-            min: 0.05,
-            average: 0.35,
-            max: 1.052
-          }
-        },
-        applyImage: applyImageSingleDataURI,
-      }],
+      providers: [
+        {
+          id: 'runware',
+          model_name: 'xai:grok-imagine@video',
+          pricing: {
+            type: PRICING_TYPES.POST_GENERATION,
+            postCalcFunction: postCalcSimple,
+            range: {
+              min: 0.05,
+              average: 0.35,
+              max: 1.052
+            }
+          },
+          applyImage: applyImageRunwareVideo,
+        }, {
+          id: 'grok',
+          model_name: 'grok-imagine-video',
+          pricing: {
+            type: PRICING_TYPES.CALCULATED,
+            calcFunction: this.calcPrice,
+            range: {
+              min: 0.05,
+              average: 0.35,
+              max: 1.052
+            }
+          },
+          applyImage: applyImageSingleDataURI,
+        }
+      ],
       release_date: '2026-01-28',
       sizes: [
         // 720p
