@@ -20,6 +20,7 @@ const PROVIDER_SWITCH_ERRORS = [
   'The model is overloaded. Please try again later.',
   "Invalid value for 'model' parameter. Model must be an string value representing a valid AIR identifier.", // invalid/deprecated Runware model
   "We're experiencing high demand for this model. Please try again later.", // Grok
+  'OpenAI rate limit exceeded.'
 ]
 
 function isProviderSwitchError(error) {
