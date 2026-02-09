@@ -79,6 +79,23 @@ export function selectProvider(providers, requestParams = {}) {
     desiredProviderId = requiresOpenAI ? 'openai' : 'nanogpt';
   } */
 
+  // Route to native grok provider for image-to-image requests when size is not specified
+  if (modelId === 'xAI/grok-imagine-image') {
+    const { size } = requestParams
+    const sizeIsDefault = !size || size === 'auto'
+    if (hasInputImage && sizeIsDefault) {
+      desiredProviderId = 'grok'
+    }
+  }
+
+  // Route to native grok provider for 480p sizes (720x480 etc.)
+  if (modelId === 'xAI/grok-imagine-video') {
+    const { size } = requestParams
+    if (size === '720x480') {
+      desiredProviderId = 'grok'
+    }
+  }
+
   // Find index of desired provider; fallback to 0 if not found
   const idx = providers.findIndex(p => p.id === desiredProviderId);
   return idx === -1 ? 0 : idx;

@@ -8,7 +8,7 @@ class Grok2Image {
       id: 'xAI/grok-imagine-image',
       providers: [
         {
-          id: 'runware',
+          id: 'runware', // image-to-image does NOT work with auto size on Runware
           model_name: 'xai:grok-imagine@image',
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
