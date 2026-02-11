@@ -7,7 +7,7 @@ class CyberRealisticPony {
       id: 'cyberdelia/CyberRealisticPony',
       providers: [{
         id: 'runware',
-        model_name: 'pasaranax:443821@1957537',
+        model_name: 'imagerouter:443821@2581228',
         pricing: {
           type: PRICING_TYPES.POST_GENERATION,
           postCalcFunction: postCalcSimple,
@@ -19,7 +19,7 @@ class CyberRealisticPony {
         },
         applyQuality: this.applyQuality
       }],
-      release_date: '2025-06-29'
+      release_date: '2026-01-24'
     }
   }
 

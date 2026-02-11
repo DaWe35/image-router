@@ -1,0 +1,29 @@
+# get RANDOM_UUID https://www.uuidgenerator.net/
+
+curl --location 'https://api.runware.ai/v1' \
+     --header 'Content-Type: application/json' \
+     --header 'Authorization: Bearer <API_KEY>' \
+     --data-raw '[
+  {
+    "taskType": "modelUpload",
+    "taskUUID": "<RANDOM_UUID>",
+    "category": "checkpoint",
+    "type": "base",
+    "architecture": "pony",
+    "format": "safetensors",
+    "air": "imagerouter:443821@2581228",
+    "uniqueIdentifier": "443821@2581228",
+    "name": "CyberRealistic Pony",
+    "version": "16.0",
+    "downloadURL": "https://civitai.com/api/download/models/2581228?type=Model&format=SafeTensor&size=full&fp=fp32",
+    "defaultScheduler": "Default",
+    "defaultSteps": 20,
+    "defaultCFG": 7,
+    "defaultStrength": 0.8,
+    "private": false,
+    "heroImageURL": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/6193a98d-58fc-4eee-8c32-d2531d66dee7/anim=false,width=450,optimized=true/00171-2400831882.jpeg",
+    "tags": ["CyberRealistic Pony", "CyberRealistic", "nsfw"],
+    "shortDescription": "CyberRealistic Pony 16.0 blends all the charm of Pony Diffusion with the striking realism of CyberRealistic. The vibe? You get everything from adorable to bold (sometimes both at once) with crazy-detailed textures, moody cinematic lighting, and a hint of AI flair.",
+    "comment": "string"
+  }
+]'
