@@ -1,7 +1,6 @@
 import { PRICING_TYPES } from '../../PricingScheme.js'
-import { postCalcSimple } from '../../../services/helpers.js'
+import { postCalcSimple, calculateRunwareDimensions } from '../../../services/helpers.js'
 import { processSingleFile } from '../../../services/helpers.js'
-import { calculateRunwareDimensions } from '../../../services/helpers.js'
 
 class Flux1Schnell {
   constructor() {
