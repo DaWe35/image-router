@@ -1,5 +1,5 @@
 ---
-name: image-router
+name: imagerouter
 description: Generate Images with any AI model on ImageRouter (requires API key).
 homepage: https://imagerouter.io
 metadata: {"openclaw":{"emoji":"🎨","requires":{"bins":["curl"]},"primaryEnv":"IMAGEROUTER_API_KEY"}}
@@ -14,7 +14,7 @@ Generate images with any AI model available on [ImageRouter](https://imagerouter
 - This skill expects your ImageRouter key in the environment variable `IMAGEROUTER_API_KEY`.
 - **Do not paste API keys into chat**. Set the env var in the OpenClaw Gateway environment (in terminal) and restart the gateway. Example:
 ```bash
-openclaw config set skills.entries.image-router.apiKey "your_api_key_here"
+openclaw config set skills.entries.imagerouter.apiKey "your_api_key_here"
 openclaw gateway restart
 ```
 
