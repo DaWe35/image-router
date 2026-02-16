@@ -355,12 +355,18 @@ export const wrongGrokVideoSizeToAspectRatio = {
     '480x848': {aspectRatio: '9:16', resolution: '480p'},
 }
 
-export function resolveSeconds(requestedSeconds, modelName) {
+export function resolveSeconds(requestedSeconds, modelName, size) {
     const modelConfig = videoModels[modelName]
     if (!modelConfig) {
         throw new Error(`Model '${modelName}' not found`)
     }
-    if (requestedSeconds == null || requestedSeconds === 'auto') return modelConfig.default_seconds
+    if (requestedSeconds == null || requestedSeconds === 'auto') {
+        // Veo 3.0 Fast requires 8s for 1080p generations when duration is automatic.
+        if (modelName === 'google/veo-3-fast' && sizeToGoogleResolution(size) === '1080p') {
+            return 8
+        }
+        return modelConfig.default_seconds
+    }
     const parsed = Number(requestedSeconds)
     const isValid = Number.isFinite(parsed) && parsed > 0 && modelConfig.seconds?.includes(parsed)
     return isValid ? parsed : modelConfig.default_seconds
@@ -378,7 +384,7 @@ export function sizeToGoogleResolution(size) {
 // Video pricing: calculate price based on actual seconds
 export function calcVideoPrice(params, pricePerSecond) {
     try {
-        const seconds = resolveSeconds(params.seconds, params.model)
+        const seconds = resolveSeconds(params.seconds, params.model, params.size)
         return pricePerSecond * seconds
     } catch (error) {
         console.error('Error calculating video price:', error)

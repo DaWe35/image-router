@@ -15,7 +15,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
         throw new Error('Invalid model specified')
     }
 
-    fetchParams.seconds = resolveSeconds(fetchParams.seconds, fetchParams.model)
+    fetchParams.seconds = resolveSeconds(fetchParams.seconds, fetchParams.model, fetchParams.size)
 
     // Detect Kling v2.1 variant to set replicate mode parameter
     const klingVariantMatch = fetchParams.model.match(/kling-2\.1-(standard|pro)$/)
