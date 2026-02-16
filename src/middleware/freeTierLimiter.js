@@ -43,13 +43,13 @@ export const freeTierLimiter = async (req, res, next) => {
       prisma.APIUsage.count({ where: { ...whereCommon, ip: clientIp } })
     ])
 
-    const dailyFreeLimit = hasCredits ? 50 : 10
+    const dailyFreeLimit = hasCredits ? 3 : 3
 
     if (userUsage >= dailyFreeLimit || ipUsage >= dailyFreeLimit) {
       // Respond with a different message if the user has never deposited.
       const message = hasCredits
-        ? `Daily limit of ${dailyFreeLimit} free requests reached. There is no limit on paid models, so you can continue by removing ":free" from the model name.`
-        : `Daily limit of ${dailyFreeLimit} free requests reached. Please deposit any amount to get access to 50 daily free generations: https://imagerouter.io/pricing`
+        ? `Daily limit of ${dailyFreeLimit} free requests reached. Remove ":free" from the model name to continue with the paid model.`
+        : `Daily limit of ${dailyFreeLimit} free requests reached. Deposit any amount to continue with the paid model: https://imagerouter.io/pricing`
 
       const type = hasCredits ? 'rate_limit_error' : 'deposit_required'
 
