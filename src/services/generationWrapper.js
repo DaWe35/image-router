@@ -18,6 +18,8 @@ const PROVIDER_SWITCH_ERRORS = [
   'This API method requires billing to be enabled',
   'Invalid API key',
   'The model is overloaded. Please try again later.',
+  'This model is currently experiencing high demand.',
+  'The service is currently unavailable.',
   "Invalid value for 'model' parameter. Model must be an string value representing a valid AIR identifier.", // invalid/deprecated Runware model
   "We're experiencing high demand for this model. Please try again later.", // Grok
   'OpenAI rate limit exceeded.'
