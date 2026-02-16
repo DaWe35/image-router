@@ -25,8 +25,13 @@ export default class {
           id: 'vertex',
           model_name: 'veo-3.1-fast-generate-preview',
           pricing: {
-            type: PRICING_TYPES.FIXED,
-            value: 1.2
+            type: PRICING_TYPES.CALCULATED,
+            calcFunction: (params) => calcVideoPrice(params, 0.15), // $0.15 per second ($1.2 per 8s)
+            range: {
+              min: 0.6,
+              average: 0.6,
+              max: 1.2
+            }
           },
           applyImage: applyImageSingleBase64
           // not available yet: applyImage: applyReferenceImagesBase64
