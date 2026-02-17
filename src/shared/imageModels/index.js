@@ -30,6 +30,7 @@ import Erase from './bria/Erase.js'
 import Expand from './bria/Expand.js'
 import GenFill from './bria/Gen-Fill.js'
 import RemoveBackground from './bria/Remove-Background.js'
+import RemoveBackgroundFree from './bria/Remove-Background-Free.js'
 import ReplaceBackground from './bria/Replace-Background.js'
 
 import Sd15Dpo from './stabilityai/sd1.5-dpo.js'
@@ -173,6 +174,7 @@ const modelInstances = [
   //new Expand(),
   //new GenFill(),
   new RemoveBackground(),
+  new RemoveBackgroundFree(),
   //new ReplaceBackground(),
   
   new Sd15Dpo(),
