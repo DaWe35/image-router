@@ -3,6 +3,7 @@ import { freeTierLimiter } from '../middleware/freeTierLimiter.js'
 import { imageModels } from '../shared/imageModels/index.js'
 import { videoModels } from '../shared/videoModels/index.js'
 import { selectProvider } from '../utils/providerSelector.js'
+import { addFreeModelStabilityHint } from '../utils/errorResponseUtils.js'
 import util from 'util'
 
 // Errors that trigger a switch to a secondary provider if available
@@ -176,6 +177,7 @@ export function createGenerationHandler({ validateParams, generateFn }) {
         // If the error is already in the correct format, forward it as-is
         if (error?.errorResponse) {
           delete error.errorResponse.original_response_from_provider
+          addFreeModelStabilityHint(error.errorResponse, params.model)
           res.write(JSON.stringify(error.errorResponse))
           res.status(error.status || 500).end()
           return
@@ -187,6 +189,7 @@ export function createGenerationHandler({ validateParams, generateFn }) {
             type: 'internal_error'
           }
         }
+        addFreeModelStabilityHint(errorResponse, params.model)
         res.write(JSON.stringify(errorResponse))
         res.status(500).end()
       }
