@@ -70,11 +70,6 @@ import LucidOrigin from './leonardo/lucid-origin.js'
 
 import Imagen3 from './google/imagen-3.js'
 import Imagen3Fast from './google/imagen-3-fast.js'
-import Imagen40520 from './google/imagen-4-05-20.js'
-import Imagen4Ultra0520 from './google/imagen-4-05-20-ultra.js'
-import Imagen40606 from './google/imagen-4-06-06.js'
-import Imagen4Fast0606 from './google/imagen-4-06-06-fast.js'
-import Imagen4Ultra0606 from './google/imagen-4-06-06-ultra.js'
 import Imagen4 from './google/imagen-4.js'
 import Imagen4Ultra from './google/imagen-4-ultra.js'
 import imagen4Fast from './google/imagen-4-fast.js'
@@ -216,11 +211,6 @@ const modelInstances = [
 
   new Imagen3(),
   new Imagen3Fast(),
-  new Imagen40520(),
-  new Imagen4Ultra0520(),
-  new Imagen40606(),
-  new Imagen4Fast0606(),
-  new Imagen4Ultra0606(),
   new Imagen4(),
   new Imagen4Ultra(),
   new imagen4Fast(),
