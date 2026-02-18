@@ -10,14 +10,14 @@ class Imagen3 {
           model_name: 'imagen-3.0-generate-002',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.03
+            value: 0.03  // Official $0.04/image, 25% discount
           }
         }, {
           id: 'vertex',
           model_name: 'imagen-3.0-generate-002',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.04
+            value: 0.03  // Official $0.04/image, 25% discount
           }
         }
       ],

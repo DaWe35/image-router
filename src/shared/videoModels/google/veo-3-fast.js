@@ -12,11 +12,11 @@ export default class {
           model_name: 'veo-3.0-fast-generate-001',
           pricing: {
             type: PRICING_TYPES.CALCULATED,
-            calcFunction: (params) => calcVideoPrice(params, 0.15), // $0.15 per second ($1.2 per 8s)
+            calcFunction: (params) => calcVideoPrice(params, 0.1125), // official: 0.15 per second, 25% discount
             range: {
-              min: 0.6,
-              average: 0.6,
-              max: 1.2
+              min: 0.45,  // official: 0.6
+              average: 0.45,
+              max: 0.9    // official: 1.2
             }
           },
           applyImage: applyImageSingleBase64
@@ -25,11 +25,11 @@ export default class {
           model_name: 'veo-3.0-fast-generate-001',
           pricing: {
             type: PRICING_TYPES.CALCULATED,
-            calcFunction: (params) => calcVideoPrice(params, 0.15), // $0.15 per second ($1.2 per 8s)
+            calcFunction: (params) => calcVideoPrice(params, 0.1125), // official: 0.15 per second, 25% discount
             range: {
-              min: 0.6,
-              average: 0.6,
-              max: 1.2
+              min: 0.45,  // official: 0.6
+              average: 0.45,
+              max: 0.9     // official: 1.2
             }
           },
           applyImage: applyImageSingleBase64

@@ -10,7 +10,7 @@ class Veo2 {
         model_name: 'veo-2.0-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 1.75,
+          value: 1.875, // official: 2.5 ($0.50/sec × 5s), 25% discount
         },
         applyImage: applyImageSingleBase64,
       }],

@@ -26,7 +26,7 @@ export default class {
           pricing: {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: this.postCalcPrice,
-            value: 0.035,
+            value: 0.0293,  // Official ~$0.0387/image (1290 tokens @ $30/1M), 25% discount
           },
           applyImage: this.applyImageGemini,
         }, {
@@ -43,7 +43,7 @@ export default class {
           model_name: 'gemini-2.5-flash-image',
           pricing: {
             type: PRICING_TYPES.FIXED,
-            value: 0.035,
+            value: 0.0293,  // Official ~$0.0387/image (1290 tokens @ $30/1M), 25% discount
           },
           applyImage: this.applyImageVertex
         }
@@ -69,9 +69,10 @@ export default class {
   }
 
   postCalcPrice(imageResult, params) {
-    // Calculate price based on number of images generated
-    const pricePerImage = 0.035
+    // Official: 1290 tokens per 1024x1024 image @ $30/1M tokens = $0.0387 per image
+    const officialPricePerImage = (1290 / 1_000_000) * 30
     const numberOfImages = imageResult.data ? imageResult.data.length : 1
-    return pricePerImage * numberOfImages
+    const officialTotal = officialPricePerImage * numberOfImages
+    return officialTotal * 0.75  // 25% discount applied at the end
   }
 }

@@ -9,7 +9,7 @@ class Imagen4Fast {
         model_name: 'imagen-4.0-fast-generate-001',
         pricing: {
           type: PRICING_TYPES.FIXED,
-          value: 0.018
+          value: 0.015  // Official $0.02/image, 25% discount
         }
       }],
       release_date: '2025-08-14',

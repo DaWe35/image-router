@@ -49,9 +49,9 @@ export default class {
             type: PRICING_TYPES.POST_GENERATION,
             postCalcFunction: this.postCalcPrice,
             range: {
-              min: 0.138,
-              average: 0.138,
-              max: 0.24
+              min: 0.1035,   // 25% discount
+              average: 0.1035,
+              max: 0.18     // 25% discount
             },
           },
           applyImage: this.applyImageGemini,
@@ -121,6 +121,7 @@ export default class {
 
     outputCost = numberOfImages * pricePerOutputImage
 
-    return inputCost + outputCost
+    const officialTotal = inputCost + outputCost
+    return officialTotal * 0.75  // 25% discount applied at the end
   }
 }
