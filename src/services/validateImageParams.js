@@ -49,9 +49,6 @@ export function validateImageParams(req) {
   if (model === 'google/gemini-2.0-flash-exp:free') {
     throw new Error("Gemini 2.0 Flash is no longer available. Please switch to 'google/gemini-2.5-flash' (paid) or use other models instead.")
   }
-  if (model === 'google/gemini-2.5-flash:free') {
-    throw new Error("The free trial is over for this model. Please switch to 'google/gemini-2.5-flash' (paid) or use other models instead.")
-  }
   if (model === 'stabilityai/sd3.5-medium') {
     throw new Error("SD3.5 medium is no longer available. Available alternative: 'stabilityai/sd3.5'")
   }

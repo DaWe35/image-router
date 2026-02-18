@@ -57,22 +57,14 @@ export default class {
   }
 
   async applyImageVertex(params) {
-    // Process single or multiple image files
     const processedImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
-    
-    // Store the images for use in the API call
     params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
-    
     return params
   }
 
   async applyImageGemini(params) {
-    // Process single or multiple image files
     const processedImages = await processSingleOrMultipleFiles(params.files.image)
-    
-    // Store the images for use in the API call
     params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
-    
     return params
   }
 

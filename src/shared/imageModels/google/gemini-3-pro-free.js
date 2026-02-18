@@ -4,14 +4,14 @@ import { processSingleOrMultipleFiles } from '../../../services/helpers.js'
 export default class {
   constructor() {
     this.data = {
-      id: 'google/gemini-2.5-flash:free',
+      id: 'google/gemini-3-pro:free',
       sizes: [
         '1024x1024',
       ],
       providers: [
         {
           id: 'gemini',
-          model_name: 'gemini-2.5-flash-image-preview',
+          model_name: 'gemini-3-pro-image-preview',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0
@@ -20,7 +20,7 @@ export default class {
         },
         {
           id: 'vertex',
-          model_name: 'gemini-2.5-flash-image-preview',
+          model_name: 'gemini-3-pro-image-preview',
           pricing: {
             type: PRICING_TYPES.FIXED,
             value: 0
@@ -36,14 +36,14 @@ export default class {
     return this.data
   }
 
-  async applyImageVertex(params) {
-    const processedImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
+  async applyImageGemini(params) {
+    const processedImages = await processSingleOrMultipleFiles(params.files.image)
     params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
     return params
   }
 
-  async applyImageGemini(params) {
-    const processedImages = await processSingleOrMultipleFiles(params.files.image)
+  async applyImageVertex(params) {
+    const processedImages = await processSingleOrMultipleFiles(params.files.image, 'datauri')
     params.imagesData = Array.isArray(processedImages) ? processedImages : [processedImages]
     return params
   }

@@ -79,7 +79,9 @@ import Imagen4 from './google/imagen-4.js'
 import Imagen4Ultra from './google/imagen-4-ultra.js'
 import imagen4Fast from './google/imagen-4-fast.js'
 import Gemini25Flash from './google/gemini-2.5-flash.js'
+import Gemini25FlashFree from './google/gemini-2.5-flash-free.js'
 import Gemini3Pro from './google/gemini-3-pro.js'
+import Gemini3ProFree from './google/gemini-3-pro-free.js'
 
 import Photon from './luma/photon.js'
 import PhotonFlash from './luma/photon-flash.js'
@@ -224,7 +226,9 @@ const modelInstances = [
   new imagen4Fast(),
 
   new Gemini25Flash(),
+  new Gemini25FlashFree(),
   new Gemini3Pro(),
+  new Gemini3ProFree(),
   
   new Photon(),
   new PhotonFlash(),
