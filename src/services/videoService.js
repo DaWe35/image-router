@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import { videoModels } from '../shared/videoModels/index.js'
-import { getGeminiApiKey, extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution, wrongGrokVideoSizeToAspectRatio } from './helpers.js'
+import { extractWidthHeight, resolveSeconds, sizeToAspectRatio, sizeToGoogleResolution, wrongGrokVideoSizeToAspectRatio } from './helpers.js'
+import { getProviderKey, reportProviderKeyError } from './providerKeyService.js'
 import { b64VideoExample } from '../shared/videoModels/test/test_b64_json.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
@@ -97,7 +98,7 @@ export async function generateVideo(fetchParams, userId, res, usageLogId, provid
 }
 
 async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
-    const providerKey = getGeminiApiKey(fetchParams.model)
+    const providerKey = await getProviderKey('GEMINI')
     
     const baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
     const predictUrl = `${baseUrl}/models/${fetchParams.model}:predictLongRunning?key=${providerKey}`
@@ -190,6 +191,7 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
             },
             original_response_from_provider: errorData
         }
+        reportProviderKeyError('GEMINI', providerKey, formattedError.error.message)
         throw {
             status: response.status,
             errorResponse: formattedError
@@ -286,28 +288,22 @@ async function generateGeminiVideo({ fetchParams, userId, usageLogId }) {
 
 
 async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
+    const serviceAccountKeyB64 = await getProviderKey('VERTEX')
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
     const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
-    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
-    
+
     if (!projectId) {
         throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required for Vertex AI')
     }
 
-    if (!serviceAccountKey) {
-        throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required for Vertex AI (base64 encoded service account JSON)')
-    }
-
-    // Parse the service account key
     let serviceAccount
     try {
-        const keyJson = Buffer.from(serviceAccountKey, 'base64').toString('utf-8')
+        const keyJson = Buffer.from(serviceAccountKeyB64, 'base64').toString('utf-8')
         serviceAccount = JSON.parse(keyJson)
     } catch (error) {
-        throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_KEY format. Must be base64 encoded JSON.')
+        throw new Error('Invalid VERTEX API key format. Must be base64 encoded JSON.')
     }
 
-    // Get access token using service account
     const { GoogleAuth } = await import('google-auth-library')
     const auth = new GoogleAuth({
         credentials: serviceAccount,
@@ -317,6 +313,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
     const accessToken = await authClient.getAccessToken()
 
     if (!accessToken?.token) {
+        reportProviderKeyError('VERTEX', serviceAccountKeyB64, 'Failed to get Google Cloud access token')
         throw new Error('Failed to get Google Cloud access token')
     }
 
@@ -415,6 +412,7 @@ async function generateVertexVideo({ fetchParams, userId, usageLogId }) {
             },
             original_response_from_provider: errorData
         }
+        reportProviderKeyError('VERTEX', serviceAccountKeyB64, formattedError.error.message)
         throw {
             status: response.status,
             errorResponse: formattedError,
@@ -604,10 +602,11 @@ async function generateGeminiMockVideo({ fetchParams, userId, usageLogId }) {
         }
 
         // Return in OpenAI-compatible format with all videos
+        const mockKey = await getProviderKey('GEMINI')
         return {
             created: Math.floor(new Date().getTime() / 1000),
             data: generatedSamples.map(sample => ({
-                url: `${sample.video.uri}&key=${getGeminiApiKey(fetchParams.model)}`,
+                url: `${sample.video.uri}&key=${mockKey}`,
                 revised_prompt: null
             }))
         }
@@ -965,11 +964,7 @@ async function generateWavespeedVideo({ fetchParams, userId, usageLogId }) {
 // Runware REST API call
 async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
     const providerUrl = 'https://api.runware.ai/v1'
-    const providerKey = process.env.RUNWARE_API_KEY
-
-    if (!providerKey) {
-        throw new Error('RUNWARE_API_KEY environment variable is required for Runware provider')
-    }
+    const providerKey = await getProviderKey('RUNWARE')
 
     // Use the APIUsage row id as task UUID to enable easier tracking across systems.
     if (!usageLogId) {
@@ -1100,6 +1095,7 @@ async function generateRunwareVideo({ fetchParams, userId, usageLogId }) {
             },
             original_response_from_provider: data
         }
+        reportProviderKeyError('RUNWARE', providerKey, formattedError.error.message)
         throw {
             status: response.status,
             errorResponse: formattedError

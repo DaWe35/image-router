@@ -6,17 +6,28 @@ import { selectProvider } from '../utils/providerSelector.js'
 import { addFreeModelStabilityHint } from '../utils/errorResponseUtils.js'
 import util from 'util'
 
-// Errors that trigger a switch to a secondary provider if available
-const PROVIDER_SWITCH_ERRORS = [
+// Errors indicating a provider API key's balance/quota is exhausted.
+// Triggers: mark key EXHAUSTED → retry with a different key → then provider switch.
+const KEY_EXHAUSTED_ERRORS = [
   'insufficient_quota',
   'usage_limit_exceeded',
-  'rate_limit_exceeded',
-  '429',
   'credit',
   'balance',
   'quota',
-  'too many requests',
   'This API method requires billing to be enabled',
+]
+
+function isKeyExhaustedError(error) {
+  const errorMessage = (error?.errorResponse?.error?.message || error?.message || '').toLowerCase()
+  if (!errorMessage) return false
+  return KEY_EXHAUSTED_ERRORS.some(msg => errorMessage.includes(msg.toLowerCase()))
+}
+
+// Errors that trigger a switch to a secondary provider if available
+const PROVIDER_SWITCH_ERRORS = [
+  'rate_limit_exceeded',
+  '429',
+  'too many requests',
   'Invalid API key',
   'The model is overloaded. Please try again later.',
   'This model is currently experiencing high demand.',
@@ -110,9 +121,37 @@ export function createGenerationHandler({ validateParams, generateFn }) {
           try {
             generationResult = await generateFn(fetchParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
           } catch (error) {
-            // Check for provider switch errors first
-            if (isProviderSwitchError(error) && modelConfig?.providers?.length > 1) {
-              // Capture original response
+            // 1. Key exhausted → the bad key is already marked EXHAUSTED by reportProviderKeyError,
+            //    so retry with the same provider (will pick a different active key).
+            //    If the retry also fails, fall through to provider switch.
+            if (isKeyExhaustedError(error)) {
+              const originalResponse = error?.errorResponse?.original_response_from_provider
+              if (originalResponse) retryErrors.push(originalResponse)
+
+              const errorMessage = error?.errorResponse?.error?.message || error?.message
+              console.log(`Key exhausted for ${modelConfig.providers[activeProviderIndex].id}, retrying with a different key: ${errorMessage}`)
+
+              try {
+                const retryParams = structuredClone(params)
+                generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
+              } catch (retryError) {
+                // Different-key retry failed too — fall through to provider switch if possible
+                const retryOriginal = retryError?.errorResponse?.original_response_from_provider
+                if (retryOriginal) retryErrors.push(retryOriginal)
+
+                if (modelConfig?.providers?.length > 1) {
+                  const nextProviderIndex = (activeProviderIndex + 1) % modelConfig.providers.length
+                  console.log(`Switching provider from ${modelConfig.providers[activeProviderIndex].id} to ${modelConfig.providers[nextProviderIndex].id} after key-exhausted retry failed`)
+                  activeProviderIndex = nextProviderIndex
+                  const switchParams = structuredClone(params)
+                  generationResult = await generateFn(switchParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
+                } else {
+                  throw retryError
+                }
+              }
+
+            // 2. Provider-level errors → switch to next provider
+            } else if (isProviderSwitchError(error) && modelConfig?.providers?.length > 1) {
               const originalResponse = error?.errorResponse?.original_response_from_provider
               if (originalResponse) {
                 retryErrors.push(originalResponse)
@@ -122,14 +161,13 @@ export function createGenerationHandler({ validateParams, generateFn }) {
               const nextProviderIndex = (activeProviderIndex + 1) % modelConfig.providers.length
               console.log(`Switching provider from ${modelConfig.providers[activeProviderIndex].id} to ${modelConfig.providers[nextProviderIndex].id} due to error: ${errorMessage}`)
               
-              // Switch to the next provider
               activeProviderIndex = nextProviderIndex
               
               const retryParams = structuredClone(params)
               generationResult = await generateFn(retryParams, apiKey.user.id, res, usageLogEntry.id, activeProviderIndex)
 
+            // 3. Transient errors → simple retry
             } else if (isRetryableError(error)) {
-              // Capture the original response from the first failure
               const originalResponse = error?.errorResponse?.original_response_from_provider
               if (originalResponse) {
                 retryErrors.push(originalResponse)

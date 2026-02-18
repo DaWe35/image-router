@@ -4,7 +4,8 @@ import fetch from 'node-fetch'
 import pkg from 'https-proxy-agent'
 const { HttpsProxyAgent } = pkg
 import { imageModels } from '../shared/imageModels/index.js'
-import { objectToFormData, getGeminiApiKey, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize, wrongGrokSizeToAspectRatio } from './helpers.js'
+import { objectToFormData, extractWidthHeight, calculateRunwareDimensions, sizeToAspectRatio, sizeToImageSize, wrongGrokSizeToAspectRatio } from './helpers.js'
+import { getProviderKey, reportProviderKeyError } from './providerKeyService.js'
 import { storageService } from './storageService.js'
 import { pollReplicatePrediction } from './replicateUtils.js'
 
@@ -620,7 +621,7 @@ async function generateReplicate({ fetchParams, userId, usageLogId }) {
 
 
 async function generateGemini({ fetchParams, userId, usageLogId }) {
-    const providerKey = getGeminiApiKey(fetchParams.model)
+    const providerKey = await getProviderKey('GEMINI')
     
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:generateContent?key=${providerKey}`
 
@@ -712,6 +713,7 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
         if (formattedError?.statusText === 'RESOURCE_EXHAUSTED' && fetchParams.model === 'gemini-2.0-flash-exp-image-generation') {
             formattedError.error.message = 'This model hit a global rate limit. Please try again.'
         }
+        reportProviderKeyError('GEMINI', providerKey, formattedError.error.message)
         throw {
             status: response.status,
             errorResponse: formattedError
@@ -719,6 +721,7 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
     }
 
     if (!data) {
+        reportProviderKeyError('GEMINI', providerKey, 'Provider returned a non-JSON success response')
         throw {
             status: 502,
             errorResponse: {
@@ -779,28 +782,22 @@ async function generateGemini({ fetchParams, userId, usageLogId }) {
 }
 
 async function generateVertexGemini({ fetchParams, userId }) {
+    const serviceAccountKeyB64 = await getProviderKey('VERTEX')
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
     const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
-    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
 
     if (!projectId) {
         throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required for Vertex AI')
     }
 
-    if (!serviceAccountKey) {
-        throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required for Vertex AI (base64 encoded service account JSON)')
-    }
-
-    // Parse the service account key
     let serviceAccount
     try {
-        const keyJson = Buffer.from(serviceAccountKey, 'base64').toString('utf-8')
+        const keyJson = Buffer.from(serviceAccountKeyB64, 'base64').toString('utf-8')
         serviceAccount = JSON.parse(keyJson)
     } catch (error) {
-        throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_KEY format. Must be base64 encoded JSON.')
+        throw new Error('Invalid VERTEX API key format. Must be base64 encoded JSON.')
     }
 
-    // Get access token using service account
     const { GoogleAuth } = await import('google-auth-library')
     const auth = new GoogleAuth({
         credentials: serviceAccount,
@@ -810,6 +807,7 @@ async function generateVertexGemini({ fetchParams, userId }) {
     const accessToken = await authClient.getAccessToken()
 
     if (!accessToken?.token) {
+        reportProviderKeyError('VERTEX', serviceAccountKeyB64, 'Failed to get Google Cloud access token')
         throw new Error('Failed to get Google Cloud access token')
     }
 
@@ -875,6 +873,7 @@ async function generateVertexGemini({ fetchParams, userId }) {
 
     if (!response.ok) {
         const errorResponse = await response.json()
+        reportProviderKeyError('VERTEX', serviceAccountKeyB64, errorResponse?.error?.message || JSON.stringify(errorResponse))
         throw {
             status: response.status,
             errorResponse: {
@@ -916,28 +915,22 @@ async function generateVertex({ fetchParams, userId }) {
         return await generateVertexGemini({ fetchParams, userId })
     }
 
+    const serviceAccountKeyB64 = await getProviderKey('VERTEX')
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID
     const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1'
-    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
-    
+
     if (!projectId) {
         throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required for Vertex AI')
     }
 
-    if (!serviceAccountKey) {
-        throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required for Vertex AI (base64 encoded service account JSON)')
-    }
-
-    // Parse the service account key
     let serviceAccount
     try {
-        const keyJson = Buffer.from(serviceAccountKey, 'base64').toString('utf-8')
+        const keyJson = Buffer.from(serviceAccountKeyB64, 'base64').toString('utf-8')
         serviceAccount = JSON.parse(keyJson)
     } catch (error) {
-        throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_KEY format. Must be base64 encoded JSON.')
+        throw new Error('Invalid VERTEX API key format. Must be base64 encoded JSON.')
     }
 
-    // Get access token using service account
     const { GoogleAuth } = await import('google-auth-library')
     const auth = new GoogleAuth({
         credentials: serviceAccount,
@@ -947,6 +940,7 @@ async function generateVertex({ fetchParams, userId }) {
     const accessToken = await authClient.getAccessToken()
 
     if (!accessToken?.token) {
+        reportProviderKeyError('VERTEX', serviceAccountKeyB64, 'Failed to get Google Cloud access token')
         throw new Error('Failed to get Google Cloud access token')
     }
 
@@ -973,6 +967,7 @@ async function generateVertex({ fetchParams, userId }) {
 
     if (!response.ok) {
         const errorResponse = await response.json()
+        reportProviderKeyError('VERTEX', serviceAccountKeyB64, errorResponse?.error?.message || JSON.stringify(errorResponse))
         throw {
             status: response.status,
             errorResponse: {
@@ -1026,11 +1021,7 @@ async function generateTest({ fetchParams, userId }) {
 // Runware REST API call
 async function generateRunware({ fetchParams, userId, usageLogId }) {
     const providerUrl = 'https://api.runware.ai/v1'
-    const providerKey = process.env.RUNWARE_API_KEY
-
-    if (!providerKey) {
-        throw new Error('RUNWARE_API_KEY environment variable is required for Runware provider')
-    }
+    const providerKey = await getProviderKey('RUNWARE')
 
     // Use the APIUsage row id as task UUID to enable easier tracking across systems.
     if (!usageLogId) {
@@ -1173,6 +1164,7 @@ async function generateRunware({ fetchParams, userId, usageLogId }) {
             },
             original_response_from_provider: data
         }
+        reportProviderKeyError('RUNWARE', providerKey, errorMessage)
         throw {
             status: response.status,
             errorResponse: formattedError
@@ -1610,7 +1602,7 @@ async function generateChutes({ fetchParams }) {
 }
 
 async function generateGeminiImagen({ fetchParams }) {
-    const providerKey = getGeminiApiKey(fetchParams.model)
+    const providerKey = await getProviderKey('GEMINI')
 
     const providerUrl = `https://generativelanguage.googleapis.com/v1beta/models/${fetchParams.model}:predict?key=${providerKey}`
 
@@ -1650,6 +1642,7 @@ async function generateGeminiImagen({ fetchParams }) {
             },
             original_response_from_provider: data ?? rawBody
         }
+        reportProviderKeyError('GEMINI', providerKey, formattedError.error.message)
         throw {
             status: response.status,
             errorResponse: formattedError
@@ -1657,6 +1650,7 @@ async function generateGeminiImagen({ fetchParams }) {
     }
 
     if (!data) {
+        reportProviderKeyError('GEMINI', providerKey, 'Provider returned a non-JSON success response')
         throw {
             status: 502,
             errorResponse: {

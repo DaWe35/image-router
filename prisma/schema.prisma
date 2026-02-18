@@ -110,3 +110,39 @@ model Deposit {
 
   @@unique([provider, providerEventId])
 }
+
+
+// Third-party provider API keys (Gemini, Runware, Vertex) - managed via admin dashboard
+enum ProviderType {
+  GEMINI
+  RUNWARE
+  VERTEX
+}
+
+enum ProviderKeyStatus {
+  ACTIVE      // use this key
+  PAUSED      // temporarily disabled (e.g. rate limit)
+  EXHAUSTED   // quota/credits used up
+  FAILED      // repeatedly failing (invalid / errors)
+  DISABLED    // manually turned off
+  DEPRECATED  // keep for history, never use
+}
+
+model ProviderApiKey {
+  id                String            @id @default(uuid())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  provider          ProviderType
+  name              String            // e.g. "Primary Gemini", "Runware backup"
+  apiKey            String            // the secret
+  status            ProviderKeyStatus @default(ACTIVE)
+
+  lastUsedAt        DateTime?
+  lastErrorAt       DateTime?
+  lastErrorMessage  String?
+  notes             String?
+
+  @@index([provider])
+  @@index([provider, status])
+}
