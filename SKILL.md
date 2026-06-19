@@ -1,44 +1,54 @@
 ---
-name: imagerouter
-description: Generate Images with any AI model on ImageRouter (requires API key).
+name: image-router
+description: "Generate, edit, and transform images via the ImageRouter API using any supported AI model. Supports text-to-image, image-to-image, inpainting with masks, and multi-image composition. Use when the user asks to create images, generate AI art, convert or stylize photos, produce illustrations, or work with ImageRouter models. Requires IMAGEROUTER_API_KEY."
 homepage: https://imagerouter.io
-metadata: {"openclaw":{"emoji":"🎨","requires":{"bins":["curl"]},"primaryEnv":"IMAGEROUTER_API_KEY"}}
+metadata:
+  version: "1.0.0"
+  openclaw_emoji: "🎨"
+  openclaw_requires_bins: "curl"
+  openclaw_primary_env: "IMAGEROUTER_API_KEY"
+triggers:
+  - generate image
+  - create image
+  - AI art
+  - text-to-image
+  - image-to-image
+  - ImageRouter
+  - produce illustration
+  - stylize photo
+  - inpainting
+  - image generation
+user-invocable: true
 ---
 
-# [ImageRouter](https://imagerouter.io) AI Image Generation
+# ImageRouter AI Image Generation
 
-Generate images with any AI model available on [ImageRouter](https://imagerouter.io).
+Generate, edit, and transform images with any AI model available on [ImageRouter](https://imagerouter.io). Supports text-to-image creation, image-to-image transformation, inpainting with masks, and multi-image composition (up to 16 inputs).
 
-## OpenClaw Setup
+## Setup
 
-- This skill expects your ImageRouter key in the environment variable `IMAGEROUTER_API_KEY`.
-- **Do not paste API keys into chat**. Set the env var in the OpenClaw Gateway environment (in terminal) and restart the gateway. Example:
+1. Set the `IMAGEROUTER_API_KEY` environment variable. **Do not paste API keys into chat.**
+2. For OpenClaw Gateway users, configure and restart:
 ```bash
 openclaw config set skills.entries.imagerouter.apiKey "your_api_key_here"
 openclaw gateway restart
 ```
+3. Get an API key at https://imagerouter.io/api-keys
 
-## Available models
-The `test/test` model is a free dummy model that is used for testing the API. It is not a real model, therefore you should use other models for image generation.
+## Discover Models
 
-Get top 10 most popular models:
+Find a model before generating. The `test/test` model is a free dummy for testing only — use a real model for actual generation.
+
 ```bash
+# Top 10 most popular models
 curl -X POST 'https://backend.imagerouter.io/operations/get-popular-models'
-```
 
-Search available models by name:
-```bash
+# Search models by name
 curl "https://api.imagerouter.io/v1/models?type=image&sort=date&name=gemini"
 ```
 
-Get all available models:
-```bash
-curl "https://api.imagerouter.io/v1/models?type=image&sort=date&limit=1000"
-```
+## Text-to-Image (Quick Start)
 
-## Quick Start - Text-to-Image
-
-Basic generation with JSON endpoint:
 ```bash
 curl 'https://api.imagerouter.io/v1/openai/images/generations' \
   -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
@@ -52,21 +62,13 @@ curl 'https://api.imagerouter.io/v1/openai/images/generations' \
   }'
 ```
 
-## Unified Endpoint (Text-to-Image & Image-to-Image)
+**Verify success:** Check that the response contains `"data"` with a `"url"` field. A missing or empty `"data"` array indicates an error.
 
-### Text-to-Image with multipart/form-data:
-```bash
-curl 'https://api.imagerouter.io/v1/openai/images/edits' \
-  -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
-  -F 'prompt=a cyberpunk city at night' \
-  -F 'model=test/test' \
-  -F 'quality=high' \
-  -F 'size=1024x1024' \
-  -F 'response_format=url' \
-  -F 'output_format=webp'
-```
+## Image-to-Image (Unified Endpoint)
 
-### Image-to-Image (with input images):
+The `/v1/openai/images/edits` endpoint handles both text-to-image and image-to-image via `multipart/form-data`. Use it when file uploads are needed.
+
+### Transform an existing image:
 ```bash
 curl 'https://api.imagerouter.io/v1/openai/images/edits' \
   -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
@@ -79,7 +81,7 @@ curl 'https://api.imagerouter.io/v1/openai/images/edits' \
   -F 'image[]=@/path/to/your/image.webp'
 ```
 
-### Multiple images (up to 16):
+### Compose multiple images (up to 16):
 ```bash
 curl 'https://api.imagerouter.io/v1/openai/images/edits' \
   -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
@@ -90,7 +92,7 @@ curl 'https://api.imagerouter.io/v1/openai/images/edits' \
   -F 'image[]=@image3.webp'
 ```
 
-### With mask (some models require mask for inpainting):
+### Inpainting with mask:
 ```bash
 curl 'https://api.imagerouter.io/v1/openai/images/edits' \
   -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
@@ -102,17 +104,16 @@ curl 'https://api.imagerouter.io/v1/openai/images/edits' \
 
 ## Parameters
 
-- **model** (required): Image model to use (see https://imagerouter.io/models)
-- **prompt** (optional): Text description for generation. Most models require a text prompt, but not all.
-- **quality** (optional): `auto` (default), `low`, `medium`, `high`
-- **size** (optional): `auto` (default) or `WIDTHxHEIGHT` (e.g., `1024x1024`).
-- **response_format** (optional): 
-  - `url` (default) - Returns hosted URL
-  - `b64_json` - Returns base64-encoded image
-  - `b64_ephemeral` - Base64 without saving to logs
-- **output_format** (optional): `webp` (default), `jpeg`, `png`
-- **image[]** (optional): Input file for Image-to-Image (multipart only)
-- **mask[]** (optional): Editing mask for inpainting (multipart only)
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `model` | Yes | — | Model ID (browse at https://imagerouter.io/models) |
+| `prompt` | No | — | Text description; most models require it |
+| `quality` | No | `auto` | `low`, `medium`, `high`, or `auto` |
+| `size` | No | `auto` | `auto` or `WIDTHxHEIGHT` (e.g., `1024x1024`) |
+| `response_format` | No | `url` | `url`, `b64_json`, or `b64_ephemeral` |
+| `output_format` | No | `webp` | `webp`, `jpeg`, or `png` |
+| `image[]` | No | — | Input file(s) for image-to-image (multipart only) |
+| `mask[]` | No | — | Mask file for inpainting (multipart only) |
 
 ## Response Format
 
@@ -129,32 +130,27 @@ curl 'https://api.imagerouter.io/v1/openai/images/edits' \
 }
 ```
 
+## Error Handling
+
+| HTTP Status | Cause | Fix |
+|-------------|-------|-----|
+| 401 | Invalid or missing API key | Verify `IMAGEROUTER_API_KEY` is set correctly |
+| 400 | Bad request (missing model, invalid params) | Check required `model` field and parameter values |
+| 429 | Rate limit exceeded | Wait and retry with exponential backoff |
+| 5xx | Server error | Retry after a short delay; check https://status.imagerouter.io if persistent |
+
 ## Endpoint Comparison
 
-| Feature | Unified (/edits) | JSON (/generations) |
-|---------|------------------|---------------------|
-| Text-to-Image | ✅ | ✅ |
-| Image-to-Image | ✅ | ❌ |
+| Feature | `/edits` (unified) | `/generations` (JSON) |
+|---------|--------------------|-----------------------|
+| Text-to-Image | Yes | Yes |
+| Image-to-Image | Yes | No |
 | Encoding | multipart/form-data | application/json |
 
-## Tips
+Use `/generations` for simple text-to-image without file uploads. Use `/edits` when image inputs or masks are needed.
 
-- Both `/v1/openai/images/generations` and `/v1/openai/images/edits` are the same for the unified endpoint
-- Use JSON endpoint for simple text-to-image when you don't need file uploads
-- Use unified endpoint when you need Image-to-Image capabilities
-- Check model features at https://imagerouter.io/models (quality support, edit support, etc.)
-- Get your API key at https://imagerouter.io/api-keys
+## Download Generated Image
 
-## Examples by Use Case
-
-### Quick test generation:
-```bash
-curl 'https://api.imagerouter.io/v1/openai/images/generations' \
-  -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
-  --json '{"prompt":"test image","model":"test/test"}'
-```
-
-### Download image directly:
 ```bash
 curl 'https://api.imagerouter.io/v1/openai/images/generations' \
   -H "Authorization: Bearer $IMAGEROUTER_API_KEY" \
